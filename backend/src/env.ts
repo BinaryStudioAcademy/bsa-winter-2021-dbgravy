@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
-import { getOsEnv } from './common/utils/path.helper';
+import { getOsEnv } from './common/helpers/pathHelper';
 
 dotenv.config();
 
 export const env = {
   app: {
-    port: getOsEnv('APP_SERVER_PORT') || 3000
+    port: getOsEnv('PORT') || 3001
   }
 };

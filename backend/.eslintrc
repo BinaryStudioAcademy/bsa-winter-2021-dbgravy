@@ -15,16 +15,31 @@
     "es6": true
   },
   "rules": {
-    "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": true
+        }
+      }
+    ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "no-shadow": "off",
     "comma-dangle": ["error", "never"],
     "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "no-multi-spaces": "error",
     "no-useless-constructor": "off",
     "max-len": ["error", { "code": 120 }],
     "import/prefer-default-export": "off",
     "no-case-declarations": "off",
     "no-await-in-loop": "off",
+    "class-methods-use-this": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -32,13 +47,15 @@
         "js": "never",
         "ts": "never"
       }
-   ],
-   "object-curly-newline": "off",
-   "arrow-parens": ["error", "as-needed"]
+    ],
+    "object-curly-newline": "off",
+    "arrow-parens": ["error", "as-needed"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "lines-between-class-members": "off"
   },
   "ignorePatterns": [
     "node_modules/",
-    "data/migrations"
+    "src/data/migrations"
   ],
   "settings": {
     "import/resolver": {

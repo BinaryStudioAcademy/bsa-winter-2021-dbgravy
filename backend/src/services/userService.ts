@@ -3,7 +3,7 @@ const users = [{
   name: 'Alik'
 }, {
   id: '2',
-  name: 'Petr'
+  name: 'Uliana'
 }];
 
 export const getUsers = () => Promise.resolve(users);

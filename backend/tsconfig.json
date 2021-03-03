@@ -23,9 +23,8 @@
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["node"],
     "lib": ["es2020"],
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["src/common/typings", "node_modules/@types"]
   },
   "include": ["./src/**/*"]
 }
