@@ -1,10 +1,13 @@
 import React from 'react';
-import logo from '../../assets/images/logo.svg';
+// import logo from '../../assets/images/logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import Settings from '../Settings';
 
 const App = () => (
   <div className="App">
-    <header className="App-header">
+    {/* <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit
@@ -21,7 +24,8 @@ const App = () => (
       >
         Learn React
       </a>
-    </header>
+    </header> */}
+    <Settings />
   </div>
 );
 

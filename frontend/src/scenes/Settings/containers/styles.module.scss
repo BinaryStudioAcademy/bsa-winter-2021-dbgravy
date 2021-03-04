@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  padding: 35px 25px 0 60px;
+  width: 100%;
+}
+
+.container > div {
+  padding-bottom: 20px;
+}
+
+.userSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.charge {
+  font-weight: 600;
+}
+
+.usersTab {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: 10vh;
+  overflow: auto;
+}
+
+.userLine {
+  display: grid;
+  grid-template-columns: 4fr repeat(4, 1fr);
+
+  height: 10vh;
+  align-items: center;
+  font-size: 20px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.userLine:hover {
+  background: #ecf5fe;
+}
+
+.tabHead {
+  color: #bbb;
+}
+
+.tabHead:hover {
+  background: inherit;
+}
