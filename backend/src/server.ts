@@ -1,12 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import passport from 'passport';
 import { env } from './env';
 import routes from './api/routes';
+import './config/passportConfig';
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 routes(app);
 
