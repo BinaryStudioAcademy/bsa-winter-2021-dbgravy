@@ -14,7 +14,7 @@ export class Component extends AbstractEntity {
   width: number;
 
   @Column()
-  tpo: number;
+  top: number;
 
   @Column()
   left: number;
