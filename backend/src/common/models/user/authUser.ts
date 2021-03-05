@@ -1,8 +1,7 @@
-import { IToken } from '../jwt/token';
-import { IUser } from './user';
+import { ITransportedUser } from './transportedUser';
 
 export interface IAuthUser {
-    user: IUser
-    accessToken: IToken
-    refreshToken: IToken
+    user: ITransportedUser
+    accessToken: string
+    refreshToken: string
 }

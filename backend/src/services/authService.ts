@@ -7,6 +7,7 @@ import { IAuthUser } from '../common/models/user/authUser';
 import { IRegisterUser } from '../common/models/user/registerUser';
 import { ITokenData } from '../common/models/jwt/tokenData';
 import { Roles } from '../common/enums/roles';
+import { ITransportedUser } from '../common/models/user/transportedUser';
 
 export const getUserDataFromToken = (data: ITokenData): Promise<ITokenData> => Promise.resolve(data);
 
@@ -22,11 +23,14 @@ export const login = async (user: IUser): Promise<IAuthUser> => {
     },
     role: Roles.Developer
   };
+  // TODO: load real info for ITokenData from DB
 
+  const transportedUser = await userRepository.getById(id);
+  delete transportedUser.password; // retrived password hash from response
   return {
     accessToken: createAccessToken(tokenData),
     refreshToken: createRefreshToken(tokenData),
-    user: await userRepository.getById(id)
+    user: transportedUser as ITransportedUser
   } as IAuthUser;
 };
 
