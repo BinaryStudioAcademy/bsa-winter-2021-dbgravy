@@ -2,11 +2,12 @@ import React from 'react';
 import { store } from '../../store';
 import { Provider } from 'react-redux';
 import Routing from '../Routing';
-import { Route } from 'react-router';
+import { Router } from 'react-router';
+import { history } from '../../common/helpers/historyHelper';
 
 const App = () => (
   <Provider store={store}>
-    <Route><Routing /></Route>
+    <Router history={history}><Routing /></Router>
   </Provider>
 );
 
