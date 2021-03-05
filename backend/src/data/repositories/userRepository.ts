@@ -1,28 +1,14 @@
 import { IUser } from '../../common/models/user/user';
 
 // TODO: implement repository with real DB
-const fakeUserDb: IUser[] = [
-  {
-    id: '1',
-    email: 'test@ukr.net',
-    firstname: 'sergey',
-    lastname: 'testov',
-    password: '123123123',
-    currentOrganizationId: '1'
-  },
-  {
-    id: '2',
-    email: 'test2@ukr.net',
-    firstname: 'sergey2',
-    lastname: 'testov2',
-    password: '123123123',
-    currentOrganizationId: '2'
-  }
-];
+const fakeUserDb: IUser[] = [];
 
-export const addUser = (user: IUser): Promise<IUser> => {
-  fakeUserDb.push(user);
-  return Promise.resolve(user);
+export const addUser = async (user: IUser): Promise<IUser> => {
+  const newUser: IUser = await new Promise(resolve => {
+    fakeUserDb.push(user);
+    resolve(user);
+  });
+  return newUser;
 };
 
 /* eslint-disable max-len */
