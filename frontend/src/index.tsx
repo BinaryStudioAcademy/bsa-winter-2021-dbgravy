@@ -1,11 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './scenes/App/App';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import App from './containers/App/App';
 
-render(
-    <Router>
-        <Route path="/"><App /></Route>
-    </Router>,
-    document.getElementById('root')
-);
+render(<App />, document.getElementById('root'));
