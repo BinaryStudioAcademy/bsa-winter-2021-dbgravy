@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-const saltRounds = 25;
+const saltRounds = 10;
 
 export const encrypt = (data: string): Promise<string> => bcrypt.hash(data, saltRounds);
 
