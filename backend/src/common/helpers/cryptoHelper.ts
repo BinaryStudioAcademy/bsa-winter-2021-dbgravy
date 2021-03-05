@@ -1,0 +1,7 @@
+import bcrypt from 'bcrypt';
+
+const saltRounds = 25;
+
+export const encrypt = (data: string): Promise<string> => bcrypt.hash(data, saltRounds);
+
+export const compare = (data: string, encrypted: string): Promise<boolean> => bcrypt.compare(data, encrypted);
