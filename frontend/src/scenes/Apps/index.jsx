@@ -1,27 +1,27 @@
 import React from 'react';
 import styles from './styles.module.scss';
-import { Navbar, Nav, Form, FormControl } from 'react-bootstrap';
+import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import logo from '../images/retool-logo.png';
-import appsIcon from '../images/briefcase-solid.svg';
-import resourcesIcon from '../images/database-solid.svg';
+import logo from '../../images/retool-logo.png';
+import appsIcon from '../../images/briefcase-solid.svg';
+import resourcesIcon from '../../images/database-solid.svg';
 import { Routes } from '../../common/enums/Routes';
 
 const Apps = () => (
-  <div className={styles['resources-wrp']}>
+  <div className={styles['apps-wrp']}>
     <Navbar className={styles.navigation}>
 
       <Navbar.Brand className="p-0">
-        <img className={styles['logo-img']} src={logo} alt="retool-logo" />
+        <Image className={styles['logo-img']} src={logo} alt="retool-logo" />
       </Navbar.Brand>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link active href={Routes.Apps}>
-            <img src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
+          <Nav.Link active href={Routes.Apps} className={styles['nav-item']}>
+            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
             <span>Apps</span>
           </Nav.Link>
-          <Nav.Link href={Routes.Resources}>
-            <img src={resourcesIcon} className={styles['navbar-icons']} alt="resources-icon" />
+          <Nav.Link href={Routes.Resources} className={styles['nav-item']}>
+            <Image src={resourcesIcon} className={styles['navbar-icons']} alt="resources-icon" />
             <span>Resources</span>
           </Nav.Link>
         </Nav>
@@ -50,7 +50,7 @@ const Apps = () => (
 
         <div className={styles['list-item']}>
           <div className={styles['app-main-info']}>
-            <img src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
+            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
             <div className={styles['main-info']}>
               <span>Workspaces and Teams</span>
               <span className="text-secondary">Created by...</span>
@@ -60,6 +60,19 @@ const Apps = () => (
             <Button variant="outline-dark">...</Button>
           </div>
         </div>
+        <div className={styles['list-item']}>
+          <div className={styles['app-main-info']}>
+            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
+            <div className={styles['main-info']}>
+              <span>Workspaces and Teams</span>
+              <span className="text-secondary">Created by...</span>
+            </div>
+          </div>
+          <div>
+            <Button variant="outline-dark">...</Button>
+          </div>
+        </div>
+
       </div>
 
     </div>
