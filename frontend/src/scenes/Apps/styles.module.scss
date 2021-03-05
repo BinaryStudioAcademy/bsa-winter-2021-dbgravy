@@ -1,9 +1,11 @@
+@import "~bootstrap/scss/bootstrap";
+
 * {
   margin: 0;
   padding: 0;
 }
 
-.resources-wrp {
+.apps-wrp {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -57,16 +59,29 @@
   margin-bottom: 40px;
 }
 
-.search-create {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-  width: 30%;
-  max-width: 500px;
-}
-
-.table-wrp {
+.list-wrp {
   max-height: 700px;
   overflow: auto;
+  margin-top: 40px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.app-main-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.main-info {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
 }
