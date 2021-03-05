@@ -1,12 +1,22 @@
+import { connect } from 'react-redux';
 import React from 'react';
 import AddApp from '../../components/AddApp';
+import { addAppRoutine } from '../../routines';
 
-const AppHeader: React.FC = () => {
+interface IProps {
+  addApp: Function
+}
+
+const AppHeader: React.FC<IProps> = ({ addApp }) => {
   const handleAddApp = (appName: string): void => {
-    console.log(appName);
+    addApp(appName);
   };
 
   return (<AddApp onAddApp={handleAddApp} />);
 };
 
-export default AppHeader;
+const mapDispatchToProps = {
+  addApp: addAppRoutine
+};
+
+export default connect(null, mapDispatchToProps)(AppHeader);

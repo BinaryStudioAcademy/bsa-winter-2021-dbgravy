@@ -1,4 +1,4 @@
-let apps = [
+const apps = [
   {
     id: '1',
     name: 'App1'
@@ -31,7 +31,7 @@ export const updateApp = (id:string, appName: string) => {
   });
 }
 
-export const daleteApp = (id: string) => {
+export const deleteApp = (id: string) => {
   return new Promise(resolve => {
     apps.filter(a => a.id !== id);
     resolve(id);

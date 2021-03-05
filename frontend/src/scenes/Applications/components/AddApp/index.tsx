@@ -26,16 +26,15 @@ const AddApp: React.FC<IAddApp> = ({ onAddApp }) => {
       {
         isShow && (
           <Form className={styles.form}>
-            <Form.Group>
-              <Form.Control
-                type="text"
-                value={appName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAppName(e.target.value)}
-              />
-              <Button variant="secondary" onClick={() => handleCancel()}>Cancel</Button>
-              {' '}
-              <Button variant="primary" onClick={() => handleClick()}>Create</Button>
-            </Form.Group>
+            <Form.Control
+              className={styles.formControl}
+              type="text"
+              value={appName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAppName(e.target.value)}
+            />
+            <Button className={styles.btn} variant="secondary" onClick={() => handleCancel()}>Cancel</Button>
+            {' '}
+            <Button className={styles.btn} variant="primary" onClick={() => handleClick()}>Create</Button>
           </Form>
         )
       }
