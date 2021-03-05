@@ -7,6 +7,7 @@ import { compare } from '../common/helpers/cryptoHelper';
 import { IJwtOptions } from '../common/models/jwt/jwtOptions';
 import { IUser } from '../common/models/user/user';
 import { IRegisterUser } from '../common/models/user/registerUser';
+import { IError } from '../common/models/common/error';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -22,7 +23,6 @@ passport.use(
         return done({ status: 401, message: 'Incorrect email.' }, false);
       }
 
-      // TODO: Change 'User' to req.user (id, current organization, role in current this organization)
       return await compare(password, user.password)
         ? done(null, user)
         : done({ status: 401, message: 'Passwords do not match.' }, null, null);
@@ -40,7 +40,7 @@ passport.use(
       try {
         const userByEmail = await userRepository.getByEmail(email);
         if (userByEmail) {
-          return done({ status: 401, message: 'Email is already taken.' }, null);
+          return done({ status: 401, message: 'Email is already taken.' } as IError);
         }
 
         return done(null, { email, password, firstname, lastname } as IRegisterUser);
@@ -51,10 +51,10 @@ passport.use(
   )
 );
 
-passport.use(new JwtStrategy(options, async ({ id }, done) => {
+passport.use(new JwtStrategy(options, async ({ userId }, done) => {
   try {
-    const user = await userRepository.getById(id);
-    return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
+    const user = await userRepository.getById(userId);
+    return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' } as IError, null);
   } catch (err) {
     return done(err);
   }
