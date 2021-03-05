@@ -1,17 +1,20 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class initMigrations1614954662791 implements MigrationInterface {
-    name = 'initMigrations1614954662791'
+export class initMigrations1614956972791 implements MigrationInterface {
+    name = 'initMigrations1614956972791'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TYPE "user2_organization_role_enum" AS ENUM('admin', 'developer', 'viewer')`);
+        await queryRunner.query(`CREATE TYPE "user2_organization_status_enum" AS ENUM('pending', 'active', 'deactivated')`);
         await queryRunner.query(`CREATE TABLE "user2_organization" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "role" "user2_organization_role_enum" NOT NULL, "status" "user2_organization_status_enum" NOT NULL, "userId" uuid, "organizationId" character varying, CONSTRAINT "PK_c1c2ff8bbf18d4679e924c9219e" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "firstName" character varying(50) NOT NULL, "lastName" character varying(50) NOT NULL, "email" character varying NOT NULL, "password" character varying, "currentOrganizationId" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "email" character varying NOT NULL, "password" character varying, "currentOrganizationId" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "trigger" ("queryId" uuid NOT NULL, "triggerQueryId" uuid NOT NULL, "success" boolean NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_46032eeecba2873b949bdc5b777" PRIMARY KEY ("queryId", "triggerQueryId"))`);
         await queryRunner.query(`CREATE TABLE "query" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying NOT NULL, "runAutomatically" boolean NOT NULL, "code" character varying NOT NULL, "showConfirm" boolean NOT NULL, "appId" uuid, "resourceId" uuid, CONSTRAINT "PK_be23114e9d505264e2fdd227537" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "resource_type_enum" AS ENUM('postgres', 'mongodb')`);
         await queryRunner.query(`CREATE TABLE "resource" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying(50) NOT NULL, "type" "resource_type_enum" NOT NULL, "host" character varying NOT NULL, "port" integer NOT NULL, "dbName" character varying NOT NULL, "dbUserName" character varying NOT NULL, "dbPassword" character varying NOT NULL, "organizationId" character varying, CONSTRAINT "PK_e2894a5867e06ae2e8889f1173f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "organization" ("id" character varying NOT NULL, "name" character varying NOT NULL, "createdBy" uuid, CONSTRAINT "PK_472c1f99a32def1b0abb219cd67" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "component" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying NOT NULL, "height" integer NOT NULL, "width" integer NOT NULL, "tpo" integer NOT NULL, "left" integer NOT NULL, "appId" uuid, CONSTRAINT "PK_c084eba2d3b157314de79135f09" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "app" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying(100) NOT NULL, "organizationId" character varying, "updatedByUserId" uuid, CONSTRAINT "PK_9478629fc093d229df09e560aea" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "app" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying NOT NULL, "organizationId" character varying, "updatedByUserId" uuid, CONSTRAINT "PK_9478629fc093d229df09e560aea" PRIMARY KEY ("id"))`);
         await queryRunner.query(`ALTER TABLE "user2_organization" ADD CONSTRAINT "FK_08a1551015518cc31ffdb0c8628" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "user2_organization" ADD CONSTRAINT "FK_cc0c8978ecd306d82a0dd4220db" FOREIGN KEY ("organizationId") REFERENCES "organization"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "user" ADD CONSTRAINT "FK_6fbb9b480b4b132692fac2b13e2" FOREIGN KEY ("currentOrganizationId") REFERENCES "organization"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -43,10 +46,13 @@ export class initMigrations1614954662791 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "component"`);
         await queryRunner.query(`DROP TABLE "organization"`);
         await queryRunner.query(`DROP TABLE "resource"`);
+        await queryRunner.query(`DROP TYPE "resource_type_enum"`);
         await queryRunner.query(`DROP TABLE "query"`);
         await queryRunner.query(`DROP TABLE "trigger"`);
         await queryRunner.query(`DROP TABLE "user"`);
         await queryRunner.query(`DROP TABLE "user2_organization"`);
+        await queryRunner.query(`DROP TYPE "user2_organization_status_enum"`);
+        await queryRunner.query(`DROP TYPE "user2_organization_role_enum"`);
     }
 
 }
