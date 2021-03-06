@@ -11,8 +11,3 @@ export const verifyToken = async (token: string) => await new Promise(resolve =>
 });
 
 export const extractUserIdFromTokem = (token: string): string => jwt.decode(token) as string;
-
-export const refreshAccessToken = (refreshToken: string): string => {
-  const userId = extractUserIdFromTokem(refreshToken);
-  return createAccessToken(userId);
-};

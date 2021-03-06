@@ -6,8 +6,10 @@ import { IUser } from '../common/models/user/user';
 import { IRegisterUser } from '../common/models/user/registerUser';
 import { IError } from '../common/models/common/error';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as CustomStrategy } from 'passport-custom';
 import { secret } from './jwtConfig';
 import { IJwtOptions } from '../common/models/jwt/jwtOptions';
+import { extractUserIdFromTokem, verifyToken } from '../common/helpers/tokenHelper';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -58,4 +60,15 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
   } catch (err) {
     return done(err);
   }
+}));
+
+passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
+  const refreshToken = req.headers['x-refresh-token'] as string;
+  const isValidRefreshToken = await verifyToken(refreshToken);
+  if (isValidRefreshToken) {
+    const userId = extractUserIdFromTokem(refreshToken);
+    const user = await userRepository.getById(userId);
+    return done(null, user);
+  }
+  return done({ status: 401, message: 'Token is invalid.' }, null);
 }));
