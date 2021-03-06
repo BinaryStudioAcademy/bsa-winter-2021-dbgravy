@@ -25,12 +25,12 @@ passport.use(
       const userRepository = getCustomRepository(UserRepository);
       const user: User = await userRepository.getByEmail(email);
       if (!user) {
-        return done({ status: 401, message: 'Incorrect email.' }, false);
+        return done({ status: 401, msg: 'Incorrect email.' } as IError, false);
       }
 
       return await compare(password, user.password)
         ? done(null, extractTransportedUser(user))
-        : done({ status: 401, message: 'Passwords do not match.' }, null, null);
+        : done({ status: 401, msg: 'Passwords do not match.' } as IError, null, null);
     } catch (err) {
       return done(err);
     }
@@ -46,7 +46,7 @@ passport.use(
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
-          return done({ status: 401, message: 'Email is already taken.' } as IError);
+          return done({ status: 401, msg: 'Email is already taken.' } as IError);
         }
         return done(null, { email, password, firstname, lastname } as IRegisterUser);
       } catch (err) {
@@ -61,7 +61,7 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
     const userRepository = getCustomRepository(UserRepository);
     const user: User = await userRepository.getById(id);
     console.log(user);
-    return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
+    return user ? done(null, user) : done({ status: 401, msg: 'Token is invalid.' } as IError, null);
   } catch (err) {
     return done(err);
   }
@@ -76,5 +76,5 @@ passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
     const user: User = await userRepository.getById(id);
     return done(null, extractTransportedUser(user));
   }
-  return done({ status: 401, message: 'Refresh token is invalid.' }, null);
+  return done({ status: 401, msg: 'Refresh token is invalid.' } as IError, null);
 }));

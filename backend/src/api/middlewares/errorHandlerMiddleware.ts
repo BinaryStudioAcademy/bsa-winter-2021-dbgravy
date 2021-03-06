@@ -5,7 +5,7 @@ export const errorHandlerMiddleware = (err: IError, _req: Request, res: Response
   if (res.headersSent) {
     next(err);
   } else {
-    const { status = 500, message = '' } = err;
-    res.status(status).send({ status, message });
+    const { status = 500, msg = '', code } = err;
+    res.status(status).send({ status, msg, code });
   }
 };
