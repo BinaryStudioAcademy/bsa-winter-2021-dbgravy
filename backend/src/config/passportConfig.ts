@@ -1,12 +1,18 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as CustomStrategy } from 'passport-custom';
 import * as userRepository from '../data/repositories/userRepository';
 import { compare } from '../common/helpers/cryptoHelper';
 import { IUser } from '../common/models/user/user';
 import { IRegisterUser } from '../common/models/user/registerUser';
 import { IError } from '../common/models/common/error';
-import { extractUserDataFromTokem, refreshAccessToken, verifyToken } from '../common/helpers/tokenHelper';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { secret } from './jwtConfig';
+import { IJwtOptions } from '../common/models/jwt/jwtOptions';
+
+const options: IJwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: secret
+};
 
 passport.use(
   'sign-in',
@@ -45,18 +51,11 @@ passport.use(
   )
 );
 
-passport.use('jwt-custom', new CustomStrategy(async (req, done) => {
-  let accessToken = req.headers['x-access-token'] as string;
-  const refreshToken = req.headers['x-refresh-token'] as string;
-
-  const isValidAccessToken = await verifyToken(accessToken);
-
-  if (!isValidAccessToken) {
-    const isValidRefreshToken = await verifyToken(refreshToken);
-
-    if (!isValidRefreshToken) done({ status: 401, message: 'Token is invalid.' } as IError);
-    accessToken = refreshAccessToken(refreshToken);
+passport.use(new JwtStrategy(options, async ({ id }, done) => {
+  try {
+    const user = await userRepository.getById(id);
+    return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
+  } catch (err) {
+    return done(err);
   }
-  const userData = extractUserDataFromTokem(accessToken);
-  done(null, userData);
 }));
