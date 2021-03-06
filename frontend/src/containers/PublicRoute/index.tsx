@@ -9,7 +9,7 @@ type PublicRouteProps<T> = T & { component: ReactNode }
 const PublicRoute = ({ component: Component, isAuthorized, ...rest }: PublicRouteProps<any>) => (
   isAuthorized
     ? <Redirect to={Routes.Apps} />
-    : <Route {...rest} render={Component} />
+    : <Route {...rest} render={props => <Component {...props} />} />
 );
 
 const mapStateToProps = ({ user: { isAuthorized } }: IAppState) => ({ isAuthorized });

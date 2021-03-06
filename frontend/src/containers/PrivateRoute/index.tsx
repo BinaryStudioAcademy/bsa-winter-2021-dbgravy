@@ -12,7 +12,7 @@ const PrivateRoute: FunctionComponent<PrivateRouteProps<any>> = ({
   ...rest
 }: PrivateRouteProps<any>) => (
   isAuthorized
-    ? <Route {...rest} render={Component} />
+    ? <Route {...rest} render={props => <Component {...props} />} />
     : <Redirect to={Routes.SignIn} />
 );
 
