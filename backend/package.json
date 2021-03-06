@@ -7,7 +7,7 @@
     "start": "ts-node ./src/server.ts",
     "dev": "ts-node-dev ./src/server.ts",
     "lint:start": "nodemon -r ./src/server.ts --exec \"npm run linter && ts-node\"",
-    "linter": "eslint src/**/*.ts",
+    "linter": "eslint --ext .ts ./src",
     "typeorm": "node_modules/.bin/ts-node node_modules/typeorm/cli.js",
     "add-migration": "node_modules/.bin/ts-node node_modules/typeorm/cli.js migration:generate -n",
     "migrate": "node_modules/.bin/ts-node node_modules/typeorm/cli.js migration:run",
