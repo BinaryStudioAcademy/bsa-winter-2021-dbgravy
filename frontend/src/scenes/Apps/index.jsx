@@ -3,8 +3,8 @@ import styles from './styles.module.scss';
 import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import logo from '../../images/retool-logo.png';
-import appsIcon from '../../images/briefcase-solid.svg';
-import resourcesIcon from '../../images/database-solid.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { Routes } from '../../common/enums/Routes';
 
 const Apps = () => (
@@ -17,12 +17,12 @@ const Apps = () => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link active href={Routes.Apps} className={styles['nav-item']}>
-            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
-            <span>Apps</span>
+            <FontAwesomeIcon icon={faBriefcase} />
+            <span className="ml-2">Apps</span>
           </Nav.Link>
           <Nav.Link href={Routes.Resources} className={styles['nav-item']}>
-            <Image src={resourcesIcon} className={styles['navbar-icons']} alt="resources-icon" />
-            <span>Resources</span>
+            <FontAwesomeIcon icon={faDatabase} />
+            <span className="ml-2">Resources</span>
           </Nav.Link>
         </Nav>
         <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
@@ -50,7 +50,7 @@ const Apps = () => (
 
         <div className={styles['list-item']}>
           <div className={styles['app-main-info']}>
-            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
+            <FontAwesomeIcon icon={faBriefcase} />
             <div className={styles['main-info']}>
               <span>Workspaces and Teams</span>
               <span className="text-secondary">Created by...</span>
@@ -62,7 +62,7 @@ const Apps = () => (
         </div>
         <div className={styles['list-item']}>
           <div className={styles['app-main-info']}>
-            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
+            <FontAwesomeIcon icon={faBriefcase} />
             <div className={styles['main-info']}>
               <span>Workspaces and Teams</span>
               <span className="text-secondary">Created by...</span>

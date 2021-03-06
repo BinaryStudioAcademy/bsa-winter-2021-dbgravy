@@ -2,8 +2,8 @@ import React from 'react';
 import styles from './styles.module.scss';
 import { Navbar, Nav, Form, FormControl, Table, Image, Button } from 'react-bootstrap';
 import logo from '../../images/retool-logo.png';
-import appsIcon from '../../images/briefcase-solid.svg';
-import resourcesIcon from '../../images/database-solid.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { Routes } from '../../common/enums/Routes';
 
 const Resources = () => (
@@ -16,12 +16,12 @@ const Resources = () => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link href={Routes.Apps} className={styles['nav-item']}>
-            <Image src={appsIcon} className={styles['navbar-icons']} alt="apps-icon" />
-            <span>Apps</span>
+            <FontAwesomeIcon icon={faBriefcase} />
+            <span className="ml-2">Apps</span>
           </Nav.Link>
           <Nav.Link active href={Routes.Resources} className={styles['nav-item']}>
-            <Image src={resourcesIcon} className={styles['navbar-icons']} alt="resources-icon" />
-            <span>Resources</span>
+            <FontAwesomeIcon icon={faDatabase} />
+            <span className="ml-2">Resources</span>
           </Nav.Link>
         </Nav>
         <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
