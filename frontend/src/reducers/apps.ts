@@ -1,8 +1,9 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchAppRoutine } from '../scenes/Applications/routines';
+import { fetchAppRoutine } from '../scenes/Apps/routines';
+import { IApps } from '../common/models/apps/IApps';
 
 interface IAppsState {
-  apps: Array<{id: string, name: string}>;
+  apps: Array<IApps>;
 }
 
 const initialState = {

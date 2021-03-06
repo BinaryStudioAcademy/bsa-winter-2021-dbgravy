@@ -11,5 +11,4 @@ router
   .put('/:id', run((req: Request) => updateApp(req.params.id, req.body.name)))
   .delete('/:id', run((req: Request) => deleteApp(req.params.id)));
 
-
 export default router;

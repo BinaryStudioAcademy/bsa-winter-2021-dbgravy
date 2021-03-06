@@ -1,11 +1,6 @@
 import api from '../common/helpers/apiHelper';
+import { IApps } from '../common/models/apps/IApps';
 
-export const addApp = async (appName: string) => {
-  const response = await api.post('/api/applications', { appName });
-  return response;
-};
+export const addApp = (appName: string) => api.post<IApps>('/api/applications', { appName });
 
-export const getApps = async () => {
-  const response = await api.get('/api/applications', {});
-  return response;
-};
+export const getApps = () => api.get<IApps[]>('/api/applications', {});
