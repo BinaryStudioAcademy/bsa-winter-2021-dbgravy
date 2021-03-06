@@ -1,34 +1,64 @@
 import { v4 as uuidv4 } from 'uuid';
+import { getCustomRepository } from 'typeorm';
 import { createAccessToken, createRefreshToken } from '../common/helpers/tokenHelper';
 import { encrypt } from '../common/helpers/cryptoHelper';
-import * as userRepository from '../data/repositories/userRepository';
-import { IUser } from '../common/models/user/user';
+import { RefreshTokenRepository } from '../data/repositories/refreshTokenRepository';
+import { UserRepository } from '../data/repositories/userRepository';
 import { IAuthUser } from '../common/models/user/authUser';
 import { IRegisterUser } from '../common/models/user/registerUser';
-import { ITokenData } from '../common/models/jwt/tokenData';
+import { ITokenData } from '../common/models/tokens/tokenData';
 import { ITransportedUser } from '../common/models/user/transportedUser';
+import { IRefreshToken } from '../common/models/tokens/refreshToken';
+import { User } from '../data/entities/User';
+import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
+
+const getExpiration = (): Date => {
+  const date = new Date();
+  const expiration = date.setDate(date.getDay() + 30);
+  return new Date(expiration);
+};
+
+const saveRefreshToken = async (token: string, userId: string) => {
+  const refreshTokenRepository = getCustomRepository(RefreshTokenRepository);
+  const userRepository = getCustomRepository(UserRepository);
+
+  const user = await userRepository.getById(userId);
+
+  const refreshToken: IRefreshToken = {
+    id: uuidv4(),
+    value: token,
+    expiration: getExpiration()
+  };
+
+  refreshTokenRepository.saveToken(refreshToken, user);
+};
 
 export const getUserDataFromToken = (data: ITokenData): Promise<ITokenData> => Promise.resolve(data);
 
-export const refreshTokens = (user: IUser): Promise<IAuthUser> => login(user); 
-
-export const login = async (user: IUser): Promise<IAuthUser> => {
+export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
   const { id } = user;
+  console.log(user);
+  const accessToken = createAccessToken(id);
+  const refreshToken = createRefreshToken(id);
+  saveRefreshToken(refreshToken, id);
+  const authUser: IAuthUser = {
+    accessToken,
+    refreshToken,
+    user
+  };
 
-  delete user.password; // retrived password hash from response
-  return {
-    accessToken: createAccessToken(id),
-    refreshToken: createRefreshToken(id),
-    user: user as ITransportedUser
-  } as IAuthUser;
+  return authUser;
 };
 
 export const register = async (user: IRegisterUser): Promise<IAuthUser> => {
+  const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
-  const newUser = await userRepository.addUser({
+  const newUser: IRegisterUser = {
     ...userData,
-    id: uuidv4(),
     password: await encrypt(password)
-  });
-  return login(newUser);
+  };
+  const savedUser: User = await userRepository.createUser(newUser);
+  return login(extractTransportedUser(savedUser));
 };
+
+export const refreshToken = (user: ITransportedUser): Promise<IAuthUser> => login(user);

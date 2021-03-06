@@ -5,7 +5,7 @@ import { User } from './User';
 @Entity()
 export class RefreshToken extends AbstractEntity {
   @Column()
-  expiration: number;
+  expiration: Date;
 
   @Column()
   value: string;

@@ -6,3 +6,9 @@ export interface ITokenData {
   currentOrganization: IOrganization
   role: Roles
 }
+
+export interface IRefreshTokenData {
+  id: string
+  iat: number
+  exp: number
+}
