@@ -8,7 +8,7 @@ import Apps from '../../scenes/Apps/index';
 
 const Routing: FunctionComponent = () => (
   <Switch>
-    <PrivateRoute path={Routes.Apps} component={Apps} />
+    <PrivateRoute path={Routes.Apps} component={(props: any) => <Apps {...props} />} />
     <PrivateRoute path={Routes.Resources} component={Resources} />
     <PublicRoute path={Routes.SignIn} component={() => <div>sign in</div>} />
   </Switch>

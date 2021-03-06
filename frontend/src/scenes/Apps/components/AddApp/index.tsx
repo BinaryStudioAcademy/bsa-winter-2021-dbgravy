@@ -26,7 +26,7 @@ const AddApp: React.FC<IAddApp> = ({ onAddApp }) => {
 
   return (
     <div className={styles.btnWrp}>
-      <Button variant="info" onClick={() => setIsShow(!isShow)}>Add Application</Button>
+      <Button variant="primary" onClick={() => setIsShow(!isShow)}>Create new</Button>
       <Modal show={isShow} onHide={handleCancel}>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title>Create a blank app</Modal.Title>
