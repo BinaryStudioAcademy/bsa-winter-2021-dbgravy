@@ -10,15 +10,16 @@ import { ITransportedUser } from '../common/models/user/transportedUser';
 
 export const getUserDataFromToken = (data: ITokenData): Promise<ITokenData> => Promise.resolve(data);
 
+export const refreshTokens = (user: IUser): Promise<IAuthUser> => login(user); 
+
 export const login = async (user: IUser): Promise<IAuthUser> => {
   const { id } = user;
 
-  const transportedUser = await userRepository.getById(id);
-  delete transportedUser.password; // retrived password hash from response
+  delete user.password; // retrived password hash from response
   return {
     accessToken: createAccessToken(id),
     refreshToken: createRefreshToken(id),
-    user: transportedUser as ITransportedUser
+    user: user as ITransportedUser
   } as IAuthUser;
 };
 
