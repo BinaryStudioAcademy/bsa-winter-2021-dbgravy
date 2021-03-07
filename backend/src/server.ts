@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { createConnection } from 'typeorm';
 import passport from 'passport';
+import cors from 'cors';
 import { env } from './env';
 import routes from './api/routes';
 import './config/passportConfig';
@@ -19,6 +20,7 @@ createConnection()
     console.error('Unable to connect to the database:', err);
   });
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());

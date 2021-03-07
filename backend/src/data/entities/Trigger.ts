@@ -1,37 +1,22 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  UpdateDateColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, RelationId } from 'typeorm';
 import { Query } from './Query';
 
 @Entity()
 export class Trigger extends BaseEntity {
+  @RelationId((trigger: Trigger) => trigger.query)
   @PrimaryColumn()
-  queryId: string;
+  readonly queryId: string;
 
+  @RelationId((trigger: Trigger) => trigger.triggerQuery)
   @PrimaryColumn()
   triggerQueryId: string;
 
   @Column()
   success: boolean;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @ManyToOne(() => Query, query => query.triggers)
+  query: Query;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @ManyToOne(() => Query, query => query.id)
-  @JoinColumn({ name: 'queryId' })
-  query!: Query;
-
-  @ManyToOne(() => Query, query => query.id)
-  @JoinColumn({ name: 'triggerQueryId' })
-  triggerQuery!: Query;
+  @ManyToOne(() => Query, query => query.triggers)
+  triggerQuery: Query;
 }
