@@ -6,10 +6,10 @@ import { UserOrganization } from './UserOrganization';
 @Entity()
 export class User extends AbstractEntity {
   @Column()
-  firstName: string;
+  firstname: string;
 
   @Column()
-  lastName: string;
+  lastname: string;
 
   @Column()
   email: string;
@@ -24,7 +24,7 @@ export class User extends AbstractEntity {
   userOrganizations: UserOrganization[];
 
   @RelationId((user: User) => user.currentOrganization)
-  @Column()
+  @Column({ nullable: true })
   readonly currentOrganizationId: string;
 
   @ManyToOne(() => Organization, organization => organization.users)
