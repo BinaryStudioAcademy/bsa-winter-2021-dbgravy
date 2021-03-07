@@ -79,3 +79,31 @@
   color: #6a6a6a;
   font-size: 18px;
 }
+
+.clear {
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.action {
+  color: #5392f1;
+  user-select: none;
+  cursor: pointer;
+}
+
+.failed {
+  display: inline-block;
+  color: #fff;
+  background: #ff2525;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  margin-left: 4px;
+}
+
+.lf {
+  text-align: center;
+  color: #ff2525;
+}

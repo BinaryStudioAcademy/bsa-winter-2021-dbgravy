@@ -10,10 +10,11 @@
   padding-bottom: 20px;
 }
 
-.userSection {
+.rowSection {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 }
 
 .charge {
@@ -47,4 +48,10 @@
 
 .tabHead:hover {
   background: inherit;
+}
+
+.lf {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
