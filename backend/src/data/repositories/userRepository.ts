@@ -12,7 +12,6 @@ export class UserRepository extends Repository<User> {
     newUser.lastname = lastname;
     newUser.email = email;
     newUser.password = password;
-
     await this.save(newUser);
     return newUser;
   }

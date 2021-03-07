@@ -25,12 +25,14 @@ passport.use(
       const userRepository = getCustomRepository(UserRepository);
       const user: User = await userRepository.getByEmail(email);
       if (!user) {
-        return done(new CustomError('Incorrect email.', 401), false);
+        throw new CustomError('Incorrect email.', 401);
       }
 
-      return await compare(password, user.password)
-        ? done(null, extractTransportedUser(user))
-        : done(new CustomError('Passwords do not match.', 401), null, null);
+      const compareResult = await compare(password, user.password);
+      if (compareResult) {
+        return done(null, extractTransportedUser(user));
+      }
+      throw new CustomError('Passwords do not match.', 401);
     } catch (err) {
       return done(err);
     }
@@ -46,7 +48,7 @@ passport.use(
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
-          return done(new CustomError('Email is already taken.', 401));
+          throw new CustomError('Email is already taken.', 401);
         }
         return done(null, { email, password, firstname, lastname } as IRegisterUser);
       } catch (err) {
@@ -60,20 +62,27 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
   try {
     const userRepository = getCustomRepository(UserRepository);
     const user: User = await userRepository.getById(id);
-    return user ? done(null, user) : done(new CustomError('Token is invalid.', 401), null);
+    if (!user) {
+      throw new CustomError('Token is invalid.', 401);
+    }
+    return done(null, user);
   } catch (err) {
     return done(err);
   }
 }));
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
-  const refreshToken = req.headers['x-refresh-token'] as string;
-  const isValidRefreshToken = await verifyToken(refreshToken);
-  if (isValidRefreshToken) {
-    const userRepository = getCustomRepository(UserRepository);
-    const { id } = extractUserIdFromTokem(refreshToken);
-    const user: User = await userRepository.getById(id);
-    return done(null, extractTransportedUser(user));
+  try {
+    const refreshToken = req.headers['x-refresh-token'] as string;
+    const isValidRefreshToken = await verifyToken(refreshToken);
+    if (isValidRefreshToken) {
+      const userRepository = getCustomRepository(UserRepository);
+      const { id } = extractUserIdFromTokem(refreshToken);
+      const user: User = await userRepository.getById(id);
+      return done(null, extractTransportedUser(user));
+    }
+    throw new CustomError('Refresh token is invalid.', 401);
+  } catch (err) {
+    return done(err);
   }
-  return done(new CustomError('Refresh token is invalid.', 401), null);
 }));
