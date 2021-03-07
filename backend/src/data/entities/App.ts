@@ -1,26 +1,32 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
-import { Organization } from './Organization';
-import { User2Organization } from './User2Organization';
-import { Query } from './Query';
 import { Component } from './Component';
+import { Organization } from './Organization';
+import { UserOrganization } from './UserOrganization';
+import { Query } from './Query';
 
 @Entity()
 export class App extends AbstractEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => Query, query => query.appId)
-  queries: Query[];
-
-  @OneToMany(() => Component, component => component.appId)
+  @OneToMany(() => Component, component => component.app)
   components: Component[];
 
-  @ManyToOne(() => Organization, organization => organization.id)
-  @JoinColumn({ name: 'organizationId' })
-  organizationId: Organization;
+  @OneToMany(() => Query, query => query.app)
+  queries: Query[];
 
-  @ManyToOne(() => User2Organization, user2Organization => user2Organization.id)
-  @JoinColumn({ name: 'updatedByUserId' })
-  updatedByUserId: Organization;
+  @RelationId((app: App) => app.organization)
+  @Column()
+  readonly organizationId: string;
+
+  @ManyToOne(() => Organization, organization => organization.apps)
+  organization: Organization;
+
+  @RelationId((app: App) => app.updatedByUser)
+  @Column()
+  readonly updatedByUserId: string;
+
+  @ManyToOne(() => UserOrganization, userOrganization => userOrganization.apps)
+  updatedByUser: UserOrganization;
 }

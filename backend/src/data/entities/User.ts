@@ -1,7 +1,7 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { Organization } from './Organization';
-import { User2Organization } from './User2Organization';
+import { UserOrganization } from './UserOrganization';
 
 @Entity()
 export class User extends AbstractEntity {
@@ -11,19 +11,22 @@ export class User extends AbstractEntity {
   @Column()
   lastName: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   password: string;
 
-  @OneToMany(() => Organization, organization => organization.createdBy)
+  @OneToMany(() => Organization, organization => organization.createdByUser)
   organizations: Organization[];
 
-  @OneToMany(() => User2Organization, user2Organization => user2Organization.userId)
-  user2Organizations: User2Organization[];
+  @OneToMany(() => UserOrganization, userOrganization => userOrganization.user)
+  userOrganizations: UserOrganization[];
 
-  @ManyToOne(() => Organization, organization => organization.id)
-  @JoinColumn({ name: 'currentOrganizationId' })
-  currentOrganizationId: Organization;
+  @RelationId((user: User) => user.currentOrganization)
+  @Column()
+  readonly currentOrganizationId: string;
+
+  @ManyToOne(() => Organization, organization => organization.users)
+  currentOrganization: Organization;
 }

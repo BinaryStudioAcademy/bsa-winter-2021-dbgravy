@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { App } from './App';
 
@@ -19,7 +19,10 @@ export class Component extends AbstractEntity {
   @Column()
   left: number;
 
-  @ManyToOne(() => App, app => app.id)
-  @JoinColumn({ name: 'appId' })
-  appId: App;
+  @RelationId((component: Component) => component.app)
+  @Column()
+  readonly appId: string;
+
+  @ManyToOne(() => App, app => app.components)
+  app: App;
 }

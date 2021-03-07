@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { App } from './App';
 import { Resource } from './Resource';
@@ -18,17 +18,20 @@ export class Query extends AbstractEntity {
   @Column()
   showConfirm: boolean;
 
-  @OneToMany(() => Trigger, trigger => trigger.queryId)
+  @OneToMany(() => Trigger, trigger => trigger.query)
   triggers: Trigger[];
 
-  @OneToMany(() => Trigger, trigger => trigger.triggerQueryId)
-  queryTriggers: Trigger[];
+  @RelationId((query: Query) => query.app)
+  @Column()
+  readonly appId: string;
 
-  @ManyToOne(() => App, app => app.id)
-  @JoinColumn({ name: 'appId' })
-  appId: App;
+  @ManyToOne(() => App, app => app.queries)
+  app: App;
 
-  @ManyToOne(() => Resource, resource => resource.id)
-  @JoinColumn({ name: 'resourceId' })
-  resourceId: App;
+  @RelationId((query: Query) => query.resource)
+  @Column()
+  readonly resourceId: string;
+
+  @ManyToOne(() => Resource, resource => resource.queries)
+  resource: Resource;
 }
