@@ -22,5 +22,10 @@ export const env = {
     cli: {
       migrationsDir: getOsEnv('TYPEORM_MIGRATIONS_DIR')
     }
+  },
+  sendGrid: {
+    apiKey: process.env.SENDGRID_API_KEY,
+    emailFrom: process.env.SENDGRID_EMAIL_FROM
   }
+
 };
