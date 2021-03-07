@@ -10,8 +10,7 @@ const Routing: FunctionComponent = () => (
   <Switch>
     <PrivateRoute path={Routes.Apps} component={() => <div>apps</div>} />
     <PublicRoute path={Routes.SignIn} component={() => <div>sign in</div>} />
-    {/* private this below */}
-    <PublicRoute path={Routes.Settings} component={Settings} />
+    <PrivateRoute path={Routes.Settings} component={Settings} />
   </Switch>
 );
 
