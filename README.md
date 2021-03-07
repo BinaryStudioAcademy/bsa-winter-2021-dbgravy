@@ -36,6 +36,7 @@ If you use another IDE, please find a way to set it up in the similar way.
 ### Backend
 1. Create a copy of `.env.example` file and name it `.env`.
 1. Update values in `.env` file ​​with your local settings, if necessary.
+1. Open pgAdmin page, connect to it, using your password and create database with name 'app'
 1. Run the following commands:
 ```
 npm install
