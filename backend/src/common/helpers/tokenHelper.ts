@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { secret, expiresAccessTokenIn, expiresRefreshTokenIn } from '../../config/jwtConfig';
-import { IRefreshTokenData } from '../models/tokens/tokenData';
+import { IRefreshTokenData } from '../models/tokens/ITokenData';
 
 export const createAccessToken = (id: string): string => jwt.sign({ id }, secret, { expiresIn: expiresAccessTokenIn });
 

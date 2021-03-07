@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { IRefreshToken } from '../../common/models/tokens/refreshToken';
+import { IRefreshToken } from '../../common/models/tokens/IRefreshToken';
 import { RefreshToken } from '../entities/RefreshToken';
 import { User } from '../entities/User';
 

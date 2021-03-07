@@ -1,13 +1,13 @@
 import { Request, Router } from 'express';
-import { IRegisterUser } from '../../common/models/user/registerUser';
+import { IRegisterUser } from '../../common/models/user/IRegisterUser';
 import * as authService from '../../services/authService';
 import authenticationMiddleware from '../middlewares/authenticationMiddleware';
 import registrationMiddleware from '../middlewares/registrationMiddleware';
 import jwtMiddleware from '../middlewares/jwtMiddleware';
 import { run } from '../../common/helpers/routeHelper';
-import { ITokenData } from '../../common/models/tokens/tokenData';
+import { ITokenData } from '../../common/models/tokens/ITokenData';
 import refreshTokenMiddleware from '../middlewares/refreshTokenMiddleware';
-import { ITransportedUser } from '../../common/models/user/transportedUser';
+import { ITransportedUser } from '../../common/models/user/ITransportedUser';
 
 const router: Router = Router();
 

@@ -1,4 +1,4 @@
-import { ITransportedUser } from './transportedUser';
+import { ITransportedUser } from './ITransportedUser';
 
 export interface IAuthUser {
     user: ITransportedUser

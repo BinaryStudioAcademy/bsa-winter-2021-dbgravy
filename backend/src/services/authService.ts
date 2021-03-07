@@ -4,11 +4,11 @@ import { createAccessToken, createRefreshToken } from '../common/helpers/tokenHe
 import { encrypt } from '../common/helpers/cryptoHelper';
 import { RefreshTokenRepository } from '../data/repositories/refreshTokenRepository';
 import { UserRepository } from '../data/repositories/userRepository';
-import { IAuthUser } from '../common/models/user/authUser';
-import { IRegisterUser } from '../common/models/user/registerUser';
-import { ITokenData } from '../common/models/tokens/tokenData';
-import { ITransportedUser } from '../common/models/user/transportedUser';
-import { IRefreshToken } from '../common/models/tokens/refreshToken';
+import { IAuthUser } from '../common/models/user/IAuthUser';
+import { IRegisterUser } from '../common/models/user/IRegisterUser';
+import { ITokenData } from '../common/models/tokens/ITokenData';
+import { ITransportedUser } from '../common/models/user/ITransportedUser';
+import { IRefreshToken } from '../common/models/tokens/IRefreshToken';
 import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 
@@ -37,7 +37,6 @@ export const getUserDataFromToken = (data: ITokenData): Promise<ITokenData> => P
 
 export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
   const { id } = user;
-  console.log(user);
   const accessToken = createAccessToken(id);
   const refreshToken = createRefreshToken(id);
   saveRefreshToken(refreshToken, id);

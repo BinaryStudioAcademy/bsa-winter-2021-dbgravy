@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { IError } from '../../common/models/common/error';
+import { IError } from '../../common/models/error/IError';
 
 export const errorHandlerMiddleware = (err: IError, _req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {

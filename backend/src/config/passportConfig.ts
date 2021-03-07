@@ -4,10 +4,10 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as CustomStrategy } from 'passport-custom';
 import { getCustomRepository } from 'typeorm';
 import { compare } from '../common/helpers/cryptoHelper';
-import { IRegisterUser } from '../common/models/user/registerUser';
-import { IError } from '../common/models/common/error';
+import { IRegisterUser } from '../common/models/user/IRegisterUser';
+import { IError } from '../common/models/error/IError';
 import { secret } from './jwtConfig';
-import { IJwtOptions } from '../common/models/tokens/jwtOptions';
+import { IJwtOptions } from '../common/models/tokens/IJwtOptions';
 import { extractUserIdFromTokem, verifyToken } from '../common/helpers/tokenHelper';
 import { UserRepository } from '../data/repositories/userRepository';
 import { User } from '../data/entities/User';
@@ -60,7 +60,6 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
   try {
     const userRepository = getCustomRepository(UserRepository);
     const user: User = await userRepository.getById(id);
-    console.log(user);
     return user ? done(null, user) : done({ status: 401, msg: 'Token is invalid.' } as IError, null);
   } catch (err) {
     return done(err);

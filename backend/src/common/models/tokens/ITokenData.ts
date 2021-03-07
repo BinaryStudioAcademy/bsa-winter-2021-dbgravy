@@ -1,10 +1,10 @@
-import { Roles } from '../../enums/roles';
-import { IOrganization } from '../organization/organization';
+import { Role } from '../../enums/Role';
+import { IOrganization } from '../organization/IOrganization';
 
 export interface ITokenData {
   userId: string
   currentOrganization: IOrganization
-  role: Roles
+  role: Role
 }
 
 export interface IRefreshTokenData {
