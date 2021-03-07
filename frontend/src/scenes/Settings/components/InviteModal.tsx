@@ -20,6 +20,7 @@ interface IProps {
 const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handleSend, userChanges }) => {
   const [email, setEmail] = useState('');
   const [userRole, setRole] = useState(Roles.Viewer);
+  const [emailValid, setEmailValid] = useState(true);
 
   const handleClose = () => {
     setEmail('');
@@ -27,9 +28,14 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
     setShowModal(false);
   };
 
+  const isEmailValid = (currentEmail: string) => /(.+)@(.+){2,}\.(.+){2,}/g.test(currentEmail.toLocaleLowerCase());
+
   const handleClear = (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => setEmail('');
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setEmailValid(true);
+  };
 
   const onSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -50,15 +56,18 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
   };
 
   const onSend = () => {
-    const newUser = {
-      email,
-      role: userRole,
-      new: true
-    };
-
-    handleSend(newUser);
-    if (userChanges.isSuccess) {
-      handleClose();
+    if (isEmailValid(email)) {
+      const newUser = {
+        email,
+        role: userRole,
+        new: true
+      };
+      handleSend(newUser);
+      if (userChanges.isSuccess) {
+        handleClose();
+      }
+    } else {
+      setEmailValid(false);
     }
   };
 
@@ -72,6 +81,7 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
         <Form>
           <Form.Group controlId="formGroupEmail">
             <Form.Label>Email address</Form.Label>
+            {!emailValid ? <span className={styles.lf}> Email is not valid</span> : null}
             <div className={clsName}>
               <Form.Control
                 type="email"

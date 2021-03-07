@@ -34,10 +34,6 @@ interface IProps {
   organizationId: number
 }
 
-// TODO
-// Sagas / requests 80%
-// verify email
-
 const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
   inviteNew, reInvite, activation, userChanges, isFailed, setShowModal, showModal, organizationId }) => {
   useEffect(() => {
