@@ -3,20 +3,18 @@ import { Spinner } from 'react-bootstrap';
 
 interface IProps {
   isLoading: boolean;
-  height?: string;
 }
 
 const Loader: React.FC<IProps> = ({
   isLoading,
-  children,
-  height = '100vh'
+  children
 }) => (
   isLoading
     ? (
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
-          position: 'relative', height: `${height}`
+          position: 'absolute', height: '100%'
         }}
       >
         <Spinner animation="border" variant="secondary" role="status" />
