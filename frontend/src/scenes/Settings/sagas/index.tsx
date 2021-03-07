@@ -7,7 +7,7 @@ import {
   userActivationRoutine,
   modalShowRoutine
 } from '../routines/index';
-import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/userSettingsService';
+import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
 
 function* watchFetchUsers() {
@@ -37,14 +37,14 @@ function* sendUserInvite() {
   // Not implemented
   // const { organizationId } = select(selectOrgId);
   const { userChanges } = yield select(selectUser);
-
+  const { role, email } = userChanges;
   try {
     if (!userChanges.new) {
       // thos
-      const response: IUser = yield call(resendInvite, { ...userChanges, organizationId: '1' });
+      const response: IUser = yield call(resendInvite, { email, organizationId: '1' });
       yield put(reinviteUserRoutine.success(response));
     } else {
-      const response: IUser = yield call(sendInvite, { ...userChanges, organizationId: '1' });
+      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1' });
       yield put(inviteNewUserRoutine.success(response));
       yield put(modalShowRoutine.success());
     }
@@ -67,7 +67,8 @@ function* toggleUserActivation() {
   // const { organizationId } = select(selectOrgId);
   try {
     const { userChanges } = yield select(selectUser);
-    const response: IUser = yield call(putUserChanges, { ...userChanges, organizationId: '1' });
+    const { id, status } = userChanges;
+    const response: IUser = yield call(putUserChanges, { userId: id, status, organizationId: '1' });
     yield put(userActivationRoutine.success(response));
   } catch {
     yield put(userActivationRoutine.failure());
