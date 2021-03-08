@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.module.scss';
 import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -7,20 +7,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { Routes } from '../../common/enums/Routes';
 import AddApp from './components/AddApp';
-import { addAppRoutine } from './routines';
+import { addAppRoutine, fetchAppRoutine } from './routines';
 import { connect } from 'react-redux';
+import AppsList from './containers/AppsList/index';
+import { IApps } from '../../common/models/apps/IApps';
+import { IAppState } from '../../common/models/store/IAppState';
+import Loader from '../../components/Loader/index';
 
 interface IProps {
-  addApp: Function
+  isLoading: boolean,
+  addApp: Function,
+  fetchApps: Function,
+  apps: IApps[]
 }
 
-const Apps: React.FC<IProps> = ({ addApp }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
+  useEffect(() => {
+    fetchApps();
+  }, []);
+
   const handleAddApp = (appName: string): void => {
     addApp(appName);
   };
 
   return (
     <div className={styles['apps-wrp']}>
+      {
+        console.log(isLoading)
+      }
       <Navbar className={styles.navigation}>
 
         <Navbar.Brand className="p-0">
@@ -41,59 +55,38 @@ const Apps: React.FC<IProps> = ({ addApp }) => {
         </Navbar.Collapse>
 
       </Navbar>
-      <div className={styles['main-block-wrp']}>
+      <Loader isLoading={isLoading}>
+        <div className={styles['main-block-wrp']}>
 
-        <div className={styles['before-table']}>
-          <h1>All</h1>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <AddApp onAddApp={handleAddApp} />
+          <div className={styles['before-table']}>
+            <h1>All</h1>
+            <Form inline>
+              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+              <AddApp onAddApp={handleAddApp} />
+            </Form>
+          </div>
+
+          <Form>
+            <Form.Check
+              type="checkbox"
+              label="Select all"
+            />
           </Form>
+          <AppsList appsList={apps} />
         </div>
-
-        <Form>
-          <Form.Check
-            type="checkbox"
-            label="Select all"
-          />
-        </Form>
-
-        <div className={styles['list-wrp']}>
-
-          <div className={styles['list-item']}>
-            <div className={styles['app-main-info']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <div className={styles['main-info']}>
-                <span>Workspaces and Teams</span>
-                <span className="text-secondary">Created by...</span>
-              </div>
-            </div>
-            <div>
-              <Button variant="outline-dark">...</Button>
-            </div>
-          </div>
-          <div className={styles['list-item']}>
-            <div className={styles['app-main-info']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <div className={styles['main-info']}>
-                <span>Workspaces and Teams</span>
-                <span className="text-secondary">Created by...</span>
-              </div>
-            </div>
-            <div>
-              <Button variant="outline-dark">...</Button>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
+      </Loader>
     </div>
   );
 };
 
+const mapStateToProps = (rootState: IAppState) => ({
+  isLoading: rootState.application.isLoading,
+  apps: rootState.application.apps
+});
+
 const mapDispatchToProps = {
-  addApp: addAppRoutine
+  addApp: addAppRoutine,
+  fetchApps: fetchAppRoutine
 };
 
-export default connect(null, mapDispatchToProps)(Apps);
+export default connect(mapStateToProps, mapDispatchToProps)(Apps);

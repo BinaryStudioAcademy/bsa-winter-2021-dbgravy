@@ -2,11 +2,13 @@ import { Routine } from 'redux-saga-routines';
 import { fetchAppRoutine } from '../scenes/Apps/routines';
 import { IApps } from '../common/models/apps/IApps';
 
-interface IAppsState {
+export interface IAppsState {
+  isLoading: boolean,
   apps: Array<IApps>;
 }
 
 const initialState = {
+  isLoading: true,
   apps: []
 };
 
@@ -15,7 +17,8 @@ export const application = (state: IAppsState = initialState, action: Routine<an
     case fetchAppRoutine.SUCCESS:
       return {
         ...state,
-        apps: [...action.payload]
+        apps: [...action.payload],
+        isLoading: false
       };
 
     default:
