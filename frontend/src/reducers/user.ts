@@ -1,6 +1,8 @@
 import { Routine } from 'redux-saga-routines';
+import { IUser } from '../common/models/user/IUser';
 
 export interface IUserState {
+  user?: IUser;
   isAuthorized: boolean,
   organizationId?: string
 }

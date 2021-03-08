@@ -1,12 +1,12 @@
 export interface IResource {
   id: string,
-  createdAt?: string,
+  createdAt: string,
   updatedAt?: string,
   name: string,
-  type?: string,
+  type: string,
   host?: string,
   port?: number,
-  dbName?: string,
+  dbName: string,
   dbUserName?: string,
   dbPassword?: string
   organizationId?: string

@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.module.scss';
 import { Form, FormControl, Button } from 'react-bootstrap';
-// import Loader from '../../components/Loader/index';
+import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 import TableContainer from './containers/TableContainer/index';
+import { IResource } from '../../common/models/resources/IResource';
+import { fetchResourceRoutine } from './routines/index';
+import { IAppState } from '../../common/models/store/IAppState';
+import { connect } from 'react-redux';
 
-const Resources = () => {
-  const userId = '1';
+interface IProps {
+  resources: IResource[],
+  isLoading: boolean,
+  fetchResources: Function,
+  userId: string
+}
 
-  const resources = [
-    {
-      id: '1',
-      name: '1'
-    },
-    {
-      id: '2',
-      name: '2'
-    }
-  ];
+const Resources: React.FC<IProps> = ({
+  resources,
+  isLoading,
+  fetchResources,
+  userId
+}) => {
+  useEffect(() => {
+    fetchResources();
+  }, []);
 
   return (
     <div className={styles['resources-wrp']}>
@@ -35,11 +42,23 @@ const Resources = () => {
         </div>
 
         <div className="table-wrp">
-          <TableContainer resources={resources} />
+          <Loader isLoading={isLoading}>
+            <TableContainer resources={resources} />
+          </Loader>
         </div>
       </div>
     </div>
   );
 };
 
-export default Resources;
+const mapStateToProps = (rootState: IAppState) => ({
+  isLoading: rootState.resource.isLoading,
+  resources: rootState.resource.resources,
+  userId: rootState.user.user ? rootState.user.user.id : ''
+});
+
+const mapDispatchToProps = {
+  fetchResources: fetchResourceRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Resources);

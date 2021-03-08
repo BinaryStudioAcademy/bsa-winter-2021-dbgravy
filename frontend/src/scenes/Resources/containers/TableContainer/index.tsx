@@ -15,7 +15,7 @@ const TableContainer: React.FC<IProps> = ({
       <thead>
         <tr>
           {
-            Object.values(TableHeaders).map(value => <th>{value}</th>)
+            Object.values(TableHeaders).map(value => <th key={value}>{value}</th>)
           }
         </tr>
       </thead>
@@ -24,6 +24,9 @@ const TableContainer: React.FC<IProps> = ({
           resources.map(resource => (
             <tr key={resource.id}>
               <td>{resource.name}</td>
+              <td>{resource.type}</td>
+              <td>{resource.dbName}</td>
+              <td>{resource.createdAt}</td>
             </tr>
           ))
         }

@@ -18,7 +18,7 @@ interface IProps {
   apps: IApps[]
 }
 
-const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId = '222' }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId }) => {
   useEffect(() => {
     fetchApps();
   }, []);
@@ -58,7 +58,8 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId = '
 
 const mapStateToProps = (rootState: IAppState) => ({
   isLoading: rootState.application.isLoading,
-  apps: rootState.application.apps
+  apps: rootState.application.apps,
+  userId: rootState.user.user ? rootState.user.user.id : ''
 });
 
 const mapDispatchToProps = {
