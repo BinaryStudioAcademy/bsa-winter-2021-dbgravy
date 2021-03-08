@@ -11,3 +11,12 @@ export const extractTransportedUser = (user: User): ITransportedUser => {
   };
   return transportedUser;
 };
+
+export const extractTransportedUsers = (users: User[]): ITransportedUser[] => {
+  const extractedUsers: ITransportedUser[] = [];
+  users.forEach(u => {
+    const extracted: ITransportedUser = extractTransportedUser(u);
+    extractedUsers.push(extracted);
+  });
+  return extractedUsers;
+};
