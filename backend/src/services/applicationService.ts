@@ -28,14 +28,18 @@ export const getAppById = async (id: string) => {
 
 export const addApp = async ({ name, organizationId, updatedByUserId }: any) => {
   try {
-    const app = await getCustomRepository(ApplicationRepository).addApp(
+    const app = await getCustomRepository(ApplicationRepository).getAppByName(name);
+    if (app) {
+      throw new CustomError('App name already exists', 400);
+    }
+    const createdApp = await getCustomRepository(ApplicationRepository).addApp(
       {
         name,
         organizationId,
         updatedByUserId
       }
     );
-    return app;
+    return createdApp;
   } catch (e) {
     throw new CustomError(e.msg || e.message, e.status);
   }
@@ -44,6 +48,10 @@ export const addApp = async ({ name, organizationId, updatedByUserId }: any) => 
 export const updateApp = async (id: string, name: string) => {
   try {
     await getAppById(id);
+    const app = await getCustomRepository(ApplicationRepository).getAppByName(name);
+    if (app) {
+      throw new CustomError('App name already exists', 400);
+    }
     const editedApp = await getCustomRepository(ApplicationRepository).updateApp(id, { name });
     return editedApp;
   } catch (e) {

@@ -17,6 +17,10 @@ export class ApplicationRepository extends Repository<App> {
     return this.findOne({ where: { id }, relations: ['organization', 'updatedByUser'] });
   }
 
+  getAppByName(name: string): Promise<App> {
+    return this.findOne({ where: { name } });
+  }
+
   async updateApp(id: string, data: Partial<IEditApplication>): Promise<App> {
     await this.update(id, data);
     return this.getAppById(id);
