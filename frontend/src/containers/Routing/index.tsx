@@ -11,7 +11,7 @@ import Settings from '../../scenes/Settings';
 const Routing: FunctionComponent = () => (
   <Switch>
     <PublicRoute path={Routes.Apps} component={Apps} />
-    <PrivateRoute path={Routes.Resources} component={Resources} />
+    <PublicRoute path={Routes.Resources} component={Resources} />
     <PublicRoute path={Routes.SignIn} component={() => <div>sign in</div>} />
     <PrivateRoute path={Routes.Settings} component={Settings} />
   </Switch>

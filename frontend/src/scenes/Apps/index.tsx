@@ -34,7 +34,6 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId = '
 
       <Loader isLoading={isLoading}>
         <div className={styles['main-block-wrp']}>
-
           <div className={styles['before-table']}>
             <h1>All</h1>
             <Form inline>
@@ -49,6 +48,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId = '
               label="Select all"
             />
           </Form>
+
           <AppsList appsList={apps} />
         </div>
       </Loader>
