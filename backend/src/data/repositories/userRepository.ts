@@ -8,6 +8,10 @@ class UserRepository extends Repository<User> {
     const user = this.create(data);
     return user.save();
   }
+
+  getUserByEmail(email: string): Promise<User> {
+    return this.findOne({ where: { email } });
+  }
 }
 
 export default UserRepository;
