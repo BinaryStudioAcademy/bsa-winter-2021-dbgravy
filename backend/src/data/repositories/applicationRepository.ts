@@ -13,12 +13,16 @@ export class ApplicationRepository extends Repository<App> {
     return this.find();
   }
 
+  getAllAppByOrganizationId(organizationId: string): Promise<Array<App>> {
+    return this.find({ where: { organizationId } });
+  }
+
   getAppById(id: string): Promise<App> {
     return this.findOne({ where: { id } });
   }
 
-  getAppByName(name: string): Promise<App> {
-    return this.findOne({ where: { name } });
+  getAppByNameByOrganizationId(name: string, organizationId: string): Promise<App> {
+    return this.findOne({ where: { name, organizationId } });
   }
 
   async updateApp(id: string, data: Partial<IEditApplication>): Promise<App> {
