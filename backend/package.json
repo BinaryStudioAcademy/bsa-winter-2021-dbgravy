@@ -12,7 +12,7 @@
     "add-migration": "node_modules/.bin/ts-node node_modules/typeorm/cli.js migration:generate -n",
     "migrate": "node_modules/.bin/ts-node node_modules/typeorm/cli.js migration:run",
     "migration-revert": "node_modules/.bin/ts-node node_modules/typeorm/cli.js migration:revert",
-    "seed": "node_modules/.bin/ts-node data/seeders"
+    "seed": "node_modules/.bin/ts-node ./src/data/seeders"
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "1.19.0",
     "cors": "^2.8.5",
     "dotenv": "8.2.0",
