@@ -4,5 +4,6 @@ export enum Routes {
   SignUp = '/auth/signUp',
   SignIn = '/auth/signIn',
   Apps = '/apps',
+  Settings = '/settings',
   Resources = '/resources'
 }

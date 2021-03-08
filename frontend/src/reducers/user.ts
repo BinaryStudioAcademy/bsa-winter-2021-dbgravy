@@ -5,7 +5,8 @@ import { IUser } from '../common/models/user/IUser';
 export interface IUserState {
   user?: IUser;
   isLoading: boolean;
-  isAuthorized: boolean;
+  isAuthorized: boolean,
+  organizationId?: string
 }
 
 const initialState: IUserState = {
