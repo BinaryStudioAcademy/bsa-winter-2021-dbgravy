@@ -1,7 +1,8 @@
 import { Routine } from 'redux-saga-routines';
 
 export interface IUserState {
-  isAuthorized: boolean;
+  isAuthorized: boolean,
+  organizationId?: string
 }
 
 const initialState = {
