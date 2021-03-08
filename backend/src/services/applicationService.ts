@@ -2,29 +2,39 @@ import { getCustomRepository } from 'typeorm';
 import { ApplicationRepository } from '../data/repositories/applicationRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ICreateApplication } from '../common/models/application/ICreateApplication';
+import { ITransportedUser } from '../common/models/user/ITransportedUser';
+import { extractTransportedApp, extractTransportedApps } from '../common/helpers/appExtractorHelper';
+import { ITransportedApplication } from '../common/models/application/ITransportedApplication';
 
-export const getApps = async (): Promise<ICreateApplication[]> => {
-  const apps = await getCustomRepository(ApplicationRepository).getAllApp();
+export const checkAppExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
+  const app = await getCustomRepository(ApplicationRepository)
+    .getAppByNameByOrganizationId(name, organizationId);
+  if (app) {
+    throw new CustomError('App name already exists', 400);
+  }
+};
+
+export const getApps = async (user: ITransportedUser): Promise<ITransportedApplication[]> => {
+  const { currentOrganizationId } = user;
+  const apps = await getCustomRepository(ApplicationRepository).getAllAppByOrganizationId(currentOrganizationId);
   if (apps.length === 0) {
     throw new CustomError('Apps not found', 404);
   }
-  return apps;
+  return extractTransportedApps(apps);
 };
 
-export const getAppById = async (id: string): Promise<ICreateApplication> => {
+export const getAppById = async (id: string): Promise<ITransportedApplication> => {
   const app = await getCustomRepository(ApplicationRepository).getAppById(id);
   if (!app) {
     throw new CustomError('App not found', 404);
   }
-  return app;
+  return extractTransportedApp(app);
 };
 
-export const addApp = async (appData: ICreateApplication): Promise<ICreateApplication> => {
+export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
+  const { currentOrganizationId } = user;
   const { name, organizationId, updatedByUserId } = appData;
-  const app = await getCustomRepository(ApplicationRepository).getAppByName(name);
-  if (app) {
-    throw new CustomError('App name already exists', 400);
-  }
+  await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const createdApp = await getCustomRepository(ApplicationRepository).addApp(
     {
       name,
@@ -32,21 +42,19 @@ export const addApp = async (appData: ICreateApplication): Promise<ICreateApplic
       updatedByUserId
     }
   );
-  return createdApp;
+  return extractTransportedApp(createdApp);
 };
 
-export const updateApp = async (id: string, name: string): Promise<ICreateApplication> => {
+export const updateApp = async (id: string, name: string, user: ITransportedUser): Promise<ITransportedApplication> => {
   await getAppById(id);
-  const app = await getCustomRepository(ApplicationRepository).getAppByName(name);
-  if (app) {
-    throw new CustomError('App name already exists', 400);
-  }
+  const { currentOrganizationId } = user;
+  await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const editedApp = await getCustomRepository(ApplicationRepository).updateApp(id, { name });
-  return editedApp;
+  return extractTransportedApp(editedApp);
 };
 
-export const deleteApp = async (id: string): Promise<ICreateApplication> => {
+export const deleteApp = async (id: string): Promise<ITransportedApplication> => {
   await getAppById(id);
   const deletedApp = await getCustomRepository(ApplicationRepository).deleteApp(id);
-  return deletedApp;
+  return extractTransportedApp(deletedApp);
 };
