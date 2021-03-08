@@ -28,10 +28,11 @@ interface IProps {
   showModal: boolean
   userChanges: {
     id?: string,
+    email?: string,
     isLoading?: boolean,
     isFailed?: boolean
   },
-  organizationId: number
+  organizationId: string
 }
 
 const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
@@ -147,7 +148,7 @@ const mapStateToProps = (state: IAppState) => ({
   isFailed: state.settings.isFailed,
   userChanges: state.settings.userChanges,
   showModal: state.settings.showModal,
-  organizationId: 1
+  organizationId: '1'
 });
 
 const mapDispactchToProps = {

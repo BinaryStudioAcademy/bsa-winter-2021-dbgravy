@@ -1,5 +1,6 @@
 import { IUserState } from '../../../reducers/user';
 import { Roles } from '../../enums/UserRoles';
+import { Status } from '../../enums/UserStatus';
 import { IUser } from '../user/IUser';
 
 export interface IAppState {
@@ -11,7 +12,10 @@ export interface IAppState {
     userChanges: {
       id?: string
       email?: string,
-      role?: Roles
+      role?: Roles,
+      status?: Status,
+      isLoading?: boolean,
+      isFailed?: boolean
     },
     showModal: boolean
   };

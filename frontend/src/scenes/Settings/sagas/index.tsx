@@ -40,7 +40,6 @@ function* sendUserInvite() {
   const { role, email } = userChanges;
   try {
     if (!userChanges.new) {
-      // thos
       const response: IUser = yield call(resendInvite, { email, organizationId: '1' });
       yield put(reinviteUserRoutine.success(response));
     } else {
