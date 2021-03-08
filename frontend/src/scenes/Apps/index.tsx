@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './styles.module.scss';
-import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import logo from '../../images/retool-logo.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
-import { Routes } from '../../common/enums/Routes';
+import { Form, FormControl } from 'react-bootstrap';
 import AddApp from './components/AddApp';
 import { addAppRoutine, fetchAppRoutine } from './routines';
 import { connect } from 'react-redux';
@@ -13,15 +8,17 @@ import AppsList from './containers/AppsList/index';
 import { IApps } from '../../common/models/apps/IApps';
 import { IAppState } from '../../common/models/store/IAppState';
 import Loader from '../../components/Loader/index';
+import Header from '../../components/Header/index';
 
 interface IProps {
+  userId: string,
   isLoading: boolean,
   addApp: Function,
   fetchApps: Function,
   apps: IApps[]
 }
 
-const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId = '222' }) => {
   useEffect(() => {
     fetchApps();
   }, []);
@@ -32,29 +29,9 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
 
   return (
     <div className={styles['apps-wrp']}>
-      {
-        console.log(isLoading)
-      }
-      <Navbar className={styles.navigation}>
 
-        <Navbar.Brand className="p-0">
-          <Image className={styles['logo-img']} src={logo} alt="retool-logo" />
-        </Navbar.Brand>
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link active href={Routes.Apps} className={styles['nav-item']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <span className="ml-2">Apps</span>
-            </Nav.Link>
-            <Nav.Link href={Routes.Resources} className={styles['nav-item']}>
-              <FontAwesomeIcon icon={faDatabase} />
-              <span className="ml-2">Resources</span>
-            </Nav.Link>
-          </Nav>
-          <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
-        </Navbar.Collapse>
+      <Header userId={userId} />
 
-      </Navbar>
       <Loader isLoading={isLoading}>
         <div className={styles['main-block-wrp']}>
 
