@@ -1,56 +1,62 @@
 import { getCustomRepository } from 'typeorm';
 import { ApplicationRepository } from '../data/repositories/applicationRepository';
+import { CustomError } from '../common/models/error/CustomError';
 
 export const getApps = async () => {
   try {
     const apps = await getCustomRepository(ApplicationRepository).getAllApp();
     if (apps.length === 0) {
-      throw new Error('Apps not found');
+      throw new CustomError('Apps not found', 404);
     }
     return apps;
   } catch (e) {
-    throw new Error(e.message);
+    throw new CustomError(e.msg || e.message, e.status);
   }
 };
 
 export const getAppById = async (id: string) => {
   try {
     const app = await getCustomRepository(ApplicationRepository).getAppById(id);
-    if (app) {
-      throw new Error('App not found');
+    if (!app) {
+      throw new CustomError('App not found', 404);
     }
     return app;
   } catch (e) {
-    throw new Error(e.message);
+    throw new CustomError(e.msg || e.message, e.status);
   }
 };
 
 export const addApp = async ({ name, organizationId, updatedByUserId }: any) => {
-  const app = await getCustomRepository(ApplicationRepository).addApp(
-    {
-      name,
-      organizationId,
-      updatedByUserId
-    }
-  );
-  return app;
+  try {
+    const app = await getCustomRepository(ApplicationRepository).addApp(
+      {
+        name,
+        organizationId,
+        updatedByUserId
+      }
+    );
+    return app;
+  } catch (e) {
+    throw new CustomError(e.msg || e.message, e.status);
+  }
 };
 
 export const updateApp = async (id: string, name: string) => {
-  await getAppById(id);
-  const editedApp = await getCustomRepository(ApplicationRepository).updateApp(id, { name });
-  return editedApp;
+  try {
+    await getAppById(id);
+    const editedApp = await getCustomRepository(ApplicationRepository).updateApp(id, { name });
+    return editedApp;
+  } catch (e) {
+    throw new CustomError(e.msg || e.message, e.status);
+  }
 };
 
 export const deleteApp = async (id: string) => {
   try {
     await getAppById(id);
     const deletedApp = await getCustomRepository(ApplicationRepository).deleteApp(id);
-    if (deletedApp) {
-      throw new Error('App not deleted');
-    }
     return deletedApp;
   } catch (e) {
-    throw new Error(e.message);
+    throw new CustomError(e.msg || e.message, e.status);
   }
 };
