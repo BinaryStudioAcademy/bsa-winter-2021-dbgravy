@@ -10,11 +10,11 @@ export class ApplicationRepository extends Repository<App> {
   }
 
   getAllApp(): Promise<Array<App>> {
-    return this.find();
+    return this.find({ relations: ['organization', 'updatedByUser'] });
   }
 
   getAppById(id: string): Promise<App> {
-    return this.findOne({ where: { id } });
+    return this.findOne({ where: { id }, relations: ['organization', 'updatedByUser'] });
   }
 
   async updateApp(id: string, data: Partial<IEditApplication>): Promise<App> {
