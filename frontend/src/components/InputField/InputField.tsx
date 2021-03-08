@@ -14,7 +14,7 @@ interface IProps {
     linkClassName?: string;
 }
 
-const InputField = ({
+const InputField:React.FC<IProps> = ({
   label,
   link,
   linkDescription,

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Route } from 'react-router-dom';
-import styles from './style.module.sass';
+import styles from './style.module.scss';
 import { connect } from 'react-redux';
 import SignIn from '../components/SignIn/SignIn';
 import SignUp from '../components/SignUp/SignUp';

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import styles from './styles.module.sass';
+import styles from './styles.module.scss';
 import { Formik, Form } from 'formik';
 import { signInValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
 import InputField from '../../../../components/InputField/InputField';

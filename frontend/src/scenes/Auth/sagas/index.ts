@@ -5,6 +5,7 @@ import { registration, login, fetchUser } from '../../../services/authService';
 import { IAuthServerResponse } from '../../../common/models/auth/AuthServerResponse';
 import { IUser } from '../../../common/models/user/IUser';
 import { setTokens, clearStorage } from '../../../common/helpers/storageHelper';
+import { errorHelper } from '../../../common/helpers/errorHelper';
 
 function* fetchUserRequest() {
   try {
@@ -40,10 +41,8 @@ function* addNewUserRequest({ payload }: any): Routine<any> {
     setTokens({ accessToken, refreshToken });
     yield put(addNewUserRoutine.success(user));
   } catch (error) {
-    if (error.message.includes('duplicate key value')) {
-      error.message = 'User with this email already exists.';
-    }
-    yield put(addNewUserRoutine.failure(error.message));
+    const message = errorHelper(error.code);
+    console.log(message);
   }
 }
 

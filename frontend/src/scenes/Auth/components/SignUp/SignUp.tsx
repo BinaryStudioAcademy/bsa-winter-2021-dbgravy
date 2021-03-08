@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Formik, Form } from 'formik';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import styles from './styles.module.sass';
+import styles from './styles.module.scss';
 import { signUpValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
 import { IRegisterUser } from '../../../../common/models/auth/IRegister.User';
 import { Routes } from '../../../../common/enums/Routes';

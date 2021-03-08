@@ -29,7 +29,7 @@ const Routing: React.FC<IProps> = ({
     if (hasToken && !isAuthorized && !isLoading) {
       fetchUser();
     }
-  });
+  }, [hasToken, isAuthorized, isLoading]);
 
   const storageHandler = (event: StorageEvent) => {
     if (event.key === null) {
