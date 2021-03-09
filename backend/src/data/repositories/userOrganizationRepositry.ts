@@ -12,8 +12,8 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     'user_organization.status',
     'user.id',
     'user.email',
-    'user.firstname',
-    'user.lastname'
+    'user.firstName',
+    'user.lastName'
   ];
   async addUserOrganization(userId: string, data: any): Promise<IUserOrganization> {
     const userOrganization = await this.findOne({ where: { userId } });
