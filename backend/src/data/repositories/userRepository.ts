@@ -16,6 +16,16 @@ export class UserRepository extends Repository<User> {
     return newUser;
   }
 
+  async updateUser(user: User): Promise<void> {
+    const { id } = user;
+    await this.update(id, user);
+  }
+
+  async getAll(): Promise<User[]> {
+    const users = await this.find();
+    return users;
+  }
+
   async getByEmail(email: string): Promise<User> {
     const user: User = await this.findOne({ email });
     return user;
