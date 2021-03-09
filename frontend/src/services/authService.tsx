@@ -13,12 +13,13 @@ export const login = async ({ email, password }: ILoginUser) => {
   return response;
 };
 
-export const registration = async ({ email, password, fullName, organisationName }: IRegisterUser) => {
+export const registration = async ({ email, password, firstName, lastName, organisationName }: IRegisterUser) => {
   const userData = {
     user: {
       email,
       password,
-      fullName,
+      firstName,
+      lastName,
       organisationName
     }
   };

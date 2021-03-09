@@ -1,6 +1,12 @@
+import { Roles } from '../../enums/UserRoles';
+import { Status } from '../../enums/UserStatus';
+
 export interface IUser {
     id: string;
-    fullName: string;
     email: string;
-    password?: string;
+    firstName: string;
+    lastName: string;
+    organizationId?: string;
+    role: Roles;
+    status: Status
 }

@@ -26,14 +26,22 @@ export const user = (state = initialState, { type, payload }: Routine<any>): IUs
     case loginUserRoutine.SUCCESS: {
       const {
         id,
-        fullName,
+        firstName,
+        lastName,
+        role,
+        status,
+        organizationId,
         email
       } = payload;
       return {
         ...state,
         user: {
           id,
-          fullName,
+          firstName,
+          lastName,
+          role,
+          status,
+          organizationId,
           email
         },
         isLoading: false,

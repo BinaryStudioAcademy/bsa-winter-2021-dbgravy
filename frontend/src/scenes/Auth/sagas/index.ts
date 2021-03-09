@@ -37,6 +37,7 @@ function* watchLoginUserRequest() {
 
 function* addNewUserRequest({ payload }: any): Routine<any> {
   try {
+    console.log(payload);
     const { accessToken, refreshToken, user }: IAuthServerResponse = yield call(registration, payload);
     setTokens({ accessToken, refreshToken });
     yield put(addNewUserRoutine.success(user));

@@ -12,20 +12,19 @@ import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
 
 interface IProps {
     addNewUser: IBindingCallback1<IRegisterUser>;
-    invitedUserEmail?: string;
 }
 
 export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
   const onSubmit = (values: IRegisterUser) => {
-    const { email, password, fullName, organisationName } = values;
-    const user = { email, password, fullName, organisationName };
+    const { email, password, firstName, lastName, organisationName } = values;
+    const user = { email, password, firstName, lastName, organisationName };
     addNewUser(user);
   };
-
   const initialValues = {
-    fullName: '',
     email: '',
     password: '',
+    firstName: '',
+    lastName: '',
     confirmPassword: '',
     organisationName: ''
   };
@@ -36,6 +35,9 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
       <h1 className={styles.header}>
         Sign up
       </h1>
+      <Link className={styles.signInLink} to={Routes.SignIn}>
+        Already Signed up?
+      </Link>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -43,10 +45,16 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
       >
         <Form className="signUp-form d-flex flex-column justify-content-center align-items-center">
           <InputField
-            label="Full Name"
-            name="fullName"
+            label="firstName"
+            name="firstName"
             type="text"
-            placeholder="John Brown"
+            placeholder="Ilon"
+          />
+          <InputField
+            label="lastName"
+            name="lastName"
+            type="text"
+            placeholder="Musk"
           />
           <InputField
             label="Email"
@@ -73,12 +81,9 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
             placeholder="Tesla"
           />
           <div className={`${styles.formFooter} w-100`}>
-            <Button className={`${styles.primaryBtn} authButton save`} type="submit" variant="primary">
+            <Button type="submit" variant="primary" className={`${styles.primaryBtn} authButton save`}>
               Sign Up
             </Button>
-            <Link className={styles.signInLink} to={Routes.SignIn}>
-              Already Signed up?
-            </Link>
           </div>
         </Form>
       </Formik>
