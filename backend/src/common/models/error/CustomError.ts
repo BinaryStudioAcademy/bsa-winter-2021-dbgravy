@@ -1,9 +1,11 @@
+import { ErrorCode } from '../../enums/ErrorCode';
+
 export class CustomError extends Error {
   msg: string;
   status: number;
-  code?: number;
+  code?: ErrorCode;
 
-  constructor(msg: string, status: number, code?: number) {
+  constructor(msg: string, status: number, code?: ErrorCode) {
     super();
     this.msg = msg;
     this.status = status;

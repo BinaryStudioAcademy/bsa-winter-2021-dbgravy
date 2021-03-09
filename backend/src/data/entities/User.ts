@@ -6,10 +6,10 @@ import { UserOrganization } from './UserOrganization';
 @Entity()
 export class User extends AbstractEntity {
   @Column()
-  firstname: string;
+  firstName: string;
 
   @Column()
-  lastname: string;
+  lastName: string;
 
   @Column({ unique: true })
   email: string;
