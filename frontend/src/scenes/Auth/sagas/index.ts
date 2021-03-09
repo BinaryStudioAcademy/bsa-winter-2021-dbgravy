@@ -9,7 +9,6 @@ import { errorHelper } from '../../../common/helpers/errorHelper';
 
 function* fetchUserRequest() {
   try {
-    console.log(fetchUser);
     const user:IUser = yield call(fetchUser);
     yield put(fetchUserRoutine.success(user));
   } catch (error) {

@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as CustomStrategy } from 'passport-custom';
 import { getCustomRepository } from 'typeorm';
 import { compare } from '../common/helpers/cryptoHelper';
@@ -12,6 +12,7 @@ import { UserRepository } from '../data/repositories/userRepository';
 import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { CustomError } from '../common/models/error/CustomError';
+import { ErrorCode } from '../common/enums/ErrorCode';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -49,7 +50,7 @@ passport.use(
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
-          throw new CustomError('Email is already taken.', 401);
+          throw new CustomError('Email is already taken.', 401, ErrorCode.UserAlreadyExists);
         }
         return done(null, { email, password, firstName, lastName } as IRegisterUser);
       } catch (err) {
