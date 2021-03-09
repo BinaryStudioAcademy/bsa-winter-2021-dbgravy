@@ -9,6 +9,7 @@ import { Routes } from '../../common/enums/Routes';
 import AddApp from './components/AddApp';
 import { addAppRoutine } from './routines';
 import { connect } from 'react-redux';
+import ProfilePopup from '../../containers/ProfilePopup';
 
 interface IProps {
   addApp: Function
@@ -37,7 +38,8 @@ const Apps: React.FC<IProps> = ({ addApp }) => {
               <span className="ml-2">Resources</span>
             </Nav.Link>
           </Nav>
-          <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
+          {/* <Button variant="secondary" className={styles['profile-icon']}>KH</Button> */}
+          <ProfilePopup />
         </Navbar.Collapse>
 
       </Navbar>

@@ -5,12 +5,11 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Routine } from 'redux-saga-routines';
 
 interface IProps {
-  clsName: string,
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
-  create: Routine<any>
+  create?: Routine<any>
 }
 
-const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
+const CreateOrganization: React.FC<IProps> = ({ setShow }) => {
   const handleClose = () => {
     setOrgName('');
     setShow(false);
@@ -26,7 +25,7 @@ const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
   };
 
   return (
-    <div className={[styles.center, clsName].join(' ')}>
+    <div className={[styles.center, styles.container].join(' ')}>
       <div>
         <span
           onClick={handleClose}
@@ -36,7 +35,7 @@ const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
         >
           <FontAwesomeIcon icon={faArrowLeft} size="sm" />
         </span>
-        <span>Create an organization</span>
+        <span className={styles.head}>Create an organization</span>
       </div>
       <input
         type="text"

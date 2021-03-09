@@ -12,7 +12,6 @@ import Apps from '../../scenes/Apps/index';
 import Auth from '../../scenes/Auth/containers';
 import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
-import Popup from '../ProfilePopup';
 
 interface IProps {
     isLoading: boolean;
@@ -40,7 +39,6 @@ const Routing: React.FC<IProps> = ({
       <PrivateRoute path={Routes.Resources} component={Resources} />
       <Redirect exact from={Routes.BaseUrl} to={Routes.SignIn} />
       <PrivateRoute path={Routes.Settings} component={Settings} />
-      <PublicRoute path="popup" componen={Popup} />
     </Switch>
   );
 };

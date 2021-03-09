@@ -1,6 +1,4 @@
 import { Routine } from 'redux-saga-routines';
-import { Roles } from '../common/enums/UserRoles';
-import { IUserOrganization } from '../common/models/user/IUserOrganization';
 import {
   fetchOrgInfoRoutine,
   createOrganizationRoutine
@@ -11,35 +9,17 @@ import {
   addNewUserRoutine
 } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
+import { Roles } from '../common/enums/UserRoles';
 
 export interface IUserState {
   user?: IUser;
   isLoading: boolean;
   isAuthorized: boolean;
-  organizationId: string;
-  firstname: string;
-  lastname: string;
-  id: string;
-  currentOrganization: IUserOrganization;
-  newOrganization?: {
-    name: string;
-    isLoading?: boolean;
-    isFailed?: boolean;
-  };
 }
 
-// develop only
 const initialState = {
   isLoading: false,
-  isAuthorized: false,
-  organizationId: '1',
-  firstname: 'Test',
-  lastname: 'User',
-  id: '1',
-  currentOrganization: {
-    name: '',
-    role: Roles.Viewer
-  }
+  isAuthorized: false
 };
 
 export const user = (
@@ -110,37 +90,68 @@ export const user = (
     case fetchOrgInfoRoutine.TRIGGER:
       return {
         ...state,
-        currentOrganization: {
-          ...state.currentOrganization,
-          isLoading: true,
-          isFailed: false
+        user: {
+          ...payload,
+          currentOrganization: {
+            name: '',
+            role: Roles.Viewer,
+            isLoading: true,
+            isFailed: false
+          }
         }
       };
     case fetchOrgInfoRoutine.SUCCESS:
       return {
         ...state,
-        currentOrganization: {
-          ...payload,
-          isLoading: false,
-          isFailed: false
+        user: {
+          ...payload.user,
+          currentOrganization: {
+            ...payload.currentOrganization,
+            isLoading: false,
+            isFailed: false
+          }
+        }
+      };
+    case fetchOrgInfoRoutine.FAILURE:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          currentOrganization: {
+            isFailed: true
+          }
         }
       };
     case createOrganizationRoutine.TRIGGER:
       return {
         ...state,
-        newOrganization: {
-          ...payload,
-          isLoading: true,
-          isFailed: false
+        user: {
+          ...payload.user,
+          newOrganization: {
+            ...payload.newOrganization,
+            isLoading: true,
+            isFailed: false
+          }
         }
       };
     case createOrganizationRoutine.SUCCESS:
       return {
         ...state,
-        newOrganization: {
-          ...payload,
-          isLoading: false,
-          isFailed: false
+        user: {
+          ...payload.user,
+          newOrganization: {
+            isFailed: false
+          }
+        }
+      };
+    case createOrganizationRoutine.FAILURE:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {
+            isFailed: true
+          }
         }
       };
     default:
