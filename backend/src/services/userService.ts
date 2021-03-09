@@ -22,9 +22,12 @@ export const switchUserOrganization = async (user: User, id: string) => {
   const organizationRepository = getCustomRepository(OrganizationRepository);
 
   const nextUserOrgatization = await organizationRepository.getById(id);
-  // eslint-disable-next-line no-param-reassign
-  user.currentOrganization = nextUserOrgatization;
 
-  await userRepository.updateUser(user);
+  const updatedUser = {
+    ...user,
+    currentOrganization: nextUserOrgatization
+  };
+
+  await userRepository.updateUser(updatedUser as User);
   return nextUserOrgatization;
 };
