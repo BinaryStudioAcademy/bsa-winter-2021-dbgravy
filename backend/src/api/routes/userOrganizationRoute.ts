@@ -6,8 +6,8 @@ const router = Router();
 
 router
   .get('/:organizationId', run((req: Request) => UOSerevice.getUsers(req.params.organizationId)))
-  .post('/', run((req: Request) => UOSerevice.createUserOrganization(req.body)));
-// .put('/', run((req: Request) => updateUserOrganization(req.body)))
-// .post('/resend', run((req: Request) => resendInvite(req.body)));
+  .post('/', run((req: Request) => UOSerevice.createUserOrganization(req.body)))
+  .put('/', run((req: Request) => UOSerevice.updateUserOrganization(req.body)))
+  .post('/resend', run((req: Request) => UOSerevice.resendInvite(req.body.email)));
 
 export default router;

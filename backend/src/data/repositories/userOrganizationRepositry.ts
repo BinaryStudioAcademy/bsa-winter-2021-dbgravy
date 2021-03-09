@@ -1,24 +1,24 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { UserOrganization } from '../entities/UserOrganization';
-import { IUserOrganizationResponse } from '../../common/models/user_organization/IUserOrganizationResponse';
 import { OrganizationStatus } from '../../common/enums/OrganizationStatus';
-// import { ICreateUserOrganization } from '../../common/models/user_organization/ICreateUserOrganization';
-
-const formatResponse = (users: any) => {
-  const response = users.map((u: any) => {
-    const obj = { ...u, ...u.user };
-    delete obj.user;
-    return obj;
-  });
-  return response;
-};
+import { CustomError } from '../../common/models/error/CustomError';
+import { IUserOrganization } from '../../common/models/user_organization/IUserOrganization';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
-  async addUserOrganization(userId: string, data: any): Promise<any> {
+  select = [
+    'user_organization.organizationId',
+    'user_organization.role',
+    'user_organization.status',
+    'user.id',
+    'user.email',
+    'user.firstname',
+    'user.lastname'
+  ];
+  async addUserOrganization(userId: string, data: any): Promise<IUserOrganization> {
     const userOrganization = await this.findOne({ where: { userId } });
     if (userOrganization) {
-      throw new Error();
+      throw new CustomError('User already invited.', 400);
     }
     const userOrganizationData = this.create(
       {
@@ -28,26 +28,45 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
         organizationId: data.organizationId
       }
     );
-    return userOrganizationData.save();
+    const newUserOrganization = await userOrganizationData.save();
+    const { id } = newUserOrganization;
+    const response = await this.createQueryBuilder()
+      .select(this.select)
+      .from(UserOrganization, 'user_organization')
+      .where('user_organization.id = :id', { id })
+      .leftJoin('user_organization.user', 'user')
+      .getOne();
+
+    return response;
   }
 
-  async getUsers(organizationId: string): Promise<IUserOrganizationResponse[]> {
+  async getUsers(organizationId: string): Promise<IUserOrganization[]> {
     const users = await this.createQueryBuilder()
-      .select([
-        'user_organization.organizationId',
-        'user_organization.role',
-        'user_organization.status',
-        'user.id',
-        'user.email',
-        'user.firstName',
-        'user.lastName'
-      ])
+      .select(this.select)
       .from(UserOrganization, 'user_organization')
-      .leftJoin('user_organization.user', 'user')
       .where('user_organization.organizationId = :organizationId', { organizationId })
+      .leftJoin('user_organization.user', 'user')
       .getMany();
 
-    return formatResponse(users);
+    return users;
+  }
+
+  async updateUserOrganization(data: any): Promise<IUserOrganization> {
+    const { userId, organizationId } = data;
+    const userOrganization = await this.findOne({ where: { userId, organizationId } });
+    if (!userOrganization) {
+      throw new CustomError('User organization not found.', 404);
+    }
+    const { id } = userOrganization;
+    await this.update(id, data);
+    const response = await this.createQueryBuilder()
+      .select(this.select)
+      .from(UserOrganization, 'user_organization')
+      .where('user_organization.id = :id', { id })
+      .leftJoin('user_organization.user', 'user')
+      .getOne();
+
+    return response;
   }
 }
 

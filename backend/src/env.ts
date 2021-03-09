@@ -5,7 +5,8 @@ dotenv.config();
 
 export const env = {
   app: {
-    port: getOsEnv('PORT') || 3001
+    port: getOsEnv('PORT') || 3001,
+    secret: getOsEnv('SECRET_KEY')
   },
   db: {
     database: getOsEnv('TYPEORM_DATABASE'),
