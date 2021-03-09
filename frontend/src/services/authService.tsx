@@ -3,13 +3,12 @@ import { IRegisterUser } from '../common/models/auth/IRegisterUser';
 import { ILoginUser } from '../common/models/auth/ILoginUser';
 import { IAuthServerResponse } from '../common/models/auth/AuthServerResponse';
 
-type ServerResponse = IAuthServerResponse & Response;
 export const login = async ({ email, password }: ILoginUser) => {
   const payload = {
     email,
     password
   };
-  const response = await api.post<ServerResponse>('/api/auth/sign-in', payload);
+  const response = await api.post<IAuthServerResponse>('/api/auth/sign-in', payload);
   return response;
 };
 
@@ -25,11 +24,11 @@ export const registration = async ({ email, password, firstName, lastName, organ
 };
 
 export const fetchUser = async () => {
-  const response = await api.get<ServerResponse>('/api/users/me');
+  const response = await api.get<IAuthServerResponse>('/api/users/me');
   return response;
 };
 
 export const removeToken = async (token: string | null) => {
-  const response = await api.delete<ServerResponse>('/api/auth/tokens', { token });
+  const response = await api.delete<IAuthServerResponse>('/api/auth/tokens', { token });
   return response;
 };
