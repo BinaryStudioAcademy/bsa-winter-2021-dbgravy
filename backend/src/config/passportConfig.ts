@@ -61,7 +61,6 @@ passport.use(
 
 passport.use(new JwtStrategy(options, async ({ id }, done) => {
   try {
-    console.log('id');
     const userRepository = getCustomRepository(UserRepository);
     const user: User = await userRepository.getById(id);
     if (!user) {
@@ -75,7 +74,6 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
   try {
-    console.log('f');
     const refreshToken = req.headers['x-refresh-token'] as string;
     const isValidRefreshToken = await verifyToken(refreshToken);
     if (isValidRefreshToken) {
