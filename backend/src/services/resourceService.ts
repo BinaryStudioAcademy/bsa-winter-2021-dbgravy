@@ -1,18 +1,16 @@
-const resources = [
-  {
-    id: '1',
-    name: 'Resource1',
-    type: 'MongoDb',
-    dbName: 'db1',
-    createdAt: '12345'
-  },
-  {
-    id: '2',
-    name: 'Resource2',
-    type: 'Postgresql',
-    dbName: 'db2',
-    createdAt: '12345'
-  }
-];
+import { getCustomRepository } from 'typeorm';
+import { ResourceRepository } from '../data/repositories/resourceRepository';
+import { CustomError } from '../common/models/error/CustomError';
+import { ITransportedUser } from '../common/models/user/ITransportedUser';
+import { extractTransportedResources } from '../common/helpers/resourceExtratorHelper';
+import { ITransportedResource } from '../common/models/resource/ITransportedResource';
 
-export const getResources = () => Promise.resolve(resources);
+export const getResources = async (user: ITransportedUser): Promise<ITransportedResource[]> => {
+  const { currentOrganizationId } = user;
+  const resources = await getCustomRepository(ResourceRepository)
+    .getAllResourcesByOrganizationId(currentOrganizationId);
+  if (resources.length === 0) {
+    throw new CustomError('Resources not found', 404);
+  }
+  return extractTransportedResources(resources);
+};
