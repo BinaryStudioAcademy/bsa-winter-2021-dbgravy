@@ -1,40 +1,60 @@
-const apps = [
-  {
-    id: '1',
-    name: 'App1',
-    organizationId: '1',
-    updatedByUserId: '1'
-  },
-  {
-    id: '2',
-    name: 'App2',
-    organizationId: '2',
-    updatedByUserId: '2'
+import { getCustomRepository } from 'typeorm';
+import { ApplicationRepository } from '../data/repositories/applicationRepository';
+import { CustomError } from '../common/models/error/CustomError';
+import { ICreateApplication } from '../common/models/application/ICreateApplication';
+import { ITransportedUser } from '../common/models/user/ITransportedUser';
+import { extractTransportedApp, extractTransportedApps } from '../common/helpers/appExtractorHelper';
+import { ITransportedApplication } from '../common/models/application/ITransportedApplication';
+
+export const checkAppExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
+  const app = await getCustomRepository(ApplicationRepository)
+    .getAppByNameByOrganizationId(name, organizationId);
+  if (app) {
+    throw new CustomError('App name already exists', 400);
   }
-];
-
-export const getApps = () => Promise.resolve(apps);
-
-export const getAppById = (id: string) => Promise.resolve(apps.find(a => a.id === id));
-
-export const addApp = ({ appName }: any) => {
-  const appId = new Date().getTime().toString();
-  const name: string = appName;
-  const app = { id: appId, name, organizationId: `o${appId}`, updatedByUserId: `u${appId}` };
-  apps.push(app);
-  return Promise.resolve(app);
 };
 
-export const updateApp = (id:string, appName: string) => new Promise(resolve => {
-  apps.forEach(app => {
-    if (app.id === id) {
-      const updated = { ...app, name: appName };
-      resolve(updated);
-    }
-  });
-});
+export const getApps = async (user: ITransportedUser): Promise<ITransportedApplication[]> => {
+  const { currentOrganizationId } = user;
+  const apps = await getCustomRepository(ApplicationRepository).getAllAppByOrganizationId(currentOrganizationId);
+  if (apps.length === 0) {
+    throw new CustomError('Apps not found', 404);
+  }
+  return extractTransportedApps(apps);
+};
 
-export const deleteApp = (id: string) => new Promise(resolve => {
-  apps.filter(a => a.id !== id);
-  resolve(id);
-});
+export const getAppById = async (id: string): Promise<ITransportedApplication> => {
+  const app = await getCustomRepository(ApplicationRepository).getAppById(id);
+  if (!app) {
+    throw new CustomError('App not found', 404);
+  }
+  return extractTransportedApp(app);
+};
+
+export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
+  const { currentOrganizationId } = user;
+  const { name, organizationId, updatedByUserId } = appData;
+  await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
+  const createdApp = await getCustomRepository(ApplicationRepository).addApp(
+    {
+      name,
+      organizationId,
+      updatedByUserId
+    }
+  );
+  return extractTransportedApp(createdApp);
+};
+
+export const updateApp = async (id: string, name: string, user: ITransportedUser): Promise<ITransportedApplication> => {
+  await getAppById(id);
+  const { currentOrganizationId } = user;
+  await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
+  const editedApp = await getCustomRepository(ApplicationRepository).updateApp(id, { name });
+  return extractTransportedApp(editedApp);
+};
+
+export const deleteApp = async (id: string): Promise<ITransportedApplication> => {
+  await getAppById(id);
+  const deletedApp = await getCustomRepository(ApplicationRepository).deleteApp(id);
+  return extractTransportedApp(deletedApp);
+};
