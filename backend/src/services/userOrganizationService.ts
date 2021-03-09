@@ -3,14 +3,16 @@ import { UserRepository } from '../data/repositories/userRepository';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
 import { sendEmail } from '../common/helpers/mailHelper';
 import { formatResponse } from '../common/mappers/userOrganization';
-import { IUserOrganizationResponse } from '../common/models/user_organization/IUserOrganizationResponse';
+import { IUserOrganizationResponse } from '../common/models/userOrganization/IUserOrganizationResponse';
+import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
+import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
-  return users.map((u: any) => formatResponse(u));
+  return users.map(formatResponse);
 };
 
-export const createUserOrganization = async (data: any): Promise<IUserOrganizationResponse> => {
+export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
   const user = await getCustomRepository(UserRepository).getByEmail(data.email);
   const res = await getCustomRepository(UserOrganizationRepository).addUserOrganization(user.id, data);
   const msg = {
@@ -23,7 +25,7 @@ export const createUserOrganization = async (data: any): Promise<IUserOrganizati
   return formatResponse(res);
 };
 
-export const updateUserOrganization = async (data: any): Promise<IUserOrganizationResponse> => {
+export const updateUserOrganization = async (data: IUpdateUserOrganization): Promise<IUserOrganizationResponse> => {
   const res = await getCustomRepository(UserOrganizationRepository).updateUserOrganization(data);
   return formatResponse(res);
 };

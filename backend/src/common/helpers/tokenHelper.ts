@@ -9,7 +9,7 @@ export const createRefreshToken = (id: string): string => jwt.sign({ id }, secre
 
 // eslint-disable-next-line no-return-await
 export const verifyToken = async (token: string) => await new Promise(resolve => {
-  jwt.verify(token, secret, (_err: any, decoded: any) => resolve(!!decoded));
+  jwt.verify(token, secret, (_err, decoded) => resolve(!!decoded));
 });
 
 export const extractUserIdFromTokem = (token: string) => jwt.decode(token) as IRefreshTokenData;

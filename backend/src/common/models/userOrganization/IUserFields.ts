@@ -1,4 +1,4 @@
-export interface IUserFileds {
+export interface IUserFields {
   id: string,
   email: string,
   firstName: string,

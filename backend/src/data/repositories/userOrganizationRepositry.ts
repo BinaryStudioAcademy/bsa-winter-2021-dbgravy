@@ -2,7 +2,9 @@ import { EntityRepository, Repository } from 'typeorm';
 import { UserOrganization } from '../entities/UserOrganization';
 import { OrganizationStatus } from '../../common/enums/OrganizationStatus';
 import { CustomError } from '../../common/models/error/CustomError';
-import { IUserOrganization } from '../../common/models/user_organization/IUserOrganization';
+import { IUserOrganization } from '../../common/models/userOrganization/IUserOrganization';
+import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
+import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
@@ -15,7 +17,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     'user.firstName',
     'user.lastName'
   ];
-  async addUserOrganization(userId: string, data: any): Promise<IUserOrganization> {
+  async addUserOrganization(userId: string, data: ICreateUserOrganization): Promise<IUserOrganization> {
     const userOrganization = await this.findOne({ where: { userId } });
     if (userOrganization) {
       throw new CustomError('User already invited.', 400);
@@ -51,7 +53,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     return users;
   }
 
-  async updateUserOrganization(data: any): Promise<IUserOrganization> {
+  async updateUserOrganization(data: IUpdateUserOrganization): Promise<IUserOrganization> {
     const { userId, organizationId } = data;
     const userOrganization = await this.findOne({ where: { userId, organizationId } });
     if (!userOrganization) {
