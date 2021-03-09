@@ -52,7 +52,6 @@ export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
 export const register = async (user: IRegisterUser): Promise<IAuthUser> => {
   const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
-  console.log(user);
   const newUser: IRegisterUser = {
     ...userData,
     password: await encrypt(password)

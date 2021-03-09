@@ -33,7 +33,8 @@ export const getAppById = async (id: string): Promise<ITransportedApplication> =
 
 export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
   const { currentOrganizationId } = user;
-  const { name, organizationId, updatedByUserId } = appData;
+  const { name, updatedByUserId } = appData;
+  const organizationId = currentOrganizationId;
   await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const createdApp = await getCustomRepository(ApplicationRepository).addApp(
     {

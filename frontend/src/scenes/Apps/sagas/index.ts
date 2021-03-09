@@ -6,10 +6,9 @@ import * as appService from '../../../services/applicationService';
 function* fetchApps(): Routine<any> {
   try {
     const apps = yield call(appService.getApps);
-    console.log(apps);
     yield put(fetchAppRoutine.success(apps));
   } catch (error) {
-    console.log('addApp error:', error.message);
+    console.log('fetchApp error:', error.message);
   }
 }
 

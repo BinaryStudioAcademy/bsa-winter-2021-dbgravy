@@ -22,8 +22,8 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
     fetchApps();
   }, []);
 
-  const handleAddApp = (appName: string): void => {
-    addApp(appName);
+  const handleAddApp = (name: string): void => {
+    addApp(name);
   };
 
   return (
