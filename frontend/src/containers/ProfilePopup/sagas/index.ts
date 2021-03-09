@@ -14,7 +14,7 @@ const selectUser = (state: IAppState) => state.user.user;
 function* fetchUserOrganization() {
   const user: IUser = yield select(selectUser);
   try {
-    const response: IUserOrganization = yield call(fetchOrganization, user.id);
+    const response: IUserOrganization = yield call(fetchOrganization, user.id, '111f65db-736a-4bfb-ab9e-55f9b7616da2');
     yield put(fetchOrgInfoRoutine.success({ user, currentOrganization: response }));
   } catch {
     yield put(fetchOrgInfoRoutine.failure({ user }));
