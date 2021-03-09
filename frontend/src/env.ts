@@ -1,5 +1,7 @@
+import { getOsEnv } from './common/helpers/pathHelper';
+
 export const env = {
   app: {
-    server: 'http://localhost:3001'
+    server: getOsEnv('REACT_APP_SERVER')
   }
 };
