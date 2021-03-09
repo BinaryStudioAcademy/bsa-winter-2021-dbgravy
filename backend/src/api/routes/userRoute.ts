@@ -9,7 +9,7 @@ const router = Router();
 
 router
   .get('/', run(getUsers))
-  .post('/me', jwtMiddleware, run((req: Request) => getUserDataFromToken(req.user as ITokenData)))
+  .get('/me', jwtMiddleware, run((req: Request) => getUserDataFromToken(req.user as ITokenData)))
   .get('/:id', run((req: Request) => getUserById(req.params.id)));
 
 export default router;

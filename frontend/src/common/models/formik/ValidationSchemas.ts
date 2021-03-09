@@ -27,11 +27,11 @@ const confirmPassword = Yup.string()
   .oneOf([Yup.ref('password'), ''], 'Passwords must match')
   .required('Confirm Password is required');
 
-const firstName = Yup.string()
+const firstname = Yup.string()
   .required('first Name is required')
   .max(100, 'first name should be no longer 100 characters');
 
-const lastName = Yup.string()
+const lastname = Yup.string()
   .required('Full Name is required')
   .max(10, 'Full name should be no longer 100 characters');
 
@@ -41,8 +41,8 @@ export const signInValSchema = Yup.object().shape({
 });
 
 export const signUpValSchema = Yup.object().shape({
-  firstName,
-  lastName,
+  firstname,
+  lastname,
   email,
   password: signUpPassword,
   confirmPassword

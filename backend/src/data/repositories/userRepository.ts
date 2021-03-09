@@ -5,11 +5,11 @@ import { User } from '../entities/User';
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(user: IRegisterUser): Promise<User> {
-    const { firstname, lastname, email, password } = user;
+    const { firstName, lastName, email, password } = user;
     const newUser = new User();
 
-    newUser.firstname = firstname;
-    newUser.lastname = lastname;
+    newUser.firstName = firstName;
+    newUser.lastName = lastName;
     newUser.email = email;
     newUser.password = password;
     await this.save(newUser);

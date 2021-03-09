@@ -75,6 +75,7 @@ export const refreshToken = async () => {
 const makeRequest = (
   method: FetchMethod
 ) => async <T>(url: string, params?: IFetchParams, config: IFetchConfig = {}): Promise<T> => {
+  console.log(env);
   const domainUrl = config.external ? url : `${env.app.server}${url}`;
   const [fetchUrl, body] = method === FetchMethod.GET
     ? [getFetchUrl(domainUrl, params as ParsedQuery), undefined]

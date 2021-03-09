@@ -22,6 +22,7 @@ passport.use(
   'sign-in',
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done): Promise<void> => {
     try {
+      console.log(email);
       const userRepository = getCustomRepository(UserRepository);
       const user: User = await userRepository.getByEmail(email);
       if (!user) {
@@ -43,14 +44,14 @@ passport.use(
   'sign-up',
   new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' },
-    async ({ body: { email, firstname, lastname } }, _username, password, done): Promise<void> => {
+    async ({ body: { email, firstName, lastName } }, _username, password, done): Promise<void> => {
       try {
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
           throw new CustomError('Email is already taken.', 401);
         }
-        return done(null, { email, password, firstname, lastname } as IRegisterUser);
+        return done(null, { email, password, firstName, lastName } as IRegisterUser);
       } catch (err) {
         return done(err);
       }
@@ -60,6 +61,7 @@ passport.use(
 
 passport.use(new JwtStrategy(options, async ({ id }, done) => {
   try {
+    console.log('id');
     const userRepository = getCustomRepository(UserRepository);
     const user: User = await userRepository.getById(id);
     if (!user) {
@@ -73,6 +75,7 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
   try {
+    console.log('f');
     const refreshToken = req.headers['x-refresh-token'] as string;
     const isValidRefreshToken = await verifyToken(refreshToken);
     if (isValidRefreshToken) {
