@@ -6,7 +6,6 @@ import * as resourceService from '../../../services/resourceService';
 function* fetchResources(): Routine<any> {
   try {
     const resources = yield call(resourceService.getResources);
-    console.log(resources);
     yield put(fetchResourceRoutine.success(resources));
   } catch (error) {
     console.log('getResource error:', error.message);

@@ -7,12 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { Routes } from '../../common/enums/Routes';
 
-interface IProps {
-  userId: string;
-}
-const Header: React.FC<IProps> = ({
-  userId
-}) => (
+const Header = () => (
   <Navbar className={styles.navigation}>
     <Navbar.Brand className="p-0">
       <Image className={styles['logo-img']} src={logo} alt="retool-logo" />

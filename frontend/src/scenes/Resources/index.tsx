@@ -12,15 +12,13 @@ import { connect } from 'react-redux';
 interface IProps {
   resources: IResource[],
   isLoading: boolean,
-  fetchResources: Function,
-  userId: string
+  fetchResources: Function
 }
 
 const Resources: React.FC<IProps> = ({
   resources,
   isLoading,
-  fetchResources,
-  userId
+  fetchResources
 }) => {
   useEffect(() => {
     fetchResources();
@@ -28,33 +26,32 @@ const Resources: React.FC<IProps> = ({
 
   return (
     <div className={styles['resources-wrp']}>
+      <Header />
 
-      <Header userId={userId} />
+      <Loader isLoading={isLoading}>
 
-      <div className={styles['main-block-wrp']}>
+        <div className={styles['main-block-wrp']}>
 
-        <div className={styles['before-table']}>
-          <h1>Resources</h1>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="primary">Create new</Button>
-          </Form>
-        </div>
+          <div className={styles['before-table']}>
+            <h1>Resources</h1>
+            <Form inline>
+              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+              <Button variant="primary">Create new</Button>
+            </Form>
+          </div>
 
-        <div className="table-wrp">
-          <Loader isLoading={isLoading}>
+          <div className="table-wrp">
             <TableContainer resources={resources} />
-          </Loader>
+          </div>
         </div>
-      </div>
+      </Loader>
     </div>
   );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
   isLoading: rootState.resource.isLoading,
-  resources: rootState.resource.resources,
-  userId: rootState.user.user ? rootState.user.user.id : ''
+  resources: rootState.resource.resources
 });
 
 const mapDispatchToProps = {

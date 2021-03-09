@@ -11,14 +11,13 @@ import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 
 interface IProps {
-  userId: string,
   isLoading: boolean,
   addApp: Function,
   fetchApps: Function,
   apps: IApps[]
 }
 
-const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
   useEffect(() => {
     fetchApps();
   }, []);
@@ -30,7 +29,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId }) 
   return (
     <div className={styles['apps-wrp']}>
 
-      <Header userId={userId} />
+      <Header />
 
       <Loader isLoading={isLoading}>
         <div className={styles['main-block-wrp']}>
@@ -58,8 +57,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, userId }) 
 
 const mapStateToProps = (rootState: IAppState) => ({
   isLoading: rootState.application.isLoading,
-  apps: rootState.application.apps,
-  userId: rootState.user.user ? rootState.user.user.id : ''
+  apps: rootState.application.apps
 });
 
 const mapDispatchToProps = {
