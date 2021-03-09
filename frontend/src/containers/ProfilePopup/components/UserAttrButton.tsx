@@ -19,9 +19,10 @@ const UserAttrButton: React.FC<IProps> = ({ firstName, lastName, showDetails, de
   };
 
   return (
-    <Button variant="secondary" onClick={handleClick} className={styles.profileicon}>
+    <Button variant="secondary" onClick={handleClick} as="div" className={styles['profile-icon']}>
       <span>{`${firstLetter(firstName)}${firstLetter(lastName)}`}</span>
     </Button>
+
   );
 };
 
