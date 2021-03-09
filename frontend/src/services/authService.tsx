@@ -1,5 +1,5 @@
 import api from '../common/helpers/apiHelper';
-import { IRegisterUser } from '../common/models/auth/IRegister.User';
+import { IRegisterUser } from '../common/models/auth/IRegisterUser';
 import { ILoginUser } from '../common/models/auth/ILoginUser';
 import { IAuthServerResponse } from '../common/models/auth/AuthServerResponse';
 

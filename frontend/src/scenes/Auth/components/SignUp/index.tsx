@@ -4,9 +4,9 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { signUpValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
-import { IRegisterUser } from '../../../../common/models/auth/IRegister.User';
+import { IRegisterUser } from '../../../../common/models/auth/IRegisterUser';
 import { Routes } from '../../../../common/enums/Routes';
-import InputField from '../../../../components/InputField/InputField';
+import InputField from '../../../../components/InputField';
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
 import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
 

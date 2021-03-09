@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import styles from './styles.module.scss';
 import { Formik, Form } from 'formik';
 import { signInValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
-import InputField from '../../../../components/InputField/InputField';
+import InputField from '../../../../components/InputField';
 import { Button } from 'react-bootstrap';
 import { ILoginUser } from '../../../../common/models/auth/ILoginUser';
 import { Link } from 'react-router-dom';

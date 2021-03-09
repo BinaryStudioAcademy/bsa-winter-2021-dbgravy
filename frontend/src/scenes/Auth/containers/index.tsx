@@ -6,7 +6,7 @@ import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
 import { Routes } from '../../../common/enums/Routes';
 import { ILoginUser } from '../../../common/models/auth/ILoginUser';
-import { IRegisterUser } from '../../../common/models/auth/IRegister.User';
+import { IRegisterUser } from '../../../common/models/auth/IRegisterUser';
 import { IBindingCallback1 } from '../../../common/models/callback/IBindingCallback1';
 import { addNewUserRoutine, loginUserRoutine } from '../routines';
 
