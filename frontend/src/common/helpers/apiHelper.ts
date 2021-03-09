@@ -5,12 +5,12 @@ import { IResponseError } from '../models/fetch/IResponseError';
 import { env } from '../../env';
 import { IFetchConfig } from '../models/fetch/IFetchConfig';
 import { anyPass, is, map, mergeRight, pickBy, pipe } from 'ramda';
-import { setTokens, getRefreshToken } from './storageHelper';
+import { setTokens, getRefreshToken, getAccessToken } from './storageHelper';
 import { ITokens } from '../models/ITokens';
 
 const getInitHeaders = (contentType = 'application/json', hasContent = true) => {
   const headers: HeadersInit = new Headers();
-
+  headers.set('Authorization', `Bearer ${getAccessToken()}`);
   if (hasContent) {
     headers.set('Content-Type', contentType);
   }
@@ -75,7 +75,6 @@ export const refreshToken = async () => {
 const makeRequest = (
   method: FetchMethod
 ) => async <T>(url: string, params?: IFetchParams, config: IFetchConfig = {}): Promise<T> => {
-  console.log(env);
   const domainUrl = config.external ? url : `${env.app.server}${url}`;
   const [fetchUrl, body] = method === FetchMethod.GET
     ? [getFetchUrl(domainUrl, params as ParsedQuery), undefined]

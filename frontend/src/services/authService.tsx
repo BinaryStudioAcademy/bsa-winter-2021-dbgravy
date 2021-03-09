@@ -2,7 +2,6 @@ import api from '../common/helpers/apiHelper';
 import { IRegisterUser } from '../common/models/auth/IRegister.User';
 import { ILoginUser } from '../common/models/auth/ILoginUser';
 import { IAuthServerResponse } from '../common/models/auth/AuthServerResponse';
-import { getAccessToken } from '../common/helpers/storageHelper';
 
 type ServerResponse = IAuthServerResponse & Response;
 export const login = async ({ email, password }: ILoginUser) => {
@@ -26,11 +25,7 @@ export const registration = async ({ email, password, firstName, lastName, organ
 };
 
 export const fetchUser = async () => {
-  const token = getAccessToken();
-  const body = {
-    token
-  };
-  const response = await api.get<ServerResponse>('/api/users/me', body);
+  const response = await api.get<ServerResponse>('/api/users/me');
   return response;
 };
 
