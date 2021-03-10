@@ -9,7 +9,7 @@ const router = Router();
 
 router
   .get('/', run(getUsers))
-  .post('/me', run((req: Request) => getUserDataFromToken(req.user as ITokenData)))
+  .get('/me', run((req: Request) => getUserDataFromToken(req.user as ITokenData)))
   .get('/:id', run((req: Request) => getUserById(req.params.id)))
   .put('/:id/switch-organization', run((req: Request) => switchUserOrganization(req.user as User, req.params.id)));
 

@@ -31,7 +31,6 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
   const handleAddApp = (name: string): void => {
     addApp(name);
   };
-
   return (
     <div className={styles['apps-wrp']}>
 
