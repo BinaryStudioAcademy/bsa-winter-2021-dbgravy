@@ -12,8 +12,9 @@ export const fetchOrganization = async (userId: string, orgId: string) => {
   return response;
 };
 
-export const postCreateOrganization = async (newOraganization: {name: string}) => {
-  console.log(newOraganization);
+export const postCreateOrganization = async (newOraganization: {name: string, createdByUserId: string}) => {
+  const response = await api.post('/api/organization', newOraganization);
+  console.log(response);
   return {
     created: true
   };

@@ -27,8 +27,10 @@ function* watchCreateOrganization() {
 
 function* createOrganization() {
   try {
-    const { newOrganization } = yield select(selectUser);
-    const response: {created: boolean} = yield call(postCreateOrganization, newOrganization);
+    const { newOrganization, id: createdByUserId } = yield select(selectUser);
+
+    const response: { created: boolean } = yield call(postCreateOrganization,
+      { name: newOrganization.name, createdByUserId });
     yield put(createOrganizationRoutine.success(response));
   } catch {
     //
