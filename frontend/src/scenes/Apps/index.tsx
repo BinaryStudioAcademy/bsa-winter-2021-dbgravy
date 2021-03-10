@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './styles.module.scss';
+import { Link } from 'react-router-dom';
 import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import logo from '../../images/retool-logo.png';
@@ -18,7 +19,6 @@ const Apps: React.FC<IProps> = ({ addApp }) => {
   const handleAddApp = (appName: string): void => {
     addApp(appName);
   };
-
   return (
     <div className={styles['apps-wrp']}>
       <Navbar className={styles.navigation}>
@@ -28,11 +28,11 @@ const Apps: React.FC<IProps> = ({ addApp }) => {
         </Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link active href={Routes.Apps} className={styles['nav-item']}>
+            <Nav.Link active as={Link} to={Routes.Apps} className={styles['nav-item']}>
               <FontAwesomeIcon icon={faBriefcase} />
               <span className="ml-2">Apps</span>
             </Nav.Link>
-            <Nav.Link href={Routes.Resources} className={styles['nav-item']}>
+            <Nav.Link as={Link} to={Routes.Resources} className={styles['nav-item']}>
               <FontAwesomeIcon icon={faDatabase} />
               <span className="ml-2">Resources</span>
             </Nav.Link>

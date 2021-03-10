@@ -25,8 +25,8 @@ export const env = {
     }
   },
   sendGrid: {
-    apiKey: process.env.SENDGRID_API_KEY,
-    emailFrom: process.env.SENDGRID_EMAIL_FROM
+    apiKey: getOsEnv('SENDGRID_API_KEY'),
+    emailFrom: getOsEnv('SENDGRID_EMAIL_FROM')
   }
 
 };

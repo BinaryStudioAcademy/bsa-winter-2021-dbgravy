@@ -21,13 +21,13 @@ export const switchUserOrganization = async (user: User, id: string) => {
   const userRepository = getCustomRepository(UserRepository);
   const organizationRepository = getCustomRepository(OrganizationRepository);
 
-  const nextUserOrgatization = await organizationRepository.getById(id);
+  const nextUserOrganization = await organizationRepository.getById(id);
 
   const updatedUser = {
     ...user,
-    currentOrganization: nextUserOrgatization
+    currentOrganization: nextUserOrganization
   };
 
   await userRepository.updateUser(updatedUser as User);
-  return nextUserOrgatization;
+  return nextUserOrganization;
 };
