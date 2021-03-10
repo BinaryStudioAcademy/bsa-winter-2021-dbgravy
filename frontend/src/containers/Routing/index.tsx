@@ -12,6 +12,7 @@ import Apps from '../../scenes/Apps/index';
 import Auth from '../../scenes/Auth/containers';
 import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
+import Loader from '../../components/Loader';
 
 interface IProps {
     isLoading: boolean;
@@ -32,13 +33,15 @@ const Routing: React.FC<IProps> = ({
   }, [hasToken, isAuthorized, isLoading]);
 
   return (
-    <Switch>
-      <PublicRoute path={Routes.Auth} component={Auth} />
-      <PrivateRoute path={Routes.Apps} component={Apps} />
-      <PrivateRoute path={Routes.Resources} component={Resources} />
-      <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
-      <PrivateRoute path={Routes.Settings} component={Settings} />
-    </Switch>
+    <Loader isLoading={isLoading || (hasToken && !isAuthorized)}>
+      <Switch>
+        <PublicRoute path={Routes.Auth} component={Auth} />
+        <PrivateRoute path={Routes.Apps} component={Apps} />
+        <PrivateRoute path={Routes.Resources} component={Resources} />
+        <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
+        <PrivateRoute path={Routes.Settings} component={Settings} />
+      </Switch>
+    </Loader>
   );
 };
 
