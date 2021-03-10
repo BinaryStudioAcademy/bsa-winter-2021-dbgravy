@@ -25,7 +25,6 @@ const Routing: React.FC<IProps> = ({
   fetchUser
 }) => {
   const hasToken = Boolean(getAccessToken());
-
   useEffect(() => {
     if (hasToken && !isAuthorized && !isLoading) {
       fetchUser();
@@ -37,7 +36,7 @@ const Routing: React.FC<IProps> = ({
       <PublicRoute path={Routes.Auth} component={Auth} />
       <PrivateRoute path={Routes.Apps} component={Apps} />
       <PrivateRoute path={Routes.Resources} component={Resources} />
-      <Redirect exact from={Routes.BaseUrl} to={Routes.SignIn} />
+      <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
       <PrivateRoute path={Routes.Settings} component={Settings} />
     </Switch>
   );

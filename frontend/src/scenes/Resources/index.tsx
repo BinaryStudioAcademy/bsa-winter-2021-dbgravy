@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './styles.module.scss';
+import { Link } from 'react-router-dom';
 import { Navbar, Nav, Form, FormControl, Table, Image, Button } from 'react-bootstrap';
 import logo from '../../images/retool-logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +16,7 @@ const Resources = () => (
       </Navbar.Brand>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href={Routes.Apps} className={styles['nav-item']}>
+          <Nav.Link active as={Link} to={Routes.Apps} className={styles['nav-item']}>
             <FontAwesomeIcon icon={faBriefcase} />
             <span className="ml-2">Apps</span>
           </Nav.Link>
