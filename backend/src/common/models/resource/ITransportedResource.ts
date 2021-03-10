@@ -1,9 +1,11 @@
+import { ResourceType } from '../../enums/ResourceType';
+
 export interface ITransportedResource {
   id: string,
   createdAt: Date,
   updatedAt: Date,
   name: string,
-  type: string,
+  type: ResourceType,
   host: string,
   port: number,
   dbName: string,

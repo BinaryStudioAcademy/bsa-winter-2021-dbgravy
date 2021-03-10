@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { Navbar, Nav, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -14,14 +15,14 @@ const Header = () => (
     </Navbar.Brand>
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href={Routes.Apps} className={styles['nav-item']}>
+        <Link to={Routes.Apps} className={styles['nav-item']}>
           <FontAwesomeIcon icon={faBriefcase} />
           <span className="ml-2">Apps</span>
-        </Nav.Link>
-        <Nav.Link href={Routes.Resources} className={styles['nav-item']}>
+        </Link>
+        <Link to={Routes.Resources} className={styles['nav-item']}>
           <FontAwesomeIcon icon={faDatabase} />
           <span className="ml-2">Resources</span>
-        </Nav.Link>
+        </Link>
       </Nav>
       <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
     </Navbar.Collapse>
