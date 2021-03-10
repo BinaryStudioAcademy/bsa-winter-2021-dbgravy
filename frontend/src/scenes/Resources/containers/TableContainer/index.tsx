@@ -19,18 +19,21 @@ const TableContainer: React.FC<IProps> = ({
         }
       </tr>
     </thead>
-    <tbody>
-      {
-        resources.map(resource => (
-          <tr key={resource.id}>
-            <td>{resource.name}</td>
-            <td>{resource.type}</td>
-            <td>{resource.dbName}</td>
-            <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
-          </tr>
-        ))
-      }
-    </tbody>
+    {resources.length !== 0 ? (
+      <tbody>
+        {
+          resources.map(resource => (
+            <tr key={resource.id}>
+              <td>{resource.name}</td>
+              <td>{resource.type}</td>
+              <td>{resource.dbName}</td>
+              <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
+            </tr>
+          ))
+        }
+      </tbody>
+    )
+      : null}
   </Table>
 );
 export default TableContainer;

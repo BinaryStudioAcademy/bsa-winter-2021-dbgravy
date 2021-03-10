@@ -12,7 +12,7 @@ const AppsList: React.FC<IProps> = ({
 }) => (
   <div className={styles['list-wrp']}>
     {
-      appsList.map(app => <AppItem key={app.id} app={app} />)
+      appsList.length !== 0 ? appsList.map(app => <AppItem key={app.id} app={app} />) : ''
     }
   </div>
 );

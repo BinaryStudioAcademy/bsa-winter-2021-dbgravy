@@ -9,7 +9,7 @@ export const getResources = async (user: ITransportedUser): Promise<ITransported
   const { currentOrganizationId } = user;
   const resources = await getCustomRepository(ResourceRepository)
     .getAllResourcesByOrganizationId(currentOrganizationId);
-  if (resources.length === 0) {
+  if (!resources) {
     throw new CustomError('Resources not found', 404);
   }
   return extractTransportedResources(resources);
