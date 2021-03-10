@@ -8,7 +8,6 @@ const router = Router();
 router
   .get('/:orgId/user/:userId', run((req: Request) => (
     getUserOraganization(req.params.userId, req.params.orgId))))
-  .post('/', run((req: Request) => (
-    createOrganization(req.body.newOrganization))));
+  .post('/', run((req: Request) => createOrganization(req.body)));
 
 export default router;

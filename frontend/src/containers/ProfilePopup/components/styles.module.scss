@@ -120,6 +120,33 @@
 }
 
 .error {
-  // not implemented
   flex-grow: 5;
+  align-items: center;
+  display: flex;
+  color: rgb(255, 100, 100);
+}
+
+.po {
+  flex-grow: 5;
+}
+
+.block2 {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  padding: 10px 0 0 20px;
+  align-items: center;
+}
+
+.failed {
+  display: flex;
+  background: rgb(255, 158, 158);
+  flex-grow: 2;
+  color: #fff;
+  align-items: center;
+}
+
+.loading {
+  background: rgb(170, 217, 255);
+  flex-grow: 2;
 }

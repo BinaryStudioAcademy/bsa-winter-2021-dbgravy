@@ -14,7 +14,10 @@ const selectUser = (state: IAppState) => state.user.user;
 function* fetchUserOrganization() {
   const user: IUser = yield select(selectUser);
   try {
-    const response: IUserOrganization = yield call(fetchOrganization, user.id, '111f65db-736a-4bfb-ab9e-55f9b7616da2');
+    const response: IUserOrganization = yield call(
+      // Will be implemented
+      fetchOrganization, user.id, user.organizationId || ''
+    );
     yield put(fetchOrgInfoRoutine.success({ user, currentOrganization: response }));
   } catch {
     yield put(fetchOrgInfoRoutine.failure({ user }));
@@ -26,14 +29,20 @@ function* watchCreateOrganization() {
 }
 
 function* createOrganization() {
+  const user: IUser = yield select(selectUser);
   try {
     const { newOrganization, id: createdByUserId } = yield select(selectUser);
+    const response: { result: boolean } = yield call(
+      postCreateOrganization, { name: newOrganization.name, createdByUserId }
+    );
 
-    const response: { created: boolean } = yield call(postCreateOrganization,
-      { name: newOrganization.name, createdByUserId });
-    yield put(createOrganizationRoutine.success(response));
+    if (response.result) {
+      yield put(createOrganizationRoutine.success({ user }));
+    } else {
+      yield put(createOrganizationRoutine.failure({ user }));
+    }
   } catch {
-    //
+    yield put(createOrganizationRoutine.failure({ user }));
   }
 }
 

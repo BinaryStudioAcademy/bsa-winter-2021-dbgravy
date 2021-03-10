@@ -3,10 +3,12 @@ import { Spinner } from 'react-bootstrap';
 
 interface IProps {
   isLoading: boolean;
+  isAbsolute?: boolean
 }
 
 const Loader: React.FC<IProps> = ({
   isLoading,
+  isAbsolute = true,
   children
 }) => (
   isLoading
@@ -14,7 +16,7 @@ const Loader: React.FC<IProps> = ({
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
-          position: 'absolute', height: '100%'
+          position: isAbsolute ? 'absolute' : 'inherit', height: '100%'
         }}
       >
         <Spinner animation="border" variant="secondary" role="status" />

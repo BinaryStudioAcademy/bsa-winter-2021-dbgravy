@@ -61,7 +61,7 @@ export const getUserOraganization = async (
   ).getOrganizationUser(userId, organizationId);
 
   if (!userOrganization) {
-    throw new CustomError('There isn\'t user in organization', 404);
+    throw new CustomError('There is no user in organization', 404);
   }
 
   const { role } = userOrganization;

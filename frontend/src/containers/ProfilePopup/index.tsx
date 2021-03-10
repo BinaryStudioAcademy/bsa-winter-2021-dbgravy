@@ -6,15 +6,18 @@ import UserAttrButton from './components/UserAttrButton';
 import ProfilePopupInfo from './components/ProfilePopupInfo';
 import { connect } from 'react-redux';
 import { IUser } from '../../common/models/user/IUser';
+import { logotUserRoutine } from '../../scenes/Auth/routines';
 
 interface IProps {
   user?: IUser,
   fetchOrganization?: Routine<any>,
-  createOrganization?: Routine<any>
+  createOrganization?: Routine<any>,
+  fullfill: Routine<any>,
+  logout: Routine<any>
 }
 
 const ProfilePopup: React.FC<IProps> = (
-  { user, fetchOrganization, createOrganization }
+  { user, fetchOrganization, createOrganization, fullfill, logout }
 ) => {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -31,6 +34,8 @@ const ProfilePopup: React.FC<IProps> = (
           user={user}
           fetchOrganization={fetchOrganization}
           createOrganization={createOrganization}
+          fullfill={fullfill}
+          logout={logout}
         />
       ) : null}
     </div>
@@ -43,7 +48,9 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
   fetchOrganization: fetchOrgInfoRoutine,
-  createOrganization: createOrganizationRoutine
+  createOrganization: createOrganizationRoutine,
+  fullfill: createOrganizationRoutine.fulfill,
+  logout: logotUserRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePopup);

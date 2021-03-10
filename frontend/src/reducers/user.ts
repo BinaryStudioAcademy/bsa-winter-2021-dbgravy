@@ -6,7 +6,8 @@ import {
 import {
   fetchUserRoutine,
   loginUserRoutine,
-  addNewUserRoutine
+  addNewUserRoutine,
+  logotUserRoutine
 } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
 import { Roles } from '../common/enums/UserRoles';
@@ -153,6 +154,19 @@ export const user = (
             isFailed: true
           }
         }
+      };
+    case createOrganizationRoutine.FULFILL:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {}
+        }
+      };
+    case logotUserRoutine.TRIGGER:
+      return {
+        isLoading: false,
+        isAuthorized: false
       };
     default:
       return state;
