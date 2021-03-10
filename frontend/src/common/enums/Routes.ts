@@ -1,6 +1,6 @@
 export enum Routes {
   BaseUrl = '/',
-  Auth = '/auth',
+  Auth = '/auth/:page',
   SignUp = '/auth/sign-up',
   SignIn = '/auth/sign-in',
   Apps = '/apps',
