@@ -5,6 +5,7 @@ import { ICreateApplication } from '../common/models/application/ICreateApplicat
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { extractTransportedApp, extractTransportedApps } from '../common/helpers/appExtractorHelper';
 import { ITransportedApplication } from '../common/models/application/ITransportedApplication';
+import { getUserOrganization } from './userOrganizationService';
 
 export const checkAppExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
   const app = await getCustomRepository(ApplicationRepository)
@@ -32,9 +33,11 @@ export const getAppById = async (id: string): Promise<ITransportedApplication> =
 };
 
 export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
-  const { currentOrganizationId } = user;
-  const { name, updatedByUserId } = appData;
+  const { id, currentOrganizationId } = user;
+  const { name } = appData;
   const organizationId = currentOrganizationId;
+  const userOrganization = await getUserOrganization(currentOrganizationId, id);
+  const updatedByUserId = userOrganization.userOrganizationId;
   await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const createdApp = await getCustomRepository(ApplicationRepository).addApp(
     {

@@ -9,6 +9,7 @@ import { IUpdateUserOrganization } from '../../common/models/userOrganization/IU
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
   select = [
+    'user_organization.id',
     'user_organization.organizationId',
     'user_organization.role',
     'user_organization.status',
@@ -51,6 +52,22 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
       .getMany();
 
     return users;
+  }
+
+  async getUserOrganization(organizationId: string, userId: string): Promise<IUserOrganization> {
+    const userOrganization = await this.findOne({ where: { userId, organizationId } });
+    if (!userOrganization) {
+      throw new CustomError('User organization not found.', 404);
+    }
+    const { id } = userOrganization;
+    const response = await this.createQueryBuilder()
+      .select(this.select)
+      .from(UserOrganization, 'user_organization')
+      .where('user_organization.id = :id', { id })
+      .leftJoin('user_organization.user', 'user')
+      .getOne();
+
+    return response;
   }
 
   async updateUserOrganization(data: IUpdateUserOrganization): Promise<IUserOrganization> {
