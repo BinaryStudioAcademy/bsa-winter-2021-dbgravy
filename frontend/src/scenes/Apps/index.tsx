@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { Form, FormControl } from 'react-bootstrap';
 import AddApp from './components/AddApp';
@@ -22,6 +22,12 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
     fetchApps();
   }, []);
 
+  const [searchValue, setSearchValue] = useState<string>('');
+
+  const handleSearch = (search: string): void => {
+    setSearchValue(search);
+  };
+
   const handleAddApp = (name: string): void => {
     addApp(name);
   };
@@ -36,7 +42,15 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
           <div className={styles['before-table']}>
             <h1>All</h1>
             <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+              <FormControl
+                onChange={
+                  ev => handleSearch(ev.target.value)
+                }
+                value={searchValue}
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+              />
               <AddApp onAddApp={handleAddApp} />
             </Form>
           </div>
@@ -48,7 +62,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
             />
           </Form>
 
-          <AppsList appsList={apps} />
+          <AppsList search={searchValue} appsList={apps} />
         </div>
       </Loader>
     </div>

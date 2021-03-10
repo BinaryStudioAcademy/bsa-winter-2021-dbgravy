@@ -17,7 +17,8 @@ export const checkAppExistByNameByOrganizationId = async (name: string, organiza
 
 export const getApps = async (user: ITransportedUser): Promise<ITransportedApplication[]> => {
   const { currentOrganizationId } = user;
-  const apps = await getCustomRepository(ApplicationRepository).getAllAppByOrganizationId(currentOrganizationId);
+  const apps = await getCustomRepository(ApplicationRepository)
+    .getAllAppByOrganizationId(currentOrganizationId);
   if (!apps) {
     throw new CustomError('Apps not found', 404);
   }

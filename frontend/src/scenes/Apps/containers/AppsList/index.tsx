@@ -5,14 +5,20 @@ import AppItem from '../../components/AppItem/index';
 
 interface IProps {
   appsList: IApps[];
+  search: string;
 }
 
 const AppsList: React.FC<IProps> = ({
+  search,
   appsList
 }) => (
   <div className={styles['list-wrp']}>
     {
-      appsList.length !== 0 ? appsList.map(app => <AppItem key={app.id} app={app} />) : ''
+      appsList.map(app => (
+        app.name.includes(search)
+          ? (<AppItem key={app.id} app={app} />)
+          : null
+      ))
     }
   </div>
 );

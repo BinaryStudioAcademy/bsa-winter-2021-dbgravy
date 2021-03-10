@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { Form, FormControl, Button } from 'react-bootstrap';
 import Loader from '../../components/Loader/index';
@@ -24,6 +24,12 @@ const Resources: React.FC<IProps> = ({
     fetchResources();
   }, []);
 
+  const [searchValue, setSearchValue] = useState<string>('');
+
+  const handleSearch = (search: string): void => {
+    setSearchValue(search);
+  };
+
   return (
     <div className={styles['resources-wrp']}>
       <Header />
@@ -35,13 +41,19 @@ const Resources: React.FC<IProps> = ({
           <div className={styles['before-table']}>
             <h1>Resources</h1>
             <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+              <FormControl
+                value={searchValue}
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+                onChange={ev => handleSearch(ev.target.value)}
+              />
               <Button variant="primary">Create new</Button>
             </Form>
           </div>
 
           <div className="table-wrp">
-            <TableContainer resources={resources} />
+            <TableContainer search={searchValue} resources={resources} />
           </div>
         </div>
       </Loader>
