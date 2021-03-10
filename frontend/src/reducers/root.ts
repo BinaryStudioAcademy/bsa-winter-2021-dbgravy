@@ -5,7 +5,7 @@ import { application } from './apps';
 
 const rootReducer = combineReducers({
   user,
-  app: application,
+  application,
   settings
 });
 
