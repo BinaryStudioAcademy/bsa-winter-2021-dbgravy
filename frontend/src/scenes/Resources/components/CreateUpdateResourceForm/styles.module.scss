@@ -1,0 +1,21 @@
+.main{
+  height: calc(100vh - 7rem);
+  overflow-y: auto;
+
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0; }
+}
+
+.footer {
+  margin-top: 1rem;
+}
+
+.requiredProperty::before{
+  content: '* ';
+  color: #dc3545;
+}
+
+.errorMessage{
+  color: #dc3545
+}
