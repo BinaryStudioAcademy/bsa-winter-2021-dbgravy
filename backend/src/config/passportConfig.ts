@@ -23,7 +23,6 @@ passport.use(
   'sign-in',
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done): Promise<void> => {
     try {
-      console.log(email);
       const userRepository = getCustomRepository(UserRepository);
       const user: User = await userRepository.getByEmail(email);
       if (!user) {
@@ -75,7 +74,7 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
   try {
-    const refreshToken = req.headers['x-refresh-token'] as string;
+    const { refreshToken } = req.body;
     const isValidRefreshToken = await verifyToken(refreshToken);
     if (isValidRefreshToken) {
       const userRepository = getCustomRepository(UserRepository);
