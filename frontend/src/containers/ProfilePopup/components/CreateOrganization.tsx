@@ -1,19 +1,30 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Routine } from 'redux-saga-routines';
+import { IUser } from '../../../common/models/user/IUser';
+import Loader from '../../../components/Loader';
 
 interface IProps {
-  clsName: string,
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
-  create: Routine<any>
+  create?: Routine<any>,
+  user?: IUser,
+  fullfill: Routine<any>
 }
 
-const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
+const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill }) => {
+  useEffect(() => {
+    if (user?.newOrganization?.isLoading === true
+      && user?.newOrganization?.isFailed === true) {
+      handleClose();
+    }
+  }, []);
+
   const handleClose = () => {
     setOrgName('');
     setShow(false);
+    fullfill({ user });
   };
 
   const [organizationName, setOrgName] = useState('');
@@ -22,11 +33,11 @@ const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
 
   const onSend = () => {
     setOrgName('');
-    handleClose();
+    create({ user, newOrganization: { name: organizationName } });
   };
 
   return (
-    <div className={[styles.center, clsName].join(' ')}>
+    <div className={[styles.center, styles.container].join(' ')}>
       <div>
         <span
           onClick={handleClose}
@@ -36,7 +47,7 @@ const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
         >
           <FontAwesomeIcon icon={faArrowLeft} size="sm" />
         </span>
-        <span>Create an organization</span>
+        <span className={styles.head}>Create an organization</span>
       </div>
       <input
         type="text"
@@ -45,7 +56,11 @@ const CreateOrganization: React.FC<IProps> = ({ clsName, setShow }) => {
         value={organizationName}
         onChange={onChange}
       />
-      <div className={styles.error}> </div>
+      <div className={user?.newOrganization?.isFailed ? styles.error : styles.po}>
+        {user?.newOrganization?.isLoading
+          ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
+        {user?.newOrganization?.isFailed ? 'Failed to create new organization.' : ' '}
+      </div>
       <div className={styles.btnsContainer}>
         <div
           onClick={onSend}

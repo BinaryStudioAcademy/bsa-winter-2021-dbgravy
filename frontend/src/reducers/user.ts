@@ -1,77 +1,177 @@
 import { Routine } from 'redux-saga-routines';
+import {
+  fetchOrgInfoRoutine,
+  createOrganizationRoutine
+} from '../containers/ProfilePopup/routines';
+import {
+  fetchUserRoutine,
+  loginUserRoutine,
+  addNewUserRoutine,
+  logotUserRoutine
+} from '../scenes/Auth/routines';
+import { IUser } from '../common/models/user/IUser';
 import { Roles } from '../common/enums/UserRoles';
-import { IUserOrganization } from '../common/models/user/IUserOrganization';
-import { fetchOrgInfoRoutine, createOrganizationRoutine } from '../containers/ProfilePopup/routines';
 
 export interface IUserState {
+  user?: IUser;
+  isLoading: boolean;
   isAuthorized: boolean;
-  organizationId: string;
-  firstname: string;
-  lastname: string;
-  id: string;
-  currentOrganization: IUserOrganization;
-  newOrganization?: {
-    name: string
-    isLoading?: boolean,
-    isFailed?: boolean
-  }
 }
 
 // dev only
 const initialState = {
-  isAuthorized: false,
-  organizationId: '1',
-  firstname: 'Test',
-  lastname: 'User',
-  id: '1',
-  currentOrganization: {
-    name: '',
-    role: Roles.Viewer
-  }
+  isLoading: false,
+  isAuthorized: false
 };
 
 export const user = (
-  state: IUserState = initialState,
-  action: Routine<any>
+  state = initialState,
+  { type, payload }: Routine<any>
 ): IUserState => {
-  switch (action.type) {
+  switch (type) {
+    case addNewUserRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case addNewUserRoutine.SUCCESS:
+    case fetchUserRoutine.SUCCESS:
+    case loginUserRoutine.SUCCESS: {
+      const {
+        id,
+        firstName,
+        lastName,
+        role,
+        status,
+        organizationId,
+        email
+      } = payload;
+      return {
+        ...state,
+        user: {
+          id,
+          firstName,
+          lastName,
+          role,
+          status,
+          organizationId,
+          email
+        },
+        isLoading: false,
+        isAuthorized: Boolean(payload?.id)
+      };
+    }
+    case addNewUserRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthorized: false
+      };
+    case fetchUserRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case fetchUserRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthorized: false
+      };
+    case loginUserRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case loginUserRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthorized: false
+      };
     case fetchOrgInfoRoutine.TRIGGER:
       return {
         ...state,
-        currentOrganization: {
-          ...state.currentOrganization,
-          isLoading: true,
-          isFailed: false
+        user: {
+          ...payload,
+          currentOrganization: {
+            name: '',
+            role: Roles.Viewer,
+            isLoading: true,
+            isFailed: false
+          }
         }
       };
     case fetchOrgInfoRoutine.SUCCESS:
       return {
         ...state,
-        currentOrganization: {
-          ...action.payload,
-          isLoading: false,
-          isFailed: false
+        user: {
+          ...payload.user,
+          currentOrganization: {
+            ...payload.currentOrganization,
+            isLoading: false,
+            isFailed: false
+          }
+        }
+      };
+    case fetchOrgInfoRoutine.FAILURE:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          currentOrganization: {
+            isFailed: true
+          }
         }
       };
     case createOrganizationRoutine.TRIGGER:
       return {
         ...state,
-        newOrganization: {
-          ...action.payload,
-          isLoading: true,
-          isFailed: false
+        user: {
+          ...payload.user,
+          newOrganization: {
+            ...payload.newOrganization,
+            isLoading: true,
+            isFailed: false
+          }
         }
       };
     case createOrganizationRoutine.SUCCESS:
       return {
         ...state,
-        newOrganization: {
-          ...action.payload,
-          isLoading: false,
-          isFailed: false
+        user: {
+          ...payload.user,
+          newOrganization: {
+            isFailed: false
+          }
         }
+      };
+    case createOrganizationRoutine.FAILURE:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {
+            isFailed: true
+          }
+        }
+      };
+    case createOrganizationRoutine.FULFILL:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {}
+        }
+      };
+    case logotUserRoutine.TRIGGER:
+      return {
+        isLoading: false,
+        isAuthorized: false
       };
     default:
       return state;
   }
 };
+
+export default user;

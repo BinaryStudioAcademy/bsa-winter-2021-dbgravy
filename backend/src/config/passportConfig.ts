@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as CustomStrategy } from 'passport-custom';
 import { getCustomRepository } from 'typeorm';
 import { compare } from '../common/helpers/cryptoHelper';
@@ -12,6 +12,7 @@ import { UserRepository } from '../data/repositories/userRepository';
 import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { CustomError } from '../common/models/error/CustomError';
+import { ErrorCode } from '../common/enums/ErrorCode';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -43,14 +44,14 @@ passport.use(
   'sign-up',
   new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' },
-    async ({ body: { email, firstname, lastname } }, _username, password, done): Promise<void> => {
+    async ({ body: { email, firstName, lastName } }, _username, password, done): Promise<void> => {
       try {
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
-          throw new CustomError('Email is already taken.', 401);
+          throw new CustomError('Email is already taken.', 401, ErrorCode.UserAlreadyExists);
         }
-        return done(null, { email, password, firstname, lastname } as IRegisterUser);
+        return done(null, { email, password, firstName, lastName } as IRegisterUser);
       } catch (err) {
         return done(err);
       }
@@ -73,7 +74,7 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
   try {
-    const refreshToken = req.headers['x-refresh-token'] as string;
+    const { refreshToken } = req.body;
     const isValidRefreshToken = await verifyToken(refreshToken);
     if (isValidRefreshToken) {
       const userRepository = getCustomRepository(UserRepository);

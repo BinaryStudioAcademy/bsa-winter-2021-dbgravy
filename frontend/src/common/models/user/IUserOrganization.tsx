@@ -6,3 +6,9 @@ export interface IUserOrganization {
   isLoading?: boolean,
   isFailed?: boolean
 }
+
+export interface IUserNewOrganization {
+  name: string;
+  isLoading?: boolean;
+  isFailed?: boolean;
+}
