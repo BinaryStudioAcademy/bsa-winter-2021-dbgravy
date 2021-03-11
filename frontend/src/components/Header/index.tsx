@@ -8,6 +8,7 @@ import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { Routes } from '../../common/enums/Routes';
 import ProfilePopup from '../../containers/ProfilePopup';
 
+
 const Header = () => (
   <Navbar className={styles.navigation}>
     <Navbar.Brand className="p-0">

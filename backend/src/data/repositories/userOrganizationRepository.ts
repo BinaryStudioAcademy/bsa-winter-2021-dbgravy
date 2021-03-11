@@ -80,7 +80,6 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
 
     return response;
   }
-
   async getOrganizationUser(userId: string, organizationId: string): Promise<UserOrganization> {
     const userOrganization: UserOrganization = await this.findOne({ where: { userId, organizationId } });
     return userOrganization;
