@@ -3,10 +3,6 @@ import { Resource } from '../entities/Resource';
 
 @EntityRepository(Resource)
 export class ResourceRepository extends Repository<Resource> {
-  getAllResources(): Promise<Array<Resource>> {
-    return this.find();
-  }
-
   getAllResourcesByOrganizationId(organizationId: string): Promise<Array<Resource>> {
     return this.find({ where: { organizationId } });
   }

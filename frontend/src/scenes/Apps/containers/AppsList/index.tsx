@@ -15,7 +15,7 @@ const AppsList: React.FC<IProps> = ({
   <div className={styles['list-wrp']}>
     {
       appsList.map(app => (
-        app.name.includes(search)
+        app.name.toLowerCase().includes(search.trim().toLowerCase())
           ? (<AppItem key={app.id} app={app} />)
           : null
       ))

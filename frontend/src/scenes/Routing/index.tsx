@@ -1,12 +1,12 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Resources from '../../index';
-import { Routes } from '../../../../common/enums/Routes';
+import Resources from '../Resources/index';
+import { Routes } from '../../common/enums/Routes';
 
 const ResourceRouting = () => (
   <Switch>
     <Route path={Routes.Resources} component={Resources} />
-    <Route path="/edit" component={() => <div>edit</div>} />
+    <Route path={Routes.ResourcesEdit} component={() => <div>edit</div>} />
   </Switch>
 );
 

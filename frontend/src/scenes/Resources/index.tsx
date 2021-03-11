@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 interface IProps {
   resources: IResource[],
   isLoading: boolean,
-  fetchResources: Function
+  fetchResources: () => void
 }
 
 const Resources: React.FC<IProps> = ({

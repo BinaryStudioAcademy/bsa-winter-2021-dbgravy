@@ -1,6 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import { UserRepository } from '../data/repositories/userRepository';
-import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
 import { sendEmail } from '../common/helpers/mailHelper';
 import { formatResponse } from '../common/mappers/userOrganization';
 import { IUserOrganizationResponse } from '../common/models/userOrganization/IUserOrganizationResponse';

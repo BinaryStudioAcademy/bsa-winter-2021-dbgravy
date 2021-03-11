@@ -20,7 +20,7 @@ export const getApps = async (user: ITransportedUser): Promise<ITransportedAppli
   const apps = await getCustomRepository(ApplicationRepository)
     .getAllAppByOrganizationId(currentOrganizationId);
   if (!apps) {
-    throw new CustomError('Apps not found', 404);
+    return [];
   }
   return extractTransportedApps(apps);
 };
@@ -36,14 +36,13 @@ export const getAppById = async (id: string): Promise<ITransportedApplication> =
 export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
   const { id, currentOrganizationId } = user;
   const { name } = appData;
-  const organizationId = currentOrganizationId;
   const userOrganization = await getUserOrganization(currentOrganizationId, id);
   const updatedByUserId = userOrganization.userOrganizationId;
   await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const createdApp = await getCustomRepository(ApplicationRepository).addApp(
     {
       name,
-      organizationId,
+      organizationId: currentOrganizationId,
       updatedByUserId
     }
   );

@@ -13,7 +13,7 @@ import Header from '../../components/Header/index';
 interface IProps {
   isLoading: boolean,
   addApp: Function,
-  fetchApps: Function,
+  fetchApps: () => void,
   apps: IApps[]
 }
 
@@ -24,13 +24,6 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
 
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const handleSearch = (search: string): void => {
-    setSearchValue(search);
-  };
-
-  const handleAddApp = (name: string): void => {
-    addApp(name);
-  };
   return (
     <div className={styles['apps-wrp']}>
 
@@ -43,23 +36,16 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
             <Form inline>
               <FormControl
                 onChange={
-                  ev => handleSearch(ev.target.value)
+                  ev => setSearchValue(ev.target.value)
                 }
                 value={searchValue}
                 type="text"
                 placeholder="Search"
                 className="mr-sm-2"
               />
-              <AddApp onAddApp={handleAddApp} />
+              <AddApp onAddApp={name => addApp(name)} />
             </Form>
           </div>
-
-          <Form>
-            <Form.Check
-              type="checkbox"
-              label="Select all"
-            />
-          </Form>
 
           <AppsList search={searchValue} appsList={apps} />
         </div>

@@ -2,7 +2,7 @@ import { getCustomRepository } from 'typeorm';
 import { ResourceRepository } from '../data/repositories/resourceRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
-import { extractTransportedResources } from '../common/helpers/resourceExtratorHelper';
+import { extractTransportedResources } from '../common/mappers/resourceExtrator';
 import { ITransportedResource } from '../common/models/resource/ITransportedResource';
 
 export const getResources = async (user: ITransportedUser): Promise<ITransportedResource[]> => {

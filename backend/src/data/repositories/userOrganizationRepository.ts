@@ -33,9 +33,8 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     );
     const newUserOrganization = await userOrganizationData.save();
     const { id } = newUserOrganization;
-    const response = await this.createQueryBuilder()
+    const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.id = :id', { id })
       .leftJoin('user_organization.user', 'user')
       .getOne();
@@ -44,9 +43,8 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
   }
 
   async getUsers(organizationId: string): Promise<IUserOrganization[]> {
-    const users = await this.createQueryBuilder()
+    const users = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.organizationId = :organizationId', { organizationId })
       .leftJoin('user_organization.user', 'user')
       .getMany();
@@ -55,15 +53,10 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
   }
 
   async getUserOrganization(organizationId: string, userId: string): Promise<IUserOrganization> {
-    const userOrganization = await this.findOne({ where: { userId, organizationId } });
-    if (!userOrganization) {
-      throw new CustomError('User organization not found.', 404);
-    }
-    const { id } = userOrganization;
-    const response = await this.createQueryBuilder()
+    const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
-      .where('user_organization.id = :id', { id })
+      .where('user_organization.userId = :userId', { userId })
+      .andWhere('user_organization.organizationId = :organizationId', { organizationId })
       .leftJoin('user_organization.user', 'user')
       .getOne();
 
@@ -78,9 +71,8 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     }
     const { id } = userOrganization;
     await this.update(id, data);
-    const response = await this.createQueryBuilder()
+    const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.id = :id', { id })
       .leftJoin('user_organization.user', 'user')
       .getOne();
