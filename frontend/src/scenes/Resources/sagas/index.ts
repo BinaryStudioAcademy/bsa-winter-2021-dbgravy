@@ -32,9 +32,37 @@ function* watchGetResource() {
   yield takeEvery(getResourceByIdRoutine.TRIGGER, getResource);
 }
 
+function* addResource({ payload }: Routine<any>): Routine<any> {
+  try {
+    const resources = yield call(resourceService.addResource, payload);
+    yield put(fetchResourceRoutine.success(resources));
+  } catch (error) {
+    console.log('getResource error:', error.message);
+  }
+}
+
+function* watchAddResource() {
+  yield takeEvery(getResourceByIdRoutine.TRIGGER, addResource);
+}
+
+function* updateResource({ payload }: Routine<any>): Routine<any> {
+  try {
+    const resources = yield call(resourceService.updateResource, payload);
+    yield put(fetchResourceRoutine.success(resources));
+  } catch (error) {
+    console.log('getResource error:', error.message);
+  }
+}
+
+function* watchUpdateResource() {
+  yield takeEvery(getResourceByIdRoutine.TRIGGER, updateResource);
+}
+
 export default function* resourceSaga() {
   yield all([
     watchFetchResources(),
-    watchGetResource()
+    watchGetResource(),
+    watchUpdateResource(),
+    watchAddResource()
   ]);
 }
