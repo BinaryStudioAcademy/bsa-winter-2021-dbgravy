@@ -1,83 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { Link } from 'react-router-dom';
-import { Navbar, Nav, Form, FormControl, Table, Image, Button } from 'react-bootstrap';
-import logo from '../../images/retool-logo.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
-import { Routes } from '../../common/enums/Routes';
+import { Form, FormControl, Button } from 'react-bootstrap';
+import Loader from '../../components/Loader/index';
+import Header from '../../components/Header/index';
+import TableContainer from './containers/TableContainer/index';
+import { IResource } from '../../common/models/resources/IResource';
+import { fetchResourceRoutine } from './routines/index';
+import { IAppState } from '../../common/models/store/IAppState';
+import { connect } from 'react-redux';
 
-const Resources = () => (
-  <div className={styles['resources-wrp']}>
-    <Navbar className={styles.navigation}>
+interface IProps {
+  resources: IResource[],
+  isLoading: boolean,
+  fetchResources: () => void
+}
 
-      <Navbar.Brand className="p-0">
-        <Image className={styles['logo-img']} src={logo} alt="retool-logo" />
-      </Navbar.Brand>
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link active as={Link} to={Routes.Apps} className={styles['nav-item']}>
-            <FontAwesomeIcon icon={faBriefcase} />
-            <span className="ml-2">Apps</span>
-          </Nav.Link>
-          <Nav.Link active href={Routes.Resources} className={styles['nav-item']}>
-            <FontAwesomeIcon icon={faDatabase} />
-            <span className="ml-2">Resources</span>
-          </Nav.Link>
-        </Nav>
-        <Button variant="secondary" className={styles['profile-icon']}>KH</Button>
-      </Navbar.Collapse>
+const Resources: React.FC<IProps> = ({
+  resources,
+  isLoading,
+  fetchResources
+}) => {
+  useEffect(() => {
+    fetchResources();
+  }, []);
 
-    </Navbar>
+  const [searchValue, setSearchValue] = useState<string>('');
 
-    <div className={styles['main-block-wrp']}>
+  const handleSearch = (search: string): void => {
+    setSearchValue(search);
+  };
 
-      <div className={styles['before-table']}>
-        <h1>Resources</h1>
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="primary">Create new</Button>
-        </Form>
-      </div>
+  return (
+    <div className={styles['resources-wrp']}>
+      <Header />
 
-      <div className="table-wrp">
-        <Table className="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">RESOURCE NAME</th>
-              <th scope="col">DATABASE TYPE</th>
-              <th scope="col">DATABASE NAME</th>
-              <th scope="col">CREATED</th>
-              <th scope="col"> </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>...</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td>...</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-              <td>...</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
+      <Loader isLoading={isLoading}>
+
+        <div className={styles['main-block-wrp']}>
+
+          <div className={styles['before-table']}>
+            <h1>Resources</h1>
+            <Form inline>
+              <FormControl
+                value={searchValue}
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+                onChange={ev => handleSearch(ev.target.value)}
+              />
+              <Button variant="primary">Create new</Button>
+            </Form>
+          </div>
+
+          <div className="table-wrp">
+            <TableContainer search={searchValue} resources={resources} />
+          </div>
+        </div>
+      </Loader>
     </div>
-  </div>
-);
+  );
+};
 
-export default Resources;
+const mapStateToProps = (rootState: IAppState) => ({
+  isLoading: rootState.resource.isLoading,
+  resources: rootState.resource.resources
+});
+
+const mapDispatchToProps = {
+  fetchResources: fetchResourceRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Resources);

@@ -1,6 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import { UserRepository } from '../data/repositories/userRepository';
-import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
 import { sendEmail } from '../common/helpers/mailHelper';
 import { formatResponse } from '../common/mappers/userOrganization';
 import { IUserOrganizationResponse } from '../common/models/userOrganization/IUserOrganizationResponse';
@@ -10,6 +10,13 @@ import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpda
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
   return users.map(formatResponse);
+};
+
+export const getUserOrganization = async (organizationId: string, userId: string):
+  Promise<IUserOrganizationResponse> => {
+  const userOrganization = await getCustomRepository(UserOrganizationRepository)
+    .getUserOrganization(organizationId, userId);
+  return formatResponse(userOrganization);
 };
 
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {

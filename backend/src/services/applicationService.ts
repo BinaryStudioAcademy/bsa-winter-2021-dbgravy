@@ -5,6 +5,7 @@ import { ICreateApplication } from '../common/models/application/ICreateApplicat
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { extractTransportedApp, extractTransportedApps } from '../common/helpers/appExtractorHelper';
 import { ITransportedApplication } from '../common/models/application/ITransportedApplication';
+import { getUserOrganization } from './userOrganizationService';
 
 export const checkAppExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
   const app = await getCustomRepository(ApplicationRepository)
@@ -16,9 +17,10 @@ export const checkAppExistByNameByOrganizationId = async (name: string, organiza
 
 export const getApps = async (user: ITransportedUser): Promise<ITransportedApplication[]> => {
   const { currentOrganizationId } = user;
-  const apps = await getCustomRepository(ApplicationRepository).getAllAppByOrganizationId(currentOrganizationId);
-  if (apps.length === 0) {
-    throw new CustomError('Apps not found', 404);
+  const apps = await getCustomRepository(ApplicationRepository)
+    .getAllAppByOrganizationId(currentOrganizationId);
+  if (!apps) {
+    return [];
   }
   return extractTransportedApps(apps);
 };
@@ -32,13 +34,15 @@ export const getAppById = async (id: string): Promise<ITransportedApplication> =
 };
 
 export const addApp = async (appData: ICreateApplication, user: ITransportedUser): Promise<ITransportedApplication> => {
-  const { currentOrganizationId } = user;
-  const { name, organizationId, updatedByUserId } = appData;
+  const { id, currentOrganizationId } = user;
+  const { name } = appData;
+  const userOrganization = await getUserOrganization(currentOrganizationId, id);
+  const updatedByUserId = userOrganization.userOrganizationId;
   await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
   const createdApp = await getCustomRepository(ApplicationRepository).addApp(
     {
       name,
-      organizationId,
+      organizationId: currentOrganizationId,
       updatedByUserId
     }
   );

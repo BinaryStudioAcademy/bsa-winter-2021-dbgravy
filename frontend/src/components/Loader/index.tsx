@@ -14,7 +14,7 @@ const Loader: React.FC<IProps> = ({
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
-          position: 'absolute', height: '100%'
+          position: 'absolute', height: '100%', width: '100%'
         }}
       >
         <Spinner animation="border" variant="secondary" role="status" />
