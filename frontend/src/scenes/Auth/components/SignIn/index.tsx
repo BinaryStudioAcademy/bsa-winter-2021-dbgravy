@@ -40,7 +40,7 @@ const SignIn: FunctionComponent<IProps> = ({
           Welcome back
         </h1>
         <p className={styles.signUpLink}>
-          {'Need to create a new organisation? '}
+          {'Need to create a new organization? '}
           <Link className={styles.authLink} to={Routes.SignUp}>Sign up</Link>
         </p>
       </header>

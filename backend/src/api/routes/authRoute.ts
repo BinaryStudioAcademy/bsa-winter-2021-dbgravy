@@ -13,6 +13,7 @@ const router: Router = Router();
 router
   .post('/token', refreshTokenMiddleware, run(req => authService.refreshToken(req.user as ITransportedUser)))
   .post('/sign-in', authenticationMiddleware, run(req => authService.login(req.user as ITransportedUser)))
-  .post('/sign-up', registrationMiddleware, run(req => authService.register(req.user as IRegisterUser)));
+  // eslint-disable-next-line max-len
+  .post('/sign-up', registrationMiddleware, run(req => authService.register(req.body.organizationName, req.user as IRegisterUser)));
 
 export default router;
