@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class updateRefreshTokenRelationships1615410014359 implements MigrationInterface {
-    name = 'updateRefreshTokenRelationships1615410014359'
+export class updateRefreshTokenRelationships1615491756693 implements MigrationInterface {
+    name = 'updateRefreshTokenRelationships1615491756693'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "refresh_token" DROP CONSTRAINT "FK_8e913e288156c133999341156ad"`);
