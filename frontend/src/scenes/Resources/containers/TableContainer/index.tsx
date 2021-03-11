@@ -1,9 +1,11 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Dropdown } from 'react-bootstrap';
 import { TableHeaders } from '../../enums/TableHeaderEnum';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import { IResource } from '../../../../common/models/resources/IResource';
 import Moment from 'react-moment';
+import { Routes } from '../../../../common/enums/Routes';
+import { Link } from 'react-router-dom';
 
 interface IProps {
   search: string,
@@ -17,7 +19,7 @@ const TableContainer: React.FC<IProps> = ({
     <thead>
       <tr>
         {
-          Object.values(TableHeaders).map(value => <th style={{ width: '180px' }} key={value}>{value}</th>)
+          Object.values(TableHeaders).map(value => <th key={value}>{value}</th>)
         }
       </tr>
     </thead>
@@ -31,6 +33,17 @@ const TableContainer: React.FC<IProps> = ({
                 <td>{resource.type}</td>
                 <td>{resource.dbName}</td>
                 <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
+                <td>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="outline-dark" id="dropdown-split-basic" />
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <Link to={Routes.ResourcesEdit}>Edit</Link>
+                      </Dropdown.Item>
+                      <Dropdown.Item>Delete</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </td>
               </tr>
             )
             : null

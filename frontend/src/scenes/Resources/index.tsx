@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { Form, FormControl, Button } from 'react-bootstrap';
+import { Form, FormControl } from 'react-bootstrap';
 import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 import TableContainer from './containers/TableContainer/index';
@@ -8,6 +8,8 @@ import { IResource } from '../../common/models/resources/IResource';
 import { fetchResourceRoutine } from './routines/index';
 import { IAppState } from '../../common/models/store/IAppState';
 import { connect } from 'react-redux';
+import { Routes } from '../../common/enums/Routes';
+import { Link } from 'react-router-dom';
 
 interface IProps {
   resources: IResource[],
@@ -48,7 +50,7 @@ const Resources: React.FC<IProps> = ({
                 className="mr-sm-2"
                 onChange={ev => handleSearch(ev.target.value)}
               />
-              <Button variant="primary">Create new</Button>
+              <Link to={Routes.ResourcesAdd} className="btn btn-primary">Create new</Link>
             </Form>
           </div>
 

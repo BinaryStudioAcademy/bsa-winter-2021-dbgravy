@@ -1,7 +1,7 @@
 export interface IResource {
   id: string,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: Date,
+  updatedAt?: Date,
   name: string,
   type: string,
   host: string,
