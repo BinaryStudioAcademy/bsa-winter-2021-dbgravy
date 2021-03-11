@@ -8,7 +8,7 @@ interface IAddApp {
 
 const AddApp: React.FC<IAddApp> = ({ onAddApp }) => {
   const [isShow, setIsShow] = useState<boolean>(false);
-  const [appName, setAppName] = useState<string>('');
+  const [name, setAppName] = useState<string>('');
 
   const handleCancel = (): void => {
     setIsShow(false);
@@ -16,10 +16,10 @@ const AddApp: React.FC<IAddApp> = ({ onAddApp }) => {
   };
 
   const handleCreate = (): void => {
-    if (!appName) {
+    if (!name) {
       return;
     }
-    onAddApp(appName);
+    onAddApp(name);
     setAppName('');
     setIsShow(false);
   };
@@ -38,7 +38,7 @@ const AddApp: React.FC<IAddApp> = ({ onAddApp }) => {
               required
               className={styles.formControl}
               type="text"
-              value={appName}
+              value={name}
               placeholder="Give your app a name"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAppName(e.target.value)}
             />
