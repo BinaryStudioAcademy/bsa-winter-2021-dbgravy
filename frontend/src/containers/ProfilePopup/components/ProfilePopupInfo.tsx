@@ -4,17 +4,16 @@ import { faCog, faPlus, faSyncAlt, faArrowRight } from '@fortawesome/free-solid-
 import styles from './styles.module.scss';
 import UserAttrButton from './UserAttrButton';
 import { IUser } from '../../../common/models/user/IUser';
-import { Routine } from 'redux-saga-routines';
 import CreateOrganization from './CreateOrganization';
 import Loader from '../../../components/Loader';
 import { clearStorage } from '../../../common/helpers/storageHelper';
 
 interface IProps {
   user?: IUser,
-  fetchOrganization?: Routine<any>,
-  createOrganization?: Routine<any>
-  fullfill: Routine<any>,
-  logout: Routine<any>
+  fetchOrganization: (user?: IUser) => void,
+  createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
+  fullfill: (payload: { user?: IUser }) => void,
+  logout: () => void
 }
 
 const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrganization, fullfill, logout }) => {

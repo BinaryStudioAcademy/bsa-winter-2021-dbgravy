@@ -44,7 +44,7 @@ export const resendInvite = async (email: string) => {
   return res;
 };
 
-export const getUserOraganization = async (
+export const getUserOrganization = async (
   userId: string,
   organizationId: string
 ): Promise<IUserOrganization> => {

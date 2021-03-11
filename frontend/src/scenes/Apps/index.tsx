@@ -38,7 +38,6 @@ const Apps: React.FC<IProps> = ({ addApp }) => {
               <span className="ml-2">Resources</span>
             </Nav.Link>
           </Nav>
-          {/* <Button variant="secondary" className={styles['profile-icon']}>KH</Button> */}
           <ProfilePopup />
         </Navbar.Collapse>
 

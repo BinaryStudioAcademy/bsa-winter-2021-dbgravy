@@ -2,15 +2,14 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Routine } from 'redux-saga-routines';
 import { IUser } from '../../../common/models/user/IUser';
 import Loader from '../../../components/Loader';
 
 interface IProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
-  create?: Routine<any>,
-  user?: IUser,
-  fullfill: Routine<any>
+  create: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
+  fullfill: (payload: { user?: IUser }) => void,
+  user?: IUser
 }
 
 const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill }) => {
@@ -32,8 +31,8 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => setOrgName(e.target.value);
 
   const onSend = () => {
-    setOrgName('');
     create({ user, newOrganization: { name: organizationName } });
+    setOrgName('');
   };
 
   return (
@@ -59,7 +58,7 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill 
       <div className={user?.newOrganization?.isFailed ? styles.error : styles.po}>
         {user?.newOrganization?.isLoading
           ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
-        {user?.newOrganization?.isFailed ? 'Failed to create new organization.' : ' '}
+        {user?.newOrganization?.isFailed ? 'Failed to create new organization.' : ''}
       </div>
       <div className={styles.btnsContainer}>
         <div

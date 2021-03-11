@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { IAppState } from '../../common/models/store/IAppState';
 import { createOrganizationRoutine, fetchOrgInfoRoutine } from './routines';
-import { Routine } from 'redux-saga-routines';
 import UserAttrButton from './components/UserAttrButton';
 import ProfilePopupInfo from './components/ProfilePopupInfo';
 import { connect } from 'react-redux';
@@ -10,10 +9,10 @@ import { logotUserRoutine } from '../../scenes/Auth/routines';
 
 interface IProps {
   user?: IUser,
-  fetchOrganization?: Routine<any>,
-  createOrganization?: Routine<any>,
-  fullfill: Routine<any>,
-  logout: Routine<any>
+  fetchOrganization: (user?: IUser) => void,
+  createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
+  fullfill: (payload: { user?: IUser }) => void,
+  logout: () => void
 }
 
 const ProfilePopup: React.FC<IProps> = (
