@@ -1,0 +1,131 @@
+.container {
+  width: 280px;
+  height: 350px;
+  max-height: 500px;
+  display: flex;
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  flex-direction: column;
+  color: rgb(83, 83, 83);
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+  border-radius: 3px;
+  background: #fff;
+  z-index: 1;
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    padding: 10px 0 0 20px;
+  }
+
+  .block:last-child {
+    border-bottom: none;
+  }
+
+  .block > span {
+    margin: 0 10px 13px 0;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .secondary {
+    color: rgb(143, 143, 143);
+    cursor: default !important;
+    user-select: text !important;
+    padding-left: 10px;
+  }
+
+  .primary {
+    font-weight: 600;
+    color: #000;
+    cursor: default !important;
+    user-select: text !important;
+  }
+
+  .link {
+    color: rgb(98, 176, 212);
+  }
+
+  .block > span > svg {
+    margin-right: 8px;
+  }
+
+  .line {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.btnsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 25px 0;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.head {
+  font-size: 17px;
+  color: #000;
+}
+
+.btnsContainer > div {
+  width: 20%;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 5px;
+}
+
+.input {
+  border: 1px solid lightgray;
+  width: 80%;
+  height: 30px;
+  border-radius: 3px;
+  outline: lightgray;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.center {
+  align-items: center;
+  padding-top: 20px;
+}
+
+.center > div:first-child {
+  font-weight: 600;
+}
+
+.center > div:first-child > span {
+  margin-right: 20px;
+}
+
+.error {
+  flex-grow: 5;
+  align-items: center;
+  display: flex;
+  color: rgb(255, 100, 100);
+}
+
+.po {
+  flex-grow: 5;
+}
+
+.block2 {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  padding: 10px 0 0 20px;
+  align-items: center;
+}
+
