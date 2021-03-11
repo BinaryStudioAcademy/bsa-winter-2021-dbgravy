@@ -42,7 +42,6 @@ function* addNewUserRequest({ payload }: any): Routine<any> {
     yield put(addNewUserRoutine.success(user));
   } catch (error) {
     const message = errorHelper(error.code);
-    console.log(message);
     yield put(loginUserRoutine.failure(message));
   }
 }

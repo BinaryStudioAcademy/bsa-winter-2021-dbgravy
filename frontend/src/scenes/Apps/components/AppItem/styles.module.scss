@@ -1,0 +1,20 @@
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.app-main-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.main-info {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+}

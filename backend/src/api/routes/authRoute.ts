@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Router } from 'express';
 import { IRegisterUser } from '../../common/models/user/IRegisterUser';
 import * as authService from '../../services/authService';
 import authenticationMiddleware from '../middlewares/authenticationMiddleware';
@@ -11,8 +11,8 @@ const router: Router = Router();
 
 // user added to the request (req.user) in a strategy, see passport config
 router
-  .post('/token', refreshTokenMiddleware, run((req: Request) => authService.refreshToken(req.user as ITransportedUser)))
-  .post('/sign-in', authenticationMiddleware, run((req: Request) => authService.login(req.user as ITransportedUser)))
-  .post('/sign-up', registrationMiddleware, run((req: Request) => authService.register(req.user as IRegisterUser)));
+  .post('/token', refreshTokenMiddleware, run(req => authService.refreshToken(req.user as ITransportedUser)))
+  .post('/sign-in', authenticationMiddleware, run(req => authService.login(req.user as ITransportedUser)))
+  .post('/sign-up', registrationMiddleware, run(req => authService.register(req.user as IRegisterUser)));
 
 export default router;
