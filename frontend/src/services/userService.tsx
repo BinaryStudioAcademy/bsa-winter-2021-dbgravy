@@ -1,17 +1,16 @@
-import { Roles } from '../common/enums/UserRoles';
-// import api from '../common/helpers/apiHelper';
+import api from '../common/helpers/apiHelper';
+import { IUserOrganization } from '../common/models/user/IUserOrganization';
 
-export const fetchOrganization = async (data: { organizationId: string, userId: string }) => {
-  // const response = await api.get('/api/organization/id/user/id');
-  const response = {
-    name: 'Microsoft:Azure',
-    role: Roles.Admin
-  };
+interface IResult {
+  result: boolean
+}
+
+export const fetchOrganization = async (userId: string, orgId: string) => {
+  const response = await api.get<IUserOrganization>(`/api/organization/${orgId}/user/${userId}`);
   return response;
 };
 
-export const postCreateOrganization = async (newOraganization: {name: string}) => {
-  return {
-    created: true
-  };
+export const postCreateOrganization = async (newOrganization: {name: string, createdByUserId: string}) => {
+  const response = await api.post<IResult>('/api/organization', newOrganization);
+  return response;
 };

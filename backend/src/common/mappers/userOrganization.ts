@@ -2,11 +2,13 @@ import { IUserOrganizationResponse } from '../models/userOrganization/IUserOrgan
 import { IUserOrganization } from '../models/userOrganization/IUserOrganization';
 
 export const formatResponse = ({
+  id,
   user,
   role,
   organizationId,
   status
 }: IUserOrganization): IUserOrganizationResponse => ({
+  userOrganizationId: id,
   id: user.id,
   email: user.email,
   firstName: user.firstName,

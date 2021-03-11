@@ -2,9 +2,10 @@ import { App } from '../../data/entities/App';
 import { ITransportedApplication } from '../models/application/ITransportedApplication';
 
 export const extractTransportedApp = (app: App): ITransportedApplication => {
-  const { id, name, organizationId, updatedByUserId } = app;
+  const { id, createdAt, name, organizationId, updatedByUserId } = app;
   const transportedApp: ITransportedApplication = {
     id,
+    createdAt,
     name,
     organizationId,
     updatedByUserId

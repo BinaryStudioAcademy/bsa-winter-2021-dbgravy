@@ -5,5 +5,6 @@ export enum Routes {
   SignIn = '/auth/sign-in',
   Apps = '/apps',
   Settings = '/settings',
-  Resources = '/resources'
+  Resources = '/resources',
+  ResourcesEdit = '/resources/edit'
 }

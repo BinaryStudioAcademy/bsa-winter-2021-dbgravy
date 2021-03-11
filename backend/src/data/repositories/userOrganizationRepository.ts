@@ -5,10 +5,12 @@ import { CustomError } from '../../common/models/error/CustomError';
 import { IUserOrganization } from '../../common/models/userOrganization/IUserOrganization';
 import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
+import { Role } from '../../common/enums/Role';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
   select = [
+    'user_organization.id',
     'user_organization.organizationId',
     'user_organization.role',
     'user_organization.status',
@@ -32,9 +34,8 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     );
     const newUserOrganization = await userOrganizationData.save();
     const { id } = newUserOrganization;
-    const response = await this.createQueryBuilder()
+    const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.id = :id', { id })
       .leftJoin('user_organization.user', 'user')
       .getOne();
@@ -43,14 +44,24 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
   }
 
   async getUsers(organizationId: string): Promise<IUserOrganization[]> {
-    const users = await this.createQueryBuilder()
+    const users = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.organizationId = :organizationId', { organizationId })
       .leftJoin('user_organization.user', 'user')
       .getMany();
 
     return users;
+  }
+
+  async getUserOrganization(organizationId: string, userId: string): Promise<IUserOrganization> {
+    const response = await this.createQueryBuilder('user_organization')
+      .select(this.select)
+      .where('user_organization.userId = :userId', { userId })
+      .andWhere('user_organization.organizationId = :organizationId', { organizationId })
+      .leftJoin('user_organization.user', 'user')
+      .getOne();
+
+    return response;
   }
 
   async updateUserOrganization(data: IUpdateUserOrganization): Promise<IUserOrganization> {
@@ -61,13 +72,28 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     }
     const { id } = userOrganization;
     await this.update(id, data);
-    const response = await this.createQueryBuilder()
+    const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
-      .from(UserOrganization, 'user_organization')
       .where('user_organization.id = :id', { id })
       .leftJoin('user_organization.user', 'user')
       .getOne();
 
+    return response;
+  }
+  async getOrganizationUser(userId: string, organizationId: string): Promise<UserOrganization> {
+    const userOrganization: UserOrganization = await this.findOne({ where: { userId, organizationId } });
+    return userOrganization;
+  }
+
+  async addUserOrganizationOwner(userId: string, organizationId: string): Promise<UserOrganization> {
+    const userOrganization = {
+      userId,
+      organizationId,
+      status: OrganizationStatus.ACTIVE,
+      role: Role.ADMIN
+    };
+
+    const response = await this.create(userOrganization).save();
     return response;
   }
 }

@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { Organization } from './Organization';
+import { RefreshToken } from './RefreshToken';
 import { UserOrganization } from './UserOrganization';
 
 @Entity()
@@ -16,6 +17,9 @@ export class User extends AbstractEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => RefreshToken, refreshToken => refreshToken.user)
+  refreshTokens: RefreshToken[]
 
   @OneToMany(() => Organization, organization => organization.createdByUser)
   organizations: Organization[];

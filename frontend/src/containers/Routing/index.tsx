@@ -7,11 +7,11 @@ import { IAppState } from '../../common/models/store/IAppState';
 import { fetchUserRoutine } from '../../scenes/Auth/routines';
 import PrivateRoute from '../PrivateRoute';
 import PublicRoute from '../PublicRoute';
-import Resources from '../../scenes/Resources/index';
 import Apps from '../../scenes/Apps/index';
 import Auth from '../../scenes/Auth/containers';
 import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
+import Resources from '../../scenes/Routing/index';
 import Loader from '../../components/Loader';
 
 interface IProps {
