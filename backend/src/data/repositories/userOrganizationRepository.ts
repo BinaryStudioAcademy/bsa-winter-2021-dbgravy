@@ -5,6 +5,7 @@ import { CustomError } from '../../common/models/error/CustomError';
 import { IUserOrganization } from '../../common/models/userOrganization/IUserOrganization';
 import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
+import { Role } from '../../common/enums/Role';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
@@ -77,6 +78,22 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
       .leftJoin('user_organization.user', 'user')
       .getOne();
 
+    return response;
+  }
+  async getOrganizationUser(userId: string, organizationId: string): Promise<UserOrganization> {
+    const userOrganization: UserOrganization = await this.findOne({ where: { userId, organizationId } });
+    return userOrganization;
+  }
+
+  async addUserOrganizationOwner(userId: string, organizationId: string): Promise<UserOrganization> {
+    const userOrganization = {
+      userId,
+      organizationId,
+      status: OrganizationStatus.ACTIVE,
+      role: Role.ADMIN
+    };
+
+    const response = await this.create(userOrganization).save();
     return response;
   }
 }
