@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IAppState } from '../../common/models/store/IAppState';
-import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../../routines/userOrganization';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from './routines';
 import UserAttrButton from '../../components/UserAttrButton/UserAttrButton';
 import ProfilePopupInfo from '../../components/ProfilePopupInfo/ProfilePopupInfo';
 import { connect } from 'react-redux';
