@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { IAppState } from '../../common/models/store/IAppState';
-import { createOrganizationRoutine, fetchOrgInfoRoutine } from './routines';
-import UserAttrButton from './components/UserAttrButton';
-import ProfilePopupInfo from './components/ProfilePopupInfo';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../../routines/userOrganization';
+import UserAttrButton from '../../components/UserAttrButton/UserAttrButton';
+import ProfilePopupInfo from '../../components/ProfilePopupInfo/ProfilePopupInfo';
 import { connect } from 'react-redux';
 import { IUser } from '../../common/models/user/IUser';
 import { logotUserRoutine } from '../../scenes/Auth/routines';

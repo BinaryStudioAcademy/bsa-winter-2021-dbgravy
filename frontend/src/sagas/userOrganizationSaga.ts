@@ -1,9 +1,9 @@
 import { takeEvery, select, put, call, all } from 'redux-saga/effects';
-import { IAppState } from '../../../common/models/store/IAppState';
-import { IUser } from '../../../common/models/user/IUser';
-import { IUserOrganization } from '../../../common/models/user/IUserOrganization';
-import { fetchOrganization, postCreateOrganization } from '../../../services/userService';
-import { fetchOrgInfoRoutine, createOrganizationRoutine } from '../routines/index';
+import { IAppState } from '../common/models/store/IAppState';
+import { IUser } from '../common/models/user/IUser';
+import { IUserOrganization } from '../common/models/user/IUserOrganization';
+import { fetchOrganization, postCreateOrganization } from '../services/userService';
+import { fetchOrgInfoRoutine, createOrganizationRoutine } from '../routines/userOrganization';
 
 function* watchFetchUserOrganization() {
   yield takeEvery(fetchOrgInfoRoutine.TRIGGER, fetchUserOrganization);

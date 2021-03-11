@@ -2,7 +2,7 @@ import { Routine } from 'redux-saga-routines';
 import {
   fetchOrgInfoRoutine,
   createOrganizationRoutine
-} from '../containers/ProfilePopup/routines';
+} from '../routines/userOrganization';
 import {
   fetchUserRoutine,
   loginUserRoutine,

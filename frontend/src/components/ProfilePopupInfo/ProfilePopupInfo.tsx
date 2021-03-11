@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus, faSyncAlt, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles.module.scss';
-import UserAttrButton from './UserAttrButton';
-import { IUser } from '../../../common/models/user/IUser';
-import CreateOrganization from './CreateOrganization';
-import Loader from '../../../components/Loader';
-import { clearStorage } from '../../../common/helpers/storageHelper';
+import UserAttrButton from '../UserAttrButton/UserAttrButton';
+import { IUser } from '../../common/models/user/IUser';
+import CreateOrganization from '../CreateOrganization/CreateOrganization';
+import Loader from '../Loader';
+import { clearStorage } from '../../common/helpers/storageHelper';
 
 interface IProps {
   user?: IUser,

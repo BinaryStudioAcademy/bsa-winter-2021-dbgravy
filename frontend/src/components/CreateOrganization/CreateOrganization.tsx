@@ -2,8 +2,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { IUser } from '../../../common/models/user/IUser';
-import Loader from '../../../components/Loader';
+import { IUser } from '../../common/models/user/IUser';
+import Loader from '../Loader';
 
 interface IProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
