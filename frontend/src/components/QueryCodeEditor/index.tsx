@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
+import { ITables } from '../../common/models/resources/ITables';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/sql/sql';
@@ -7,7 +8,7 @@ import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/sql-hint';
 import 'codemirror/addon/hint/show-hint.css';
 
-const QueryEditor: React.FC = ({ tables }: any) => {
+const QueryEditor: React.FC<ITables> = ({ tables }) => {
   const [query, setQuery] = useState('');
 
   const autoComplete = (cm:any) => {
