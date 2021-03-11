@@ -15,6 +15,13 @@ export const getUsers = async (organizationId: string): Promise<IUserOrganizatio
   return users.map(formatResponse);
 };
 
+export const getUserOrganization = async (organizationId: string, userId: string):
+  Promise<IUserOrganizationResponse> => {
+  const userOrganization = await getCustomRepository(UserOrganizationRepository)
+    .getUserOrganization(organizationId, userId);
+  return formatResponse(userOrganization);
+};
+
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
   const user = await getCustomRepository(UserRepository).getByEmail(data.email);
   const res = await getCustomRepository(UserOrganizationRepository).addUserOrganization(user.id, data);
@@ -44,7 +51,7 @@ export const resendInvite = async (email: string) => {
   return res;
 };
 
-export const getUserOrganization = async (
+export const getUserCurOrganization = async (
   userId: string,
   organizationId: string
 ): Promise<IUserOrganization> => {

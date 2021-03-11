@@ -1,100 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { Link } from 'react-router-dom';
-import { Navbar, Nav, Form, FormControl, Image } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import logo from '../../images/retool-logo.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faDatabase } from '@fortawesome/free-solid-svg-icons';
-import { Routes } from '../../common/enums/Routes';
+import { Form, FormControl } from 'react-bootstrap';
 import AddApp from './components/AddApp';
-import { addAppRoutine } from './routines';
+import { addAppRoutine, fetchAppRoutine } from './routines';
 import { connect } from 'react-redux';
-import ProfilePopup from '../../containers/ProfilePopup';
+import AppsList from './containers/AppsList/index';
+import { IApps } from '../../common/models/apps/IApps';
+import { IAppState } from '../../common/models/store/IAppState';
+import Loader from '../../components/Loader/index';
+import Header from '../../components/Header/index';
 
 interface IProps {
-  addApp: Function
+  isLoading: boolean,
+  addApp: Function,
+  fetchApps: () => void,
+  apps: IApps[]
 }
 
-const Apps: React.FC<IProps> = ({ addApp }) => {
-  const handleAddApp = (appName: string): void => {
-    addApp(appName);
-  };
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
+  useEffect(() => {
+    fetchApps();
+  }, []);
+
+  const [searchValue, setSearchValue] = useState<string>('');
+
   return (
     <div className={styles['apps-wrp']}>
-      <Navbar className={styles.navigation}>
 
-        <Navbar.Brand className="p-0">
-          <Image className={styles['logo-img']} src={logo} alt="retool-logo" />
-        </Navbar.Brand>
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link active as={Link} to={Routes.Apps} className={styles['nav-item']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <span className="ml-2">Apps</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to={Routes.Resources} className={styles['nav-item']}>
-              <FontAwesomeIcon icon={faDatabase} />
-              <span className="ml-2">Resources</span>
-            </Nav.Link>
-          </Nav>
-          <ProfilePopup />
-        </Navbar.Collapse>
+      <Header />
 
-      </Navbar>
-      <div className={styles['main-block-wrp']}>
-
-        <div className={styles['before-table']}>
-          <h1>All</h1>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <AddApp onAddApp={handleAddApp} />
-          </Form>
-        </div>
-
-        <Form>
-          <Form.Check
-            type="checkbox"
-            label="Select all"
-          />
-        </Form>
-
-        <div className={styles['list-wrp']}>
-
-          <div className={styles['list-item']}>
-            <div className={styles['app-main-info']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <div className={styles['main-info']}>
-                <span>Workspaces and Teams</span>
-                <span className="text-secondary">Created by...</span>
-              </div>
-            </div>
-            <div>
-              <Button variant="outline-dark">...</Button>
-            </div>
-          </div>
-          <div className={styles['list-item']}>
-            <div className={styles['app-main-info']}>
-              <FontAwesomeIcon icon={faBriefcase} />
-              <div className={styles['main-info']}>
-                <span>Workspaces and Teams</span>
-                <span className="text-secondary">Created by...</span>
-              </div>
-            </div>
-            <div>
-              <Button variant="outline-dark">...</Button>
-            </div>
+      <Loader isLoading={isLoading}>
+        <div className={styles['main-block-wrp']}>
+          <div className={styles['before-table']}>
+            <h1>All</h1>
+            <Form inline>
+              <FormControl
+                onChange={
+                  ev => setSearchValue(ev.target.value)
+                }
+                value={searchValue}
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+              />
+              <AddApp onAddApp={name => addApp(name)} />
+            </Form>
           </div>
 
+          <AppsList search={searchValue} appsList={apps} />
         </div>
-
-      </div>
+      </Loader>
     </div>
   );
 };
 
+const mapStateToProps = (rootState: IAppState) => ({
+  isLoading: rootState.application.isLoading,
+  apps: rootState.application.apps
+});
+
 const mapDispatchToProps = {
-  addApp: addAppRoutine
+  addApp: addAppRoutine,
+  fetchApps: fetchAppRoutine
 };
 
-export default connect(null, mapDispatchToProps)(Apps);
+export default connect(mapStateToProps, mapDispatchToProps)(Apps);
