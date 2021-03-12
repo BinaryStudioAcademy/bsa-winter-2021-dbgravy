@@ -1,5 +1,6 @@
 import TResource from '../../types/TResource';
 import { resourceTypeValue } from '../../../enums/ResourceTypeValue';
+import { FormActions } from '../../../../scenes/Resources/models/enums/FormActions';
 
 const resourceInitValues: TResource = {
   type: resourceTypeValue.postgreSQL,
@@ -9,7 +10,8 @@ const resourceInitValues: TResource = {
   dbName: '',
   dbUsername: '',
   password: '',
-  id: ''
+  id: '',
+  resource: [FormActions.testConnection]
 };
 
 export default resourceInitValues;

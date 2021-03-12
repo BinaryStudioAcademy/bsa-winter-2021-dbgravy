@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { resourceTypeValue } from '../../../enums/ResourceTypeValue';
+import { FormActions } from '../../../../scenes/Resources/models/enums/FormActions';
 
 const resourceSchema = Yup.object({
   type: Yup.mixed<resourceTypeValue>()
@@ -37,6 +38,12 @@ const resourceSchema = Yup.object({
     .matches(/W+/, 'Password must include special symbols.')
     .notRequired(),
   id: Yup.string()
+    .notRequired(),
+  resource: Yup.array()
+    .of(
+      Yup.mixed<FormActions>()
+        .oneOf(Object.values(FormActions))
+    )
     .notRequired()
 });
 

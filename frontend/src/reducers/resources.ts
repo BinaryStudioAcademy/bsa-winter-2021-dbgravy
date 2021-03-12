@@ -1,20 +1,34 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchResourceRoutine } from '../scenes/Resources/routines';
-import { IResource } from '../common/models/resources/IResource';
+import {
+  createResourceRoutine,
+  updateResourceRoutine,
+  deleteResourceByIdRoutine,
+  //  getResourceByIdRoutine,
+  fetchResourceRoutine
+} from '../scenes/Resources/routines';
 
-export interface IResourcesState {
-  isLoading: boolean,
-  resources: Array<IResource>;
+import TResource from '../common/models/types/TResource';
+import resourceInitValues from '../common/models/formik/resource/resourceInitValues';
+
+export interface IResouercesState {
+  resources: Array<TResource>;
+  editInitialState: TResource,
+  isLoading: boolean
 }
 
-const initialState = {
-  isLoading: true,
-  resources: []
-};
-
-export const resource = (state: IResourcesState = initialState, action: Routine<any>): IResourcesState => {
+export const resource = (
+  state: IResouercesState = {
+    resources: [],
+    editInitialState: resourceInitValues,
+    isLoading: false
+  },
+  action: Routine<any>
+): IResouercesState => {
   switch (action.type) {
-    case fetchResourceRoutine.SUCCESS:
+    case fetchResourceRoutine.success:
+    case createResourceRoutine.success:
+    case updateResourceRoutine.success:
+    case deleteResourceByIdRoutine.success:
       return {
         ...state,
         resources: [...action.payload],

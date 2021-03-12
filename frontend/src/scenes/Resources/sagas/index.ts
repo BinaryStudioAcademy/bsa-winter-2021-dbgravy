@@ -1,18 +1,20 @@
-import { useHistory: TUseHistory } from '@types/react-router-dom';
-import { all, put, call, takeEvery } from 'redux-saga/effects';
-import { useHistory, RouteComponentProps } from 'react-router-dom';
+import { all, put, call, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
-import { Routes } from '../../../common/enums/Routes';
 import TResource from '../../../common/models/types/TResource';
-// import { IResponseError } from '../../../common/models/fetch/IResponseError';
+import { resources } from './selectors';
+
+// import { Routes } from '../../../common/enums/Routes';
+// import { /* useHistory, */ RouteComponentProps } from 'react-router-dom';
+// import { useHistory } from '@types/react-router-dom';
 
 import {
   testConnectionRoutine,
   createResourceRoutine,
   updateResourceRoutine,
   getResourceByIdRoutine,
-  getResourcesRoutine
-} from '../routines/inedex';
+  fetchResourceRoutine,
+  deleteResourceByIdRoutine
+} from '../routines';
 
 import {
   getResources,
@@ -20,22 +22,40 @@ import {
   testConnection,
   createResource,
   updateResource
-  // deleteResource
+  deleteResource
 } from '../../../services/resourceService';
 
+/*
 interface IPush {
   push: RouteComponentProps
 }
+*/
 
-const { push }: IPush = useHistory();
+// const { push }: IPush = useHistory();
+
+function* deleteResourceByIdRequest({ payload }: Routine<any>) {
+  try {
+    yield call(deleteResource, payload);
+    const oldResources: Array<TResource> = yield select(resources);
+    const updated = oldResources.filter(oldResource => (oldResource.id !== payload));
+    yield put(deleteResourceByIdRoutine.success(updated));
+  } catch (error) {
+    // eslint-disable-next-line
+    console.log('testConnection error:', error.message);
+  }
+}
+
+function* watchDeleteResourceByIdRequest() {
+  yield takeEvery(deleteResourceByIdRoutine.TRIGGER, deleteResourceByIdRequest);
+}
 
 function* testConnectionRequest({ payload }: Routine<any>) {
   try {
     yield call(testConnection, payload);
     yield put(testConnectionRoutine.success());
   } catch (error) {
-    // yield call(toastrError, error.message);
-    // yield put(testConnectionRoutine.failure(error.message));
+    // eslint-disable-next-line
+    console.log('testConnection error:', error.message);
   }
 }
 
@@ -46,11 +66,12 @@ function* watchTestConnectionRequest() {
 function* createResourceRequest({ payload }: Routine<any>) {
   try {
     const resource: TResource = yield call(createResource, payload);
-    yield put(push(Routes.Resources));
-    yield put(createResourceRoutine.success(resource));
+    const oldResources: Array<TResource> = yield select(resources);
+    // yield put(push(Routes.Resources));
+    yield put(createResourceRoutine.success([resource, ...oldResources]));
   } catch (error) {
-    // yield call(toastrError, error.message);
-    // yield put(createResourceRoutine.failure(error.message));
+    // eslint-disable-next-line
+    console.log('createResource error:', error.message);
   }
 }
 
@@ -61,11 +82,13 @@ function* watchCreateResourceRequest() {
 function* updateResourceRequest({ payload }: Routine<any>) {
   try {
     const resource: TResource = yield call(updateResource, payload);
-    yield put(push(Routes.Resources));
-    yield put(updateResourceRoutine.success(resource));
+    const oldResources: Array<TResource> = yield select(resources);
+    const updated = oldResources.map(oldResourse => (oldResourse.id !== resource.id ? oldResourse : resource));
+    // yield put(push(Routes.Resources));
+    yield put(updateResourceRoutine.success(updated));
   } catch (error) {
-    // yield call(toastrError, error.message);
-    // yield put(updateResourceRoutine.failure(error.message));
+    // eslint-disable-next-line
+    console.log('updateResource error:', error.message);
   }
 }
 
@@ -76,11 +99,11 @@ function* watchUpdateResourceRequest() {
 function* getResourceByIdRequest({ payload }: Routine<any>) {
   try {
     const resource: TResource = yield call(getResourceById, payload);
-    yield put(push(Routes.Resources));
+    // yield put(push(Routes.Resources));
     yield put(getResourceByIdRoutine.success(resource));
   } catch (error) {
-    // yield call(toastrError, error.message);
-    // yield put(getResourceByIdRoutine.failure(error.message));
+    // eslint-disable-next-line
+    console.log('getResourceById error:', error.message);
   }
 }
 
@@ -88,40 +111,12 @@ function* watchGetResourceByIdRequest() {
   yield takeEvery(getResourceByIdRoutine.TRIGGER, getResourceByIdRequest);
 }
 
-function* getResourcesRequest() {
-  try {
-    const resource: Array<TResource> = yield call(getResources);
-    yield put(push(Routes.Resources));
-    yield put(getResourcesRoutine.success(resource));
-  } catch (error) {
-    // yield call(toastrError, error.message);
-    // yield put(getResourcesRoutine.failure(error.message));
-  }
-}
-
-function* watchGetResourcesRequest() {
-  yield takeEvery(getResourcesRoutine.TRIGGER, getResourcesRequest);
-}
-
-export default function* resourcesSagas() {
-  [
-    watchTestConnectionRequest(),
-    watchCreateResourceRequest(),
-    watchUpdateResourceRequest(),
-    watchGetResourceByIdRequest(),
-    watchGetResourcesRequest()
-  ]
-};
-import { all, put, call, takeEvery } from 'redux-saga/effects';
-import { Routine } from 'redux-saga-routines';
-import { fetchResourceRoutine } from '../routines';
-import * as resourceService from '../../../services/resourceService';
-
 function* fetchResources(): Routine<any> {
   try {
-    const resources = yield call(resourceService.getResources);
-    yield put(fetchResourceRoutine.success(resources));
+    const resources = yield call(getResources);
+    yield put((resources));
   } catch (error) {
+    // eslint-disable-next-line
     console.log('getResource error:', error.message);
   }
 }
@@ -130,8 +125,12 @@ function* watchFetchResources() {
   yield takeEvery(fetchResourceRoutine.TRIGGER, fetchResources);
 }
 
-export default function* resourceSaga() {
+export default function* resourcesSagas() {
   yield all([
+    watchTestConnectionRequest(),
+    watchCreateResourceRequest(),
+    watchUpdateResourceRequest(),
+    watchGetResourceByIdRequest(),
     watchFetchResources()
   ]);
 }

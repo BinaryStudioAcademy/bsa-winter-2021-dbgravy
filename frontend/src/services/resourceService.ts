@@ -1,8 +1,9 @@
 import api from '../common/helpers/apiHelper';
 import TResource from '../common/models/types/TResource';
+import { IResource } from '../common/models/resources/IResource';
 import { resourcesApiPath } from '../common/enums/ResourcesApiPath';
 
-export const getResources = () => api.get<Promise<Array<TResource>>>(resourcesApiPath.resourcesPath);
+export const getResources = () => api.get<IResource[]>(resourcesApiPath.resourcesPath, {});
 
 export const getResourceById = (id: string) => api.get<Promise<TResource>>(`${resourcesApiPath.resourcesPath}${id}`);
 
