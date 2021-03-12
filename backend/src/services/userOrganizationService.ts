@@ -6,6 +6,9 @@ import { formatResponse } from '../common/mappers/userOrganization';
 import { IUserOrganizationResponse } from '../common/models/userOrganization/IUserOrganizationResponse';
 import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
+import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
+import { OrganizationRepository } from '../data/repositories/organizationRepository';
+import { CustomError } from '../common/models/error/CustomError';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -46,4 +49,31 @@ export const resendInvite = async (email: string) => {
   };
   const res = await sendEmail(msg);
   return res;
+};
+
+export const getUserCurOrganization = async (
+  userId: string,
+  organizationId: string
+): Promise<IUserOrganization> => {
+  const organization = await getCustomRepository(
+    OrganizationRepository
+  ).getById(organizationId);
+
+  if (!organizationId) {
+    throw new CustomError('Organization not found', 404);
+  }
+
+  const userOrganization = await getCustomRepository(
+    UserOrganizationRepository
+  ).getOrganizationUser(userId, organizationId);
+
+  if (!userOrganization) {
+    throw new CustomError('There is no user in organization', 404);
+  }
+
+  const { role } = userOrganization;
+  const { name } = organization;
+
+  const response: IUserOrganization = { role, name };
+  return response;
 };
