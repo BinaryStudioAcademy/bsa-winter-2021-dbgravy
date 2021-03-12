@@ -1,9 +1,9 @@
 import * as Yup from 'yup';
-import { resourceTypeValue } from '../../enums/ResourceTypeValue';
+import { ResourceTypeValue } from '../../enums/ResourceTypeValue';
 
 const resourceSchema = Yup.object({
-  type: Yup.mixed<resourceTypeValue>()
-    .oneOf(Object.values(resourceTypeValue)),
+  type: Yup.mixed<ResourceTypeValue>()
+    .oneOf(Object.values(ResourceTypeValue)),
   name: Yup.string()
     .min(5, 'Resource name should be more, than 5 symbols.')
     .max(30, 'Resource name should be less, than 40 symbols.')

@@ -1,7 +1,7 @@
-import TResource from '../../../common/models/resources/TResource';
+import { ICreateResource } from '../../../common/models/resources/ICreateResource';
 
 type ThandleSubmitFormData = (
-  values: TResource
+  values: ICreateResource
 ) => void
 
 export default ThandleSubmitFormData;

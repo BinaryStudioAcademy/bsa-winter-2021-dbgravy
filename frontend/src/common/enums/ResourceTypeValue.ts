@@ -1,3 +1,3 @@
-export enum resourceTypeValue {
-  PostgreSQL = 'PostgreSQL'
+export enum ResourceTypeValue {
+  PostgreSQL = 'postgres'
 }

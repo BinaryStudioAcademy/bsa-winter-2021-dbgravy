@@ -5,23 +5,26 @@ import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
 
 interface IProps {
-    label: string;
-    name: string;
-    type: string;
-    placeholder?: string;
-    link?: string;
-    linkDescription?: string;
-    linkClassName?: string;
+  label: string;
+  name: string;
+  type: string;
+  placeholder?: string;
+  link?: string;
+  linkDescription?: string;
+  linkClassName?: string;
+  labelClassName?: boolean
 }
 
-const InputField :React.FC<IProps> = ({
+const InputField: React.FC<IProps> = ({
   label,
   link,
   linkDescription,
   linkClassName,
+  labelClassName,
   ...props
 }: IProps) => {
   const [field, meta] = useField(props);
+  const labelClass = labelClassName;
   const { name } = props;
   let classname = '';
   if (name === 'password' || name === 'confirmPassword') {
@@ -32,7 +35,18 @@ const InputField :React.FC<IProps> = ({
   return (
     <div className={`${styles.inputContainer} w-100`}>
       <div className={styles.labelRow}>
-        <label className={styles.inputLabel} htmlFor={label}>{label}</label>
+        {
+          labelClass
+            ? (
+              <label
+                className={[styles.inputLabel, styles.labelClass].join(' ')}
+                htmlFor={label}
+              >
+                {label}
+              </label>
+            )
+            : <label className={styles.inputLabel} htmlFor={label}>{label}</label>
+        }
         {link
           ? (
             <Link

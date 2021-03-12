@@ -1,9 +1,6 @@
 import { ResourceTypeValue } from '../../enums/ResourceTypeValue';
 
-export interface IResource {
-  id: string,
-  createdAt?: Date,
-  updatedAt?: Date,
+export interface ICreateResource {
   name: string,
   type: ResourceTypeValue,
   host: string,
@@ -11,5 +8,4 @@ export interface IResource {
   dbName: string,
   dbUserName: string,
   dbPassword: string,
-  organizationId: string
 }
