@@ -1,5 +1,9 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchResourceRoutine } from '../scenes/Resources/routines';
+import {
+  fetchResourceRoutine,
+  getResourceByIdRoutine,
+  clearResourceRoitine
+} from '../scenes/Resources/routines';
 import { IResource } from '../common/models/resources/IResource';
 import { ResourceTypeValue } from '../common/enums/ResourceTypeValue';
 import { ICreateResource } from '../common/models/resources/ICreateResource';
@@ -34,7 +38,16 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
         resources: [...action.payload],
         isLoading: false
       };
-
+    case getResourceByIdRoutine.SUCCESS:
+      return {
+        ...state,
+        resource: action.payload
+      };
+    case clearResourceRoitine.TRIGGER:
+      return {
+        ...state,
+        resource: initialState.resource
+      };
     default:
       return state;
   }

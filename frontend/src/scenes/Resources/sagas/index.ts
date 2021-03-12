@@ -23,8 +23,8 @@ function* watchFetchResources() {
 
 function* getResource({ payload }: Routine<any>): Routine<any> {
   try {
-    const resources = yield call(resourceService.getResourceById, payload);
-    yield put(fetchResourceRoutine.success(resources));
+    const resource = yield call(resourceService.getResourceById, payload);
+    yield put(getResourceByIdRoutine.success(resource));
   } catch (error) {
     console.log('getResource error:', error.message);
   }
@@ -36,9 +36,8 @@ function* watchGetResource() {
 
 function* addResource({ payload }: Routine<any>): Routine<any> {
   try {
-    console.log(payload);
-    const resources = yield call(resourceService.addResource, payload);
-    yield put(fetchResourceRoutine.success(resources));
+    yield call(resourceService.addResource, payload);
+    yield put(fetchResourceRoutine.trigger());
   } catch (error) {
     console.log('addResource error:', error.message);
   }
@@ -50,8 +49,8 @@ function* watchAddResource() {
 
 function* updateResource({ payload }: Routine<any>): Routine<any> {
   try {
-    const resources = yield call(resourceService.updateResource, payload);
-    yield put(fetchResourceRoutine.success(resources));
+    yield call(resourceService.updateResource, payload);
+    yield put(fetchResourceRoutine.trigger());
   } catch (error) {
     console.log('editResource error:', error.message);
   }

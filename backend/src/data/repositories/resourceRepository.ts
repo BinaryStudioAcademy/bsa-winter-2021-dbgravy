@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Resource } from '../entities/Resource';
 import { ICreateResource } from '../../common/models/resource/ICreateResource';
+import { IEditResource } from '../../common/models/resource/IEditResource';
 
 @EntityRepository(Resource)
 export class ResourceRepository extends Repository<Resource> {
@@ -15,7 +16,13 @@ export class ResourceRepository extends Repository<Resource> {
   getResourceByNameByOrganizationId(name: string, organizationId: string): Promise<Resource> {
     return this.findOne({ where: { name, organizationId } });
   }
+
   addResource(resource: ICreateResource): Promise<Resource> {
     return this.create(resource).save();
+  }
+
+  async updateResource(id: string, data: Partial<IEditResource>): Promise<Resource> {
+    await this.update(id, data);
+    return this.getResourceById(id);
   }
 }

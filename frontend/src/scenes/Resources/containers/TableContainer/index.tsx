@@ -37,9 +37,7 @@ const TableContainer: React.FC<IProps> = ({
                   <Dropdown>
                     <Dropdown.Toggle variant="outline-dark" id="dropdown-split-basic" />
                     <Dropdown.Menu>
-                      <Dropdown.Item>
-                        <Link to={Routes.ResourcesEdit}>Edit</Link>
-                      </Dropdown.Item>
+                      <Link to={`${Routes.ResourcesAddEdit}/${resource.id}`}>Edit</Link>
                       <Dropdown.Item>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>

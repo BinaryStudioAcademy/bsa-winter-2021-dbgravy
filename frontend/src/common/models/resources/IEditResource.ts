@@ -1,7 +1,7 @@
 import { ResourceTypeValue } from '../../enums/ResourceTypeValue';
 
-export interface ICreateResource {
-  id?: string,
+export interface IEditResource {
+  id: string,
   name: string,
   type: ResourceTypeValue,
   host: string,

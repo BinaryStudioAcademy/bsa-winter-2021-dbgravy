@@ -50,7 +50,7 @@ const Resources: React.FC<IProps> = ({
                 className="mr-sm-2"
                 onChange={ev => handleSearch(ev.target.value)}
               />
-              <Link to={Routes.ResourcesAdd} className="btn btn-primary">Create new</Link>
+              <Link to={Routes.ResourcesAddEdit} className="btn btn-primary">Create new</Link>
             </Form>
           </div>
 

@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import { Container, Form, Button, ButtonGroup } from 'react-bootstrap';
-import { getResourceByIdRoutine, createResourceRoutine, updateResourceRoutine } from '../../routines';
+import {
+  getResourceByIdRoutine,
+  createResourceRoutine,
+  updateResourceRoutine,
+  clearResourceRoitine
+} from '../../routines';
 import { connect } from 'react-redux';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import { Formik } from 'formik';
 import resourceSchema from '../../../../common/models/formik/resourceSchema';
@@ -18,6 +23,7 @@ interface IProps {
   getResource: Function;
   addResource: ThandleSubmitFormData;
   editResource: ThandleSubmitFormData;
+  clear: ()=> void;
   history: {
     push(url: string): void;
   };
@@ -29,23 +35,30 @@ const CreateUpdateResource: React.FC<IProps> = (
     getResource,
     addResource,
     editResource,
+    clear,
     history: { push }
   }
 ) => {
   const { id }: IFetchParams = useParams();
   useEffect(() => {
-    console.log(resource);
     if (id) {
       getResource(id);
     }
   }, []);
 
+  const onCancel = () => {
+    clear();
+    push(Routes.Resources);
+  };
+
   const handleSubmitFormData: ThandleSubmitFormData = newResource => {
     if (id) {
-      console.log(newResource);
-      // editResource(resource);
+      editResource(newResource);
+      clear();
+      push(Routes.Resources);
     } else {
       addResource(newResource);
+      clear();
       push(Routes.Resources);
     }
   };
@@ -54,7 +67,7 @@ const CreateUpdateResource: React.FC<IProps> = (
       <header className="pt-4">
         <h1>
           {
-            id ? 'Edit Resource' : 'Create Resource'
+            id ? `Edit ${resource.name}` : 'Create Resource'
           }
         </h1>
       </header>
@@ -63,6 +76,7 @@ const CreateUpdateResource: React.FC<IProps> = (
         validationSchema={resourceSchema}
         initialValues={resource}
         onSubmit={handleSubmitFormData}
+        key={resource.id}
       >
         {({
           handleSubmit,
@@ -138,7 +152,7 @@ const CreateUpdateResource: React.FC<IProps> = (
               type="password"
               placeholder="password"
             />
-            <Link to={Routes.Resources} className="btn btn-light">Back</Link>
+            <Button onClick={onCancel} variant="light">Back</Button>
             <ButtonGroup className="float-right">
               <Button
                 variant="light"
@@ -171,7 +185,8 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
   getResource: getResourceByIdRoutine,
   addResource: createResourceRoutine,
-  editResource: updateResourceRoutine
+  editResource: updateResourceRoutine,
+  clear: clearResourceRoitine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateUpdateResource);

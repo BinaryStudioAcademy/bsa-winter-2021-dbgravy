@@ -7,9 +7,8 @@ import CreateEditResource from '../Resources/containers/CreateEditResource/index
 const ResourceRouting = () => (
   <Switch>
     <Route exact path={Routes.Resources} component={Resources} />
-    <Route path={Routes.ResourcesEdit} component={CreateEditResource} />
-    <Route path={Routes.ResourcesAdd} component={CreateEditResource} />
-
+    <Route path={`${Routes.ResourcesAddEdit}/:id`} component={CreateEditResource} />
+    <Route path={Routes.ResourcesAddEdit} component={CreateEditResource} />
   </Switch>
 );
 
