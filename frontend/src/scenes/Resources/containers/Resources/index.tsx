@@ -6,7 +6,6 @@ import Header from '../../../../components/Header/index';
 import TableContainer from '../TableContainer/index';
 import { IResource } from '../../../../common/models/resources/IResource';
 import { fetchResourceRoutine } from '../../routines/index';
-import { IAppState } from '../../../../common/models/store/IAppState';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Routes } from '../../enums/Routes';
@@ -65,7 +64,7 @@ const Resources: React.FC<IProps> = ({
   );
 };
 
-const mapStateToProps = (rootState: IAppState) => ({
+const mapStateToProps = (rootState: any) => ({
   isLoading: rootState.resource.isLoading,
   resources: rootState.resource.resources
 });

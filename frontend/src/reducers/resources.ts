@@ -10,20 +10,20 @@ import {
 import TResource from '../common/models/types/TResource';
 import resourceInitValues from '../common/models/formik/resource/resourceInitValues';
 
-export interface IResouercesState {
+export interface IResourcesState {
   resources: Array<TResource>;
   editInitialState: TResource,
   isLoading: boolean
 }
 
 export const resource = (
-  state: IResouercesState = {
+  state: IResourcesState = {
     resources: [],
     editInitialState: resourceInitValues,
     isLoading: false
   },
   action: Routine<any>
-): IResouercesState => {
+): IResourcesState => {
   switch (action.type) {
     case fetchResourceRoutine.success:
     case createResourceRoutine.success:

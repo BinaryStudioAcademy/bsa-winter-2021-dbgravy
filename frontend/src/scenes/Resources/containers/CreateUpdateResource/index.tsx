@@ -53,7 +53,6 @@ const CreateUpdateResource: FC<IProps> = ({
           const { id, ...payload } = values;
           await testConnectionAction(payload);
       }
-    } catch {
     } finally {
       formikHelpers.setSubmitting(false);
     }

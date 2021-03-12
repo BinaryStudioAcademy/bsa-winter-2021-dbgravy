@@ -21,7 +21,7 @@ import {
   getResourceById,
   testConnection,
   createResource,
-  updateResource
+  updateResource,
   deleteResource
 } from '../../../services/resourceService';
 
@@ -113,8 +113,8 @@ function* watchGetResourceByIdRequest() {
 
 function* fetchResources(): Routine<any> {
   try {
-    const resources = yield call(getResources);
-    yield put((resources));
+    const resourcesNew = yield call(getResources);
+    yield put((resourcesNew));
   } catch (error) {
     // eslint-disable-next-line
     console.log('getResource error:', error.message);
@@ -131,6 +131,7 @@ export default function* resourcesSagas() {
     watchCreateResourceRequest(),
     watchUpdateResourceRequest(),
     watchGetResourceByIdRequest(),
-    watchFetchResources()
+    watchFetchResources(),
+    watchDeleteResourceByIdRequest()
   ]);
 }
