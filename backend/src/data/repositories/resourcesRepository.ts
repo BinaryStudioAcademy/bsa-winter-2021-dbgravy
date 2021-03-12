@@ -1,28 +1,46 @@
 import { EntityRepository, Repository } from 'typeorm';
-import IResource from '../../common/models/resource/IResource';
 import { Resource } from '../entities/Resource';
+import IResource from '../../common/models/resource/IResource';
 
 @EntityRepository(Resource)
-export class ResourceRepository extends Repository<Resource> {
-  async createResource(resource: IResource): Promise<Resource> {
-    const { firstname, lastname, email, password } = resource;
-    const newResource = new Resource();
+class ResourceRepository extends Repository<Resource> {
+  findAll: any;
+  async createResource(resource: IResource): Promise<IResource> {
+    type newResourceType = typeof Resource | IResource;
+    type TResourseFieldValue = (resourseFieldKey: keyof string, resource: IResource) => newResourceType
+    type TResourceReturnValue = (resource: any) => newResourceType;
+    const resourseFieldValue: TResourseFieldValue = (resourseFieldKey, resources) => {
+      const resourceReturnValue: TResourceReturnValue = resourceForReturn => resourceForReturn[resourseFieldKey];
+      return resourceReturnValue(resources);
+    };
+    let newResource: newResourceType = new Resource();
 
-    newResource.firstname = firstname;
-    newResource.lastname = lastname;
-    newResource.email = email;
-    newResource.password = password;
+    const resoursesFieldKey: Array<string> = Object.keys(resource);
+
+    resoursesFieldKey.forEach((resourseFieldKey: any) => {
+      newResource = resourseFieldValue(resourseFieldKey, resource);
+    });
     await this.save(newResource);
     return newResource;
   }
 
-  async getByEmail(email: string): Promise<Resource> {
-    const resource: Resource = await this.findOne({ email });
-    return resource;
+  async updateResourceById(id: string, updateResource: IResource): Promise<IResource> {
+    await this.update(
+      id,
+      updateResource
+    );
+    return updateResource;
   }
 
-  async getById(id: string): Promise<Resource> {
-    const resource: Resource = await this.findOne({ id });
-    return resource;
+  async getResourceById(id: string): Promise<IResource> {
+    const resourse: IResource = await this.findOne({ id });
+    return resourse;
+  }
+
+  async getResources(): Promise<IResource> {
+    const resourse: IResource = await this.findAll();
+    return resourse;
   }
 }
+
+export default new ResourceRepository();

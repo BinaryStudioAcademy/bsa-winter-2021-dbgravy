@@ -1,10 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId, Unique } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { ResourceType } from '../../common/enums/ResourceType';
 import { Organization } from './Organization';
 import { Query } from './Query';
 
 @Entity()
+@Unique(['organizationId', 'name'])
 export class Resource extends AbstractEntity {
   @Column()
   name: string;

@@ -1,7 +1,8 @@
-import { resourceTypeValue } from '../../enums/ResourceTypeValue';
+import { ResourceType } from '../../enums/ResourceType';
 
 interface IResource {
-  type: resourceTypeValue;
+  save(): import("../../../data/entities/Resource").Resource | PromiseLike<import("../../../data/entities/Resource").Resource>;
+  type: ResourceType;
   name: string;
   host: string;
   port: number
