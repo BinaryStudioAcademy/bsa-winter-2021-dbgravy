@@ -63,8 +63,9 @@ export const register = async (organizationName: string, user: IRegisterUser): P
     password: await encrypt(password)
   };
   const savedUser: User = await userRepository.createUser(newUser);
-  // eslint-disable-next-line max-len
-  const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({ name: organizationName, createdByUserId: savedUser.id });
+
+  const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({
+    name: organizationName, createdByUserId: savedUser.id });
   await userRepository.updateUserFields({ id: savedUser.id, currentOrganizationId: newOrganization.id });
   const updatedUser = await userRepository.getById(savedUser.id);
   return login(extractTransportedUser(updatedUser));
