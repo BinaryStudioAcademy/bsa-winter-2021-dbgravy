@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { run } from '../../common/helpers/routeHelper';
-import * as UOSerevice from '../../services/userOrganizationService';
+import * as UOService from '../../services/userOrganizationService';
 
 const router = Router();
 
 router
-  .get('/:organizationId', run(req => UOSerevice.getUsers(req.params.organizationId)))
-  .post('/', run(req => UOSerevice.createUserOrganization(req.body)))
-  .put('/', run(req => UOSerevice.updateUserOrganization(req.body)))
-  .post('/resend', run(req => UOSerevice.resendInvite(req.body.email)));
+  .get('/:organizationId', run(req => UOService.getUsers(req.params.organizationId)))
+  .post('/', run(req => UOService.createUserOrganization(req.body)))
+  .put('/', run(req => UOService.updateUserOrganization(req.body)))
+  .post('/resend', run(req => UOService.resendInvite(req.body.email)));
 
 export default router;
