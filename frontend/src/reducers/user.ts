@@ -54,7 +54,7 @@ export const user = (
           lastName,
           role,
           status,
-          organizationId,
+          organizationId: organizationId || '478ff774-d341-417b-8069-66f9e26570c9',
           email
         },
         isLoading: false,

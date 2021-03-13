@@ -1,7 +1,9 @@
-import { all, put, call, takeEvery } from 'redux-saga/effects';
+import { all, put, call, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
-import { addAppRoutine, fetchAppRoutine } from '../routines';
+import { addAppRoutine, deleteAppRoutine, editAppRoutine, fetchAppRoutine } from '../routines';
 import * as appService from '../../../services/applicationService';
+import { IAppState } from '../../../common/models/store/IAppState';
+import { IApps } from '../../../common/models/apps/IApps';
 
 function* fetchApps(): Routine<any> {
   try {
@@ -25,13 +27,38 @@ function* addApp({ payload }: Routine<any>): Routine<any> {
   }
 }
 
+const selectApp = (state: IAppState) => state.application.editedApp;
+
+function* deleteApp() {
+  const { app } = yield select(selectApp);
+  try {
+    yield call(appService.deleteApp, app);
+    yield put(deleteAppRoutine.success());
+    yield put(fetchAppRoutine.trigger());
+  } catch {
+    yield put(deleteAppRoutine.failure({ app }));
+  }
+}
+
+function* editApp() {
+  const { app, name } = yield select(selectApp);
+  try {
+    const response: IApps = yield call(appService.editApp, app, { name });
+    yield put(editAppRoutine.success(response));
+  } catch {
+    yield put(editAppRoutine.failure({ app }));
+  }
+}
+
+function* watchAppsEdit() {
+  yield takeEvery(editAppRoutine.TRIGGER, editApp);
+  yield takeEvery(deleteAppRoutine.TRIGGER, deleteApp);
+}
+
 function* watchAddApp() {
   yield takeEvery(addAppRoutine.TRIGGER, addApp);
 }
 
 export default function* appSaga() {
-  yield all([
-    watchAddApp(),
-    watchFetchApps()
-  ]);
+  yield all([watchAddApp(), watchFetchApps(), watchAppsEdit()]);
 }
