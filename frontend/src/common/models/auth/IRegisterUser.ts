@@ -4,4 +4,5 @@ export interface IRegisterUser {
     firstName: string;
     lastName:string;
     organisationName:string;
+    currentOrganizationId?: string
 }
