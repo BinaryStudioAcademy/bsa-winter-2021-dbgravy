@@ -13,6 +13,9 @@ import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { CustomError } from '../common/models/error/CustomError';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
+import { Role } from '../common/enums/Role';
+import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 
 const getExpiration = (): Date => {
   const date = new Date();
@@ -68,7 +71,21 @@ export const register = async (organizationName: string, user: IRegisterUser): P
     name: organizationName, createdByUserId: savedUser.id });
   await userRepository.updateUserFields({ id: savedUser.id, currentOrganizationId: newOrganization.id });
   const updatedUser = await userRepository.getById(savedUser.id);
+  const role = Role.ADMIN;
+  await getCustomRepository(UserOrganizationRepository).addUserOrganization(updatedUser.id, {
+    role,
+    userId: updatedUser.id,
+    organizationId: updatedUser.currentOrganizationId,
+    email: updatedUser.email,
+    status: OrganizationStatus.ACTIVE
+  });
   return login(extractTransportedUser(updatedUser));
+};
+
+export const removeToken = async (token: any): Promise<any> => {
+  const refreshTokenRepository = getCustomRepository(RefreshTokenRepository);
+  const res = refreshTokenRepository.deleteToken(token);
+  return res;
 };
 
 export const refreshToken = (user: ITransportedUser): Promise<IAuthUser> => login(user);
