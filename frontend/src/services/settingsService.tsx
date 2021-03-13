@@ -3,7 +3,6 @@ import { Status } from '../common/enums/UserStatus';
 import { Roles } from '../common/enums/UserRoles';
 
 export const fetchUsers = async (id: string) => {
-  console.log(id);
   const response = await api.get(`/api/user/organization/${id}`);
   return response;
 };

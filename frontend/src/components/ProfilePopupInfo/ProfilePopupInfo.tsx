@@ -7,6 +7,8 @@ import { IUser } from '../../common/models/user/IUser';
 import CreateOrganization from '../CreateOrganization/CreateOrganization';
 import Loader from '../Loader';
 import { IUserOrganization } from '../../common/models/user/IUserOrganization';
+import { Routes } from '../../common/enums/Routes';
+import { Link } from 'react-router-dom';
 
 interface IProps {
   user: IUser,
@@ -57,7 +59,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
         <span className={styles.secondary}>{organization?.role}</span>
         <span>
           <FontAwesomeIcon icon={faCog} color="grey" />
-          Organization settings
+          <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
         </span>
       </div>
     );

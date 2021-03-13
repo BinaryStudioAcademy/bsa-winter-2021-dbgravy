@@ -20,7 +20,7 @@ interface IProps {
 const ProfilePopup: React.FC<IProps> = (
   { user, fetchOrganization, createOrganization, fullfill, logout, organization }
 ) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
 
   return (
     <div>

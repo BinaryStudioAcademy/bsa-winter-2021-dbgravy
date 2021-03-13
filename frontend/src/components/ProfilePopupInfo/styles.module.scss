@@ -76,3 +76,10 @@
 .none {
   display: none
 }
+
+.linklike:hover, .linklike:visited, .linklike:link, .linklike:active
+{
+  color: rgb(83, 83, 83);
+  text-decoration: none;
+  border: none;
+}

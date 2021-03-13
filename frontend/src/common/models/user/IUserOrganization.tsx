@@ -1,6 +1,7 @@
 import { Roles } from '../../enums/UserRoles';
 
 export interface IUserOrganization {
+  id?: string,
   name?: string,
   role?: Roles,
   isLoading?: boolean,

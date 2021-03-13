@@ -53,26 +53,26 @@ export const resendInvite = async (email: string) => {
 };
 
 export const getUserCurOrganization = async (user: ITransportedUser): Promise<IUserOrganization> => {
-  const { currentOrganizationId, id } = user;
+  const { currentOrganizationId, id: userId } = user;
   const organization = await getCustomRepository(
     OrganizationRepository
   ).getById(currentOrganizationId);
 
-  if (!currentOrganizationId) {
+  if (!organization) {
     throw new CustomError('Organization not found', 404);
   }
 
   const userOrganization = await getCustomRepository(
     UserOrganizationRepository
-  ).getOrganizationUser(id, currentOrganizationId);
+  ).getOrganizationUser(userId, organization.id);
 
   if (!userOrganization) {
     throw new CustomError('There is no user in organization', 404);
   }
 
   const { role } = userOrganization;
-  const { name } = organization;
+  const { name, id } = organization;
 
-  const response: IUserOrganization = { role, name };
+  const response: IUserOrganization = { role, name, id };
   return response;
 };
