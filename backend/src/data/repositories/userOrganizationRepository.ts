@@ -24,15 +24,17 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     if (userOrganization) {
       throw new CustomError('User already invited.', 400);
     }
+    const { role, status } = data;
     const userOrganizationData = this.create(
       {
-        role: data.role,
-        status: OrganizationStatus.PENDING,
+        role,
+        status,
         userId,
         organizationId: data.organizationId
       }
     );
     const newUserOrganization = await userOrganizationData.save();
+
     const { id } = newUserOrganization;
     const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
