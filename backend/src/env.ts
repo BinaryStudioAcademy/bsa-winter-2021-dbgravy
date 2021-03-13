@@ -27,6 +27,10 @@ export const env = {
   sendGrid: {
     apiKey: getOsEnv('SENDGRID_API_KEY'),
     emailFrom: getOsEnv('SENDGRID_EMAIL_FROM')
+  },
+  mail: {
+    mail: getOsEnv('NODEMAILER_MAIL'),
+    password: getOsEnv('NODEMAIL_PASS')
   }
 
 };
