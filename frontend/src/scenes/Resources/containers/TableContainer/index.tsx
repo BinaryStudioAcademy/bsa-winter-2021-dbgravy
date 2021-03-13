@@ -1,17 +1,25 @@
+/* eslint-disable max-len */
+/* eslint-disable react/button-has-type */
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { TableHeaders } from '../../enums/TableHeaderEnum';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import { IResource } from '../../../../common/models/resources/IResource';
 import Moment from 'react-moment';
+import { connect } from 'react-redux';
+import { deleteResourceRoutine, editResourseRoutine } from '../../routines';
 
 interface IProps {
   search: string,
   resources: IResource[];
+  remove: Function
+  update: Function
 }
 const TableContainer: React.FC<IProps> = ({
   search,
-  resources
+  resources,
+  remove,
+  update
 }) => (
   <Table className="table-hover table">
     <thead>
@@ -31,6 +39,8 @@ const TableContainer: React.FC<IProps> = ({
                 <td>{resource.type}</td>
                 <td>{resource.dbName}</td>
                 <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
+                <td><button onClick={() => remove({ resource })}>delete</button></td>
+                <td><button onClick={() => update({ resource, updated: { name: `n${Math.random() * 100}` } })}>edit</button></td>
               </tr>
             )
             : null
@@ -39,4 +49,9 @@ const TableContainer: React.FC<IProps> = ({
     </tbody>
   </Table>
 );
-export default TableContainer;
+
+const map = {
+  remove: deleteResourceRoutine,
+  update: editResourseRoutine
+};
+export default connect(null, map)(TableContainer);

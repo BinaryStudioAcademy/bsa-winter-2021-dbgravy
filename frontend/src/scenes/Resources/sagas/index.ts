@@ -1,7 +1,8 @@
-import { all, put, call, takeEvery } from 'redux-saga/effects';
+import { all, put, call, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
-import { fetchResourceRoutine } from '../routines';
+import { deleteResourceRoutine, editResourseRoutine, fetchResourceRoutine } from '../routines';
 import * as resourceService from '../../../services/resourceService';
+import { IAppState } from '../../../common/models/store/IAppState';
 
 function* fetchResources(): Routine<any> {
   try {
@@ -16,8 +17,37 @@ function* watchFetchResources() {
   yield takeEvery(fetchResourceRoutine.TRIGGER, fetchResources);
 }
 
+const selector = (state: IAppState) => state.resource.editResource;
+
+function* deleteResource() {
+  const { resource } = yield select(selector);
+  try {
+    yield call(resourceService.delResource, resource.id);
+    yield put(deleteResourceRoutine.success());
+  } catch {
+    yield put(deleteResourceRoutine.failure(resource));
+  }
+}
+
+function* editResource() {
+  yield put(push())
+  const { resource, updated } = yield select(selector);
+  try {
+    yield call(resourceService.updateResource, resource.id, updated);
+    yield put(deleteResourceRoutine.success());
+  } catch {
+    yield put(deleteResourceRoutine.failure({ resource, updated }));
+  }
+}
+
+function* watchEditResource() {
+  yield takeEvery(deleteResourceRoutine.TRIGGER, deleteResource);
+  yield takeEvery(editResourseRoutine.TRIGGER, editResource);
+}
+
 export default function* resourceSaga() {
   yield all([
-    watchFetchResources()
+    watchFetchResources(),
+    watchEditResource()
   ]);
 }
