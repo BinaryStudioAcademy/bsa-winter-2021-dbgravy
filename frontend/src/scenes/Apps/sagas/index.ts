@@ -1,6 +1,6 @@
 import { all, put, call, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
-import { addAppRoutine, deleteAppRoutine, editAppRoutine, fetchAppRoutine } from '../routines';
+import { addAppRoutine, deleteAppRoutine, editAppRoutine, fetchAppRoutine, showEditRoutine } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { IApps } from '../../../common/models/apps/IApps';
@@ -45,6 +45,7 @@ function* editApp() {
   try {
     const response: IApps = yield call(appService.editApp, app, { name });
     yield put(editAppRoutine.success(response));
+    yield put(showEditRoutine.trigger(false));
   } catch {
     yield put(editAppRoutine.failure({ app }));
   }

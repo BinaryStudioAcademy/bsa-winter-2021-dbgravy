@@ -1,5 +1,5 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchAppRoutine, editAppRoutine, deleteAppRoutine } from '../scenes/Apps/routines';
+import { fetchAppRoutine, editAppRoutine, deleteAppRoutine, showEditRoutine } from '../scenes/Apps/routines';
 import { IApps } from '../common/models/apps/IApps';
 
 export interface IAppsState {
@@ -9,7 +9,12 @@ export interface IAppsState {
     app?: IApps,
     name?: string,
     isFailed: boolean,
-    message?: string
+    isShow?: boolean
+  },
+  modal?: {
+    show: boolean,
+    isEdit?: boolean,
+    app: IApps
   }
 }
 
@@ -43,6 +48,13 @@ export const application = (state: IAppsState = initialState, { type, payload }:
         editedApp: {
           isFailed: false,
           app: payload.app
+        }
+      };
+    case showEditRoutine.TRIGGER:
+      return {
+        ...state,
+        modal: {
+          ...payload
         }
       };
     case editAppRoutine.SUCCESS:
