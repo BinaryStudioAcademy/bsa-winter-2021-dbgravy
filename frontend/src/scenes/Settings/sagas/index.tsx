@@ -14,15 +14,14 @@ import { Status } from '../../../common/enums/UserStatus';
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
 }
-// Not implemented
-// const selectOrgId = (state: IAppState) => state.user;
+const selectOrgId = (state: IAppState) => state.user.user;
 const selectUser = (state: IAppState) => state.settings;
 
 function* fetchUsersList() {
-  // Not implemented
-  // const { organizationId } = select(selectOrgId);
+  const user: IUser = yield select(selectOrgId);
+  console.log(user);
   try {
-    const response: IUser[] = yield call(fetchUsers, '1');
+    const response: IUser[] = yield call(fetchUsers, '');
     yield put(fetchUsersRoutine.success(response));
   } catch {
     yield put(fetchUsersRoutine.failure());

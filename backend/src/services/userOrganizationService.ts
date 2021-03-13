@@ -9,6 +9,7 @@ import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpda
 import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
 import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { CustomError } from '../common/models/error/CustomError';
+import { ITransportedUser } from '../common/models/user/ITransportedUser';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -51,21 +52,19 @@ export const resendInvite = async (email: string) => {
   return res;
 };
 
-export const getUserCurOrganization = async (
-  userId: string,
-  organizationId: string
-): Promise<IUserOrganization> => {
+export const getUserCurOrganization = async (user: ITransportedUser): Promise<IUserOrganization> => {
+  const { currentOrganizationId, id } = user;
   const organization = await getCustomRepository(
     OrganizationRepository
-  ).getById(organizationId);
+  ).getById(currentOrganizationId);
 
-  if (!organizationId) {
+  if (!currentOrganizationId) {
     throw new CustomError('Organization not found', 404);
   }
 
   const userOrganization = await getCustomRepository(
     UserOrganizationRepository
-  ).getOrganizationUser(userId, organizationId);
+  ).getOrganizationUser(id, currentOrganizationId);
 
   if (!userOrganization) {
     throw new CustomError('There is no user in organization', 404);

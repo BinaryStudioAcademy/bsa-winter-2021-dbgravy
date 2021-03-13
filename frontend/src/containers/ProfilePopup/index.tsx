@@ -6,9 +6,11 @@ import ProfilePopupInfo from '../../components/ProfilePopupInfo/ProfilePopupInfo
 import { connect } from 'react-redux';
 import { IUser } from '../../common/models/user/IUser';
 import { logotUserRoutine } from '../../scenes/Auth/routines';
+import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 
 interface IProps {
-  user?: IUser,
+  user: IUser,
+  organization?: IUserOrganization
   fetchOrganization: (user?: IUser) => void,
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
@@ -16,7 +18,7 @@ interface IProps {
 }
 
 const ProfilePopup: React.FC<IProps> = (
-  { user, fetchOrganization, createOrganization, fullfill, logout }
+  { user, fetchOrganization, createOrganization, fullfill, logout, organization }
 ) => {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -28,21 +30,22 @@ const ProfilePopup: React.FC<IProps> = (
         showDetails={setShowDetails}
         details={showDetails}
       />
-      {showDetails ? (
-        <ProfilePopupInfo
-          user={user}
-          fetchOrganization={fetchOrganization}
-          createOrganization={createOrganization}
-          fullfill={fullfill}
-          logout={logout}
-        />
-      ) : null}
+      <ProfilePopupInfo
+        isShow={showDetails}
+        user={user}
+        fetchOrganization={fetchOrganization}
+        createOrganization={createOrganization}
+        fullfill={fullfill}
+        logout={logout}
+        organization={organization}
+      />
     </div>
   );
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.user
+  user: state.user.user,
+  organization: state.user.currentOrganization
 });
 
 const mapDispatchToProps = {

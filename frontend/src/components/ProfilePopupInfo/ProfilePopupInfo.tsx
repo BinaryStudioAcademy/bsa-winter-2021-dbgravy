@@ -6,19 +6,24 @@ import UserAttrButton from '../UserAttrButton/UserAttrButton';
 import { IUser } from '../../common/models/user/IUser';
 import CreateOrganization from '../CreateOrganization/CreateOrganization';
 import Loader from '../Loader';
+import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 
 interface IProps {
-  user?: IUser,
+  user: IUser,
+  organization?: IUserOrganization
   fetchOrganization: (user?: IUser) => void,
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
-  logout: () => void
+  logout: () => void,
+  isShow: boolean
 }
 
-const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrganization, fullfill, logout }) => {
+const ProfilePopupInfo: React.FC<IProps> = (
+  { user, createOrganization, fetchOrganization, fullfill, logout, organization, isShow }
+) => {
   useEffect(() => {
     fetchOrganization(user);
-  }, [user?.organizationId]);
+  }, []);
 
   const [showCreator, setShowCreator] = useState(false);
 
@@ -27,14 +32,14 @@ const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrg
   };
 
   const isLoadFail = () => {
-    if (user?.currentOrganization?.isLoading) {
+    if (organization && organization.isLoading) {
       return (
         <div className={[styles.block, styles.loading].join(' ')}>
-          <Loader isLoading={user?.currentOrganization?.isLoading || false} isAbsolute={false} />
+          <Loader isLoading={organization.isLoading || false} isAbsolute={false} />
         </div>
       );
     }
-    if (user?.currentOrganization?.isFailed) {
+    if (organization && organization.isFailed) {
       return (
         <div className={[styles.block, styles.failed].join(' ')}>
           Failed to fetch organization.
@@ -47,9 +52,9 @@ const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrg
     return (
       <div className={styles.block}>
         <span className={styles.primary}>
-          {user?.currentOrganization?.name}
+          {organization?.name}
         </span>
-        <span className={styles.secondary}>{user?.currentOrganization?.role}</span>
+        <span className={styles.secondary}>{organization?.role}</span>
         <span>
           <FontAwesomeIcon icon={faCog} color="grey" />
           Organization settings
@@ -113,7 +118,7 @@ const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrg
     );
   };
 
-  return (<div>{render()}</div>);
+  return (<div className={isShow ? styles.none : ''}>{render()}</div>);
 };
 
 export default ProfilePopupInfo;
