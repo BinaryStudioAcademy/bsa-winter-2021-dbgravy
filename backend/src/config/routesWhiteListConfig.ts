@@ -1,4 +1,5 @@
 export default [
   '/auth/sign-in',
-  '/auth/sign-up'
+  '/auth/sign-up',
+  /^\/user\/organization\/invite\/(?:([^/]+?))$/i
 ];

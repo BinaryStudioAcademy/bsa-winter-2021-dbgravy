@@ -4,5 +4,5 @@ export interface ICreateUserOrganization {
     role: Role,
     userId: string,
     organizationId: string,
-    email: string
+    email?: string
 }
