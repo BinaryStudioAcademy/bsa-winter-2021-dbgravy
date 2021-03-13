@@ -5,10 +5,12 @@ import {
   inviteNewUserRoutine,
   reinviteUserRoutine,
   userActivationRoutine,
-  modalShowRoutine
+  modalShowRoutine,
+  inviteUserToOrganizationRoutine
 } from '../routines/index';
-import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/settingsService';
+import { fetchUsers, sendInvite, putUserChanges, resendInvite, checkInvite } from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
+import { Routine } from 'redux-saga-routines';
 
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
@@ -74,10 +76,24 @@ function* toggleUserActivation() {
   }
 }
 
+function* checkInviteTUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(checkInvite, payload);
+    yield put(inviteUserToOrganizationRoutine.success(response));
+  } catch {
+    yield put(inviteUserToOrganizationRoutine.failure());
+  }
+}
+
+function* watchInviteUserToOrganization() {
+  yield takeEvery(inviteUserToOrganizationRoutine.TRIGGER, checkInviteTUserToOrganization);
+}
+
 export default function* settingsSaga() {
   yield all([
     watchFetchUsers(),
     watchInviteUser(),
-    watchUserActivation()
+    watchUserActivation(),
+    watchInviteUserToOrganization()
   ]);
 }
