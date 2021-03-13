@@ -6,5 +6,14 @@
 		{
 			"path": "backend"
 		}
-	]
+	],
+	"settings": {
+		"cSpell.words": [
+			"fontawesome",
+			"fortawesome",
+			"fullfill",
+			"typeorm",
+			"uuidv"
+		]
+	}
 }

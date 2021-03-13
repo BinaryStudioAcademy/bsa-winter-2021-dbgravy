@@ -6,7 +6,6 @@ import UserAttrButton from '../UserAttrButton/UserAttrButton';
 import { IUser } from '../../common/models/user/IUser';
 import CreateOrganization from '../CreateOrganization/CreateOrganization';
 import Loader from '../Loader';
-import { clearStorage } from '../../common/helpers/storageHelper';
 
 interface IProps {
   user?: IUser,
@@ -24,7 +23,6 @@ const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrg
   const [showCreator, setShowCreator] = useState(false);
 
   const logoutUser = () => {
-    clearStorage();
     logout();
   };
 

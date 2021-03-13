@@ -16,8 +16,8 @@ interface IProps {
 
 export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
   const onSubmit = (values: IRegisterUser) => {
-    const { email, password, firstName, lastName, organisationName } = values;
-    const user = { email, password, firstName, lastName, organisationName };
+    const { email, password, firstName, lastName, organizationName } = values;
+    const user = { email, password, firstName, lastName, organizationName };
     addNewUser(user);
   };
   const initialValues = {
@@ -26,7 +26,7 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
     firstName: '',
     lastName: '',
     confirmPassword: '',
-    organisationName: ''
+    organizationName: ''
   };
 
   return (
@@ -75,8 +75,8 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
             placeholder="••••••••"
           />
           <InputField
-            label="Organisation's Name"
-            name="organisationName"
+            label="Organization's Name"
+            name="organizationName"
             type="text"
             placeholder="Tesla"
           />

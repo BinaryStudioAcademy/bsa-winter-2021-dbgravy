@@ -164,7 +164,7 @@ export const user = (
           newOrganization: {}
         }
       };
-    case logotUserRoutine.TRIGGER:
+    case logotUserRoutine.SUCCESS:
       return {
         isLoading: false,
         isAuthorized: false

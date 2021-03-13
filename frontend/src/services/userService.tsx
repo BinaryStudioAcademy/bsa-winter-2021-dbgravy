@@ -6,7 +6,7 @@ interface IResult {
 }
 
 export const fetchOrganization = async (userId: string, orgId: string) => {
-  const response = await api.get<IUserOrganization>(`/api/organization/${orgId}/user/${userId}`);
+  const response = await api.get<IUserOrganization>('/api/organization/user/');
   return response;
 };
 

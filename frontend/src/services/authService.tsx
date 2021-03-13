@@ -12,12 +12,13 @@ export const login = async ({ email, password }: ILoginUser) => {
   return response;
 };
 
-export const registration = async ({ email, password, firstName, lastName, organisationName }: IRegisterUser) => {
+export const registration = async ({ email, password, firstName, lastName, organizationName }: IRegisterUser) => {
   const body = {
     email,
     password,
     firstName,
-    lastName
+    lastName,
+    organizationName
   };
   const response = await api.post('/api/auth/sign-up', body);
   return response;
