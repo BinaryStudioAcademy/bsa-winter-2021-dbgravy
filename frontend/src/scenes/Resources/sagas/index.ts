@@ -30,7 +30,6 @@ function* deleteResource() {
 }
 
 function* editResource() {
-  yield put(push())
   const { resource, updated } = yield select(selector);
   try {
     yield call(resourceService.updateResource, resource.id, updated);
