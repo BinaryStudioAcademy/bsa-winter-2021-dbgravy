@@ -1,5 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 import { UserRepository } from '../data/repositories/userRepository';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
+import { sendEmail } from '../common/helpers/mailHelper';
 import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
 // import { sendEmail } from '../common/helpers/mailHelper';
@@ -9,11 +11,21 @@ import { formatResponse } from '../common/mappers/userOrganization';
 import { IUserOrganizationResponse } from '../common/models/userOrganization/IUserOrganizationResponse';
 import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
+import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
+import { OrganizationRepository } from '../data/repositories/organizationRepository';
+import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
   return users.map(formatResponse);
+};
+
+export const getUserOrganization = async (organizationId: string, userId: string):
+  Promise<IUserOrganizationResponse> => {
+  const userOrganization = await getCustomRepository(UserOrganizationRepository)
+    .getUserOrganization(organizationId, userId);
+  return formatResponse(userOrganization);
 };
 
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
@@ -50,6 +62,33 @@ export const resendInvite = async (email: string, user: ITransportedUser) => {
   // const res = await sendEmail(msg);
   const res = await sendMail(msg);
   return res;
+};
+
+export const getUserCurOrganization = async (
+  userId: string,
+  organizationId: string
+): Promise<IUserOrganization> => {
+  const organization = await getCustomRepository(
+    OrganizationRepository
+  ).getById(organizationId);
+
+  if (!organizationId) {
+    throw new CustomError('Organization not found', 404);
+  }
+
+  const userOrganization = await getCustomRepository(
+    UserOrganizationRepository
+  ).getOrganizationUser(userId, organizationId);
+
+  if (!userOrganization) {
+    throw new CustomError('There is no user in organization', 404);
+  }
+
+  const { role } = userOrganization;
+  const { name } = organization;
+
+  const response: IUserOrganization = { role, name };
+  return response;
 };
 
 export const checkInviteUser = async (inviteToken: string) => {

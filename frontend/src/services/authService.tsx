@@ -13,6 +13,14 @@ export const login = async ({ email, password, currentOrganizationId }: ILoginUs
   return response;
 };
 
+export const registration = async ({ email, password, firstName, lastName, organizationName }: IRegisterUser) => {
+  const body = {
+    email,
+    password,
+    firstName,
+    lastName,
+    organizationName
+  };
 export const registration = async (
   { email, password, firstName, lastName, organisationName, currentOrganizationId }: IRegisterUser
 ) => {

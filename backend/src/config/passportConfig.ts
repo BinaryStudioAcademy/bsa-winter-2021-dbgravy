@@ -89,7 +89,7 @@ passport.use(new JwtStrategy(options, async ({ id }, done) => {
 
 passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
   try {
-    const refreshToken = req.headers['x-refresh-token'] as string;
+    const { refreshToken } = req.body;
     const isValidRefreshToken = await verifyToken(refreshToken);
     if (isValidRefreshToken) {
       const userRepository = getCustomRepository(UserRepository);

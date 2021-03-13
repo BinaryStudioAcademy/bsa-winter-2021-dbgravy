@@ -58,7 +58,7 @@ const throwIfResponseFailed = async (res: Response) => {
   throw exception;
 };
 export const refreshToken = async () => {
-  const url = `${env.app.server}/api/auth/tokens`;
+  const url = `${env.app.server}/api/auth/token`;
   const fetchOptions = {
     method: FetchMethod.POST,
     headers: { 'Content-Type': 'application/json' },

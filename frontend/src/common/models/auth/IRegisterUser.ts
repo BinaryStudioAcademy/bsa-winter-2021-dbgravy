@@ -3,6 +3,6 @@ export interface IRegisterUser {
     password: string;
     firstName: string;
     lastName:string;
-    organisationName:string;
+    organizationName:string;
     currentOrganizationId?: string
 }

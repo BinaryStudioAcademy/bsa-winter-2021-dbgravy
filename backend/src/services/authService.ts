@@ -11,6 +11,11 @@ import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { IRefreshToken } from '../common/models/tokens/IRefreshToken';
 import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
+import { OrganizationRepository } from '../data/repositories/organizationRepository';
+import { CustomError } from '../common/models/error/CustomError';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
+import { Role } from '../common/enums/Role';
+import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
 import { Role } from '../common/enums/Role';
 
@@ -41,7 +46,7 @@ export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
   const { id } = user;
   const accessToken = createAccessToken(id);
   const refreshToken = createRefreshToken(id);
-  await saveRefreshToken(refreshToken, id);
+  saveRefreshToken(refreshToken, id);
   const authUser: IAuthUser = {
     accessToken,
     refreshToken,
@@ -51,7 +56,11 @@ export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
   return authUser;
 };
 
-export const register = async (user: IRegisterUser): Promise<IAuthUser> => {
+export const register = async (organizationName: string, user: IRegisterUser): Promise<IAuthUser> => {
+  const organization = await getCustomRepository(OrganizationRepository).getByName(organizationName);
+  if (organization) {
+    throw new CustomError('Organization already exists.', 400);
+  }
   const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
   const newUser: IRegisterUser = {
@@ -59,6 +68,26 @@ export const register = async (user: IRegisterUser): Promise<IAuthUser> => {
     password: await encrypt(password)
   };
   const savedUser: User = await userRepository.createUser(newUser);
+
+  const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({
+    name: organizationName, createdByUserId: savedUser.id });
+  await userRepository.updateUserFields({ id: savedUser.id, currentOrganizationId: newOrganization.id });
+  const updatedUser = await userRepository.getById(savedUser.id);
+  const role = Role.ADMIN;
+  await getCustomRepository(UserOrganizationRepository).addUserOrganization(updatedUser.id, {
+    role,
+    userId: updatedUser.id,
+    organizationId: updatedUser.currentOrganizationId,
+    email: updatedUser.email,
+    status: OrganizationStatus.ACTIVE
+  });
+  return login(extractTransportedUser(updatedUser));
+};
+
+export const removeToken = async (token: any): Promise<any> => {
+  const refreshTokenRepository = getCustomRepository(RefreshTokenRepository);
+  const res = refreshTokenRepository.deleteToken(token);
+  return res;
   if (userData.currentOrganizationId) {
     getCustomRepository(UserOrganizationRepository)
       .addUserOrganization(savedUser.id, {

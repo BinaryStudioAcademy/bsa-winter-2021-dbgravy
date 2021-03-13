@@ -10,6 +10,7 @@ import {
 } from '../routines/index';
 import { fetchUsers, sendInvite, putUserChanges, resendInvite, checkInvite } from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
+import { Status } from '../../../common/enums/UserStatus';
 import { Routine } from 'redux-saga-routines';
 
 function* watchFetchUsers() {
@@ -45,7 +46,7 @@ function* sendUserInvite() {
       const response: IUser = yield call(resendInvite, { email, organizationId: '1' });
       yield put(reinviteUserRoutine.success(response));
     } else {
-      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1' });
+      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1', status: Status.Pending });
       yield put(inviteNewUserRoutine.success(response));
       yield put(modalShowRoutine.success());
     }

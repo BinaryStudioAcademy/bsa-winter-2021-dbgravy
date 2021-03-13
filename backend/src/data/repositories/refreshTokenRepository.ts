@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { CustomError } from '../../common/models/error/CustomError';
 import { IRefreshToken } from '../../common/models/tokens/IRefreshToken';
 import { RefreshToken } from '../entities/RefreshToken';
 import { User } from '../entities/User';
@@ -14,5 +15,15 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
     refreshToken.value = token.value;
 
     this.save(refreshToken);
+  }
+
+  async deleteToken(value: string) {
+    try {
+      const token = await this.findOne({ where: { value } });
+      const deletedToken = this.delete(token.id);
+      return deletedToken;
+    } catch (e) {
+      throw new CustomError(e, 404);
+    }
   }
 }

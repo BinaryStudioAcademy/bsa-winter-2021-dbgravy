@@ -1,5 +1,5 @@
 export interface IOrganization {
   id: string
   name: string
-  createdBy: string
+  createdByUserId: string
 }
