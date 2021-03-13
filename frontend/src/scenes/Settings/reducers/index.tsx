@@ -7,10 +7,12 @@ import {
   inviteNewUserRoutine,
   reinviteUserRoutine,
   userActivationRoutine,
-  modalShowRoutine
+  modalShowRoutine,
+  inviteUserToOrganizationRoutine
 } from '../routines';
+import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
 
-interface IUserState {
+export interface IUserState {
   users: IUser[],
   isLoading: boolean,
   isFailed?: boolean,
@@ -23,7 +25,8 @@ interface IUserState {
     isLoading: boolean,
     isFailed: boolean
   },
-  showModal: boolean
+  showModal: boolean,
+  inviteToOrganization: IInviteToOrganization
 }
 
 const initialState: IUserState = {
@@ -33,7 +36,14 @@ const initialState: IUserState = {
     isLoading: false,
     isFailed: false
   },
-  showModal: false
+  showModal: false,
+  inviteToOrganization: {
+    isLoading: false,
+    organizationName: '',
+    organizationId: '',
+    email: '',
+    invitedBy: ''
+  }
 };
 
 export const reducer = (state: IUserState = initialState, { type, payload }: Routine<any>): IUserState => {
@@ -110,6 +120,22 @@ export const reducer = (state: IUserState = initialState, { type, payload }: Rou
       return {
         ...state,
         showModal: true
+      };
+    case inviteUserToOrganizationRoutine.SUCCESS:
+      return {
+        ...state,
+        inviteToOrganization: { ...payload, organizationName: payload.name, isLoading: true }
+      };
+    case inviteUserToOrganizationRoutine.FAILURE:
+      return {
+        ...state,
+        inviteToOrganization: {
+          isLoading: false,
+          organizationName: '',
+          organizationId: '',
+          email: '',
+          invitedBy: ''
+        }
       };
     default:
       return state;
