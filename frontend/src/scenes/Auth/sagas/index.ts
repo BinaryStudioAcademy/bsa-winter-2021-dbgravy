@@ -1,6 +1,7 @@
 import { all, put, call, takeEvery } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
 import { fetchUserRoutine, addNewUserRoutine, loginUserRoutine } from '../routines';
+import { inviteUserToOrganizationRoutine } from '../../Settings/routines/index';
 import { registration, login, fetchUser } from '../../../services/authService';
 import { IAuthServerResponse } from '../../../common/models/auth/AuthServerResponse';
 import { IUser } from '../../../common/models/user/IUser';
@@ -26,6 +27,7 @@ function* loginUserRequest({ payload }: Routine<any>) {
     const { accessToken, refreshToken, user }: IAuthServerResponse = yield call(login, payload);
     setTokens({ accessToken, refreshToken });
     yield put(loginUserRoutine.success(user));
+    yield put(inviteUserToOrganizationRoutine.failure());
   } catch (error) {
     yield put(loginUserRoutine.failure(error.message));
   }
