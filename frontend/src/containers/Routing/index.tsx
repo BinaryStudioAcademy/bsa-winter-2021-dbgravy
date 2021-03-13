@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAccessToken } from '../../common/helpers/storageHelper';
-import { Switch, Redirect } from 'react-router-dom';
+import { Redirect, Switch } from 'react-router-dom';
 import { Routes } from '../../common/enums/Routes';
 import { IAppState } from '../../common/models/store/IAppState';
 import { fetchUserRoutine } from '../../scenes/Auth/routines';
@@ -10,6 +10,7 @@ import PublicRoute from '../PublicRoute';
 import Resources from '../../scenes/Resources/index';
 import Apps from '../../scenes/Apps/index';
 import Auth from '../../scenes/Auth/containers';
+import Home from '../Home';
 import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
 
@@ -34,6 +35,7 @@ const Routing: React.FC<IProps> = ({
 
   return (
     <Switch>
+      <PublicRoute exact path="/:inviteToken" component={Home} />
       <PublicRoute path={Routes.Auth} component={Auth} />
       <PrivateRoute path={Routes.Apps} component={Apps} />
       <PrivateRoute path={Routes.Resources} component={Resources} />
