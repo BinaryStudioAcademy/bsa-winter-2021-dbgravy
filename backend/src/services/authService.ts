@@ -11,6 +11,8 @@ import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { IRefreshToken } from '../common/models/tokens/IRefreshToken';
 import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
+import { Role } from '../common/enums/Role';
 
 const getExpiration = (): Date => {
   const date = new Date();
@@ -39,7 +41,7 @@ export const login = async (user: ITransportedUser): Promise<IAuthUser> => {
   const { id } = user;
   const accessToken = createAccessToken(id);
   const refreshToken = createRefreshToken(id);
-  saveRefreshToken(refreshToken, id);
+  await saveRefreshToken(refreshToken, id);
   const authUser: IAuthUser = {
     accessToken,
     refreshToken,
@@ -57,6 +59,14 @@ export const register = async (user: IRegisterUser): Promise<IAuthUser> => {
     password: await encrypt(password)
   };
   const savedUser: User = await userRepository.createUser(newUser);
+  if (userData.currentOrganizationId) {
+    getCustomRepository(UserOrganizationRepository)
+      .addUserOrganization(savedUser.id, {
+        userId: savedUser.id,
+        role: Role.DEVELOPER,
+        organizationId: userData.currentOrganizationId
+      });
+  }
   return login(extractTransportedUser(savedUser));
 };
 

@@ -13,6 +13,8 @@ import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { CustomError } from '../common/models/error/CustomError';
 import { ErrorCode } from '../common/enums/ErrorCode';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
+import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,38 +23,50 @@ const options: IJwtOptions = {
 
 passport.use(
   'sign-in',
-  new LocalStrategy({ usernameField: 'email' }, async (email, password, done): Promise<void> => {
-    try {
-      console.log(email);
-      const userRepository = getCustomRepository(UserRepository);
-      const user: User = await userRepository.getByEmail(email);
-      if (!user) {
-        throw new CustomError('Incorrect email.', 401);
-      }
+  new LocalStrategy({ passReqToCallback: true, usernameField: 'email' },
+    async ({ body: { currentOrganizationId } }, email, password, done): Promise<void> => {
+      try {
+        const userRepository = getCustomRepository(UserRepository);
+        const user: User = await userRepository.getByEmail(email);
+        if (!user) {
+          throw new CustomError('Incorrect email.', 401);
+        }
 
-      const compareResult = await compare(password, user.password);
-      if (compareResult) {
+        const compareResult = await compare(password, user.password);
+        if (!compareResult) {
+          throw new CustomError('Passwords do not match.', 401);
+        }
+        if (currentOrganizationId) {
+          await userRepository.updateCurrentOrganizationId(user.id, currentOrganizationId);
+          await getCustomRepository(UserOrganizationRepository).updateUserOrganization({
+            userId: user.id,
+            organizationId: currentOrganizationId,
+            status: OrganizationStatus.ACTIVE
+          });
+        }
         return done(null, extractTransportedUser(user));
+      } catch (err) {
+        return done(err);
       }
-      throw new CustomError('Passwords do not match.', 401);
-    } catch (err) {
-      return done(err);
-    }
-  })
+    })
 );
 
 passport.use(
   'sign-up',
   new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' },
-    async ({ body: { email, firstName, lastName } }, _username, password, done): Promise<void> => {
+    async ({ body: { email, firstName, lastName, currentOrganizationId } },
+      _username, password, done): Promise<void> => {
       try {
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
           throw new CustomError('Email is already taken.', 401, ErrorCode.UserAlreadyExists);
         }
-        return done(null, { email, password, firstName, lastName } as IRegisterUser);
+        // TODO if currentOrganizationId set currentOrganizationId and status: OrganizationStatus.ACTIVE
+        return currentOrganizationId
+          ? done(null, { email, password, firstName, lastName, currentOrganizationId } as IRegisterUser)
+          : done(null, { email, password, firstName, lastName } as IRegisterUser);
       } catch (err) {
         return done(err);
       }
