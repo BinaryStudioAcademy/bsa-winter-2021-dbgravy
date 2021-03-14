@@ -2,12 +2,13 @@ import { User } from '../../data/entities/User';
 import { ITransportedUser } from '../models/user/ITransportedUser';
 
 export const extractTransportedUser = (user: User): ITransportedUser => {
-  const { id, firstName, lastName, email } = user;
+  const { id, firstName, lastName, email, currentOrganizationId } = user;
   const transportedUser: ITransportedUser = {
     id,
     firstName,
     lastName,
-    email
+    email,
+    currentOrganizationId
   };
   return transportedUser;
 };
