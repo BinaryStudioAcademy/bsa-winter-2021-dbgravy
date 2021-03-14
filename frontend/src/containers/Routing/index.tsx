@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAccessToken } from '../../common/helpers/storageHelper';
-import { Redirect, Switch } from 'react-router-dom';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Redirect, Switch, Route } from 'react-router-dom';
 import { Routes } from '../../common/enums/Routes';
 import { IAppState } from '../../common/models/store/IAppState';
 import { fetchUserRoutine } from '../../scenes/Auth/routines';
@@ -13,6 +14,7 @@ import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
 import Resources from '../../scenes/Routing/index';
 import Loader from '../../components/Loader';
+import Home from '../Home/index';
 
 interface IProps {
     isLoading: boolean;
@@ -35,12 +37,12 @@ const Routing: React.FC<IProps> = ({
   return (
     <Loader isLoading={isLoading || (hasToken && !isAuthorized)}>
       <Switch>
-        <PublicRoute exact path="/:inviteToken" component={Home} />
         <PublicRoute path={Routes.Auth} component={Auth} />
         <PrivateRoute path={Routes.Apps} component={Apps} />
         <PrivateRoute path={Routes.Resources} component={Resources} />
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
+        <Route path="/:inviteToken" component={Home} />
       </Switch>
     </Loader>
   );

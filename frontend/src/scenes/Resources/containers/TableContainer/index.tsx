@@ -1,9 +1,9 @@
 import React from 'react';
+import Moment from 'react-moment';
 import { Table } from 'react-bootstrap';
 import { TableHeaders } from '../../enums/TableHeaderEnum';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import { IResource } from '../../../../common/models/resources/IResource';
-import Moment from 'react-moment';
 
 interface IProps {
   search: string,

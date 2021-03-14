@@ -13,16 +13,8 @@ export const login = async ({ email, password, currentOrganizationId }: ILoginUs
   return response;
 };
 
-export const registration = async ({ email, password, firstName, lastName, organizationName }: IRegisterUser) => {
-  const body = {
-    email,
-    password,
-    firstName,
-    lastName,
-    organizationName
-  };
 export const registration = async (
-  { email, password, firstName, lastName, organisationName, currentOrganizationId }: IRegisterUser
+  { email, password, firstName, lastName, organizationName, currentOrganizationId }: IRegisterUser
 ) => {
   const body = currentOrganizationId
     ? { email,
@@ -30,7 +22,7 @@ export const registration = async (
       firstName,
       lastName,
       currentOrganizationId }
-    : { email, password, firstName, lastName };
+    : { email, password, firstName, lastName, organizationName };
   const response = await api.post('/api/auth/sign-up', body);
   return response;
 };

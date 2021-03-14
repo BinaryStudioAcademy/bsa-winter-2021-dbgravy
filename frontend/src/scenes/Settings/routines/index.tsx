@@ -6,3 +6,4 @@ export const userActivationRoutine = createRoutine('USER_ACTIVATE');
 export const reinviteUserRoutine = createRoutine('RESEND_INVITE');
 export const modalShowRoutine = createRoutine('SHOW_MODAL');
 export const inviteUserToOrganizationRoutine = createRoutine('INVITE_USER_TO_ORGANIZATION');
+export const switchUserToOrganizationRoutine = createRoutine('SWITCH_USER_TO_ORGANIZATION');

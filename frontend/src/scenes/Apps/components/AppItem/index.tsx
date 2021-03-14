@@ -1,11 +1,12 @@
 import React from 'react';
-import styles from './styles.module.scss';
+import Moment from 'react-moment';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
 import { IApps } from '../../../../common/models/apps/IApps';
-import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
+
+import styles from './styles.module.scss';
 
 interface IProps {
   app: IApps;

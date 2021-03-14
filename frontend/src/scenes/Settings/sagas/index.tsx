@@ -6,9 +6,17 @@ import {
   reinviteUserRoutine,
   userActivationRoutine,
   modalShowRoutine,
-  inviteUserToOrganizationRoutine
+  inviteUserToOrganizationRoutine,
+  switchUserToOrganizationRoutine
 } from '../routines/index';
-import { fetchUsers, sendInvite, putUserChanges, resendInvite, checkInvite } from '../../../services/settingsService';
+import {
+  fetchUsers,
+  sendInvite,
+  putUserChanges,
+  resendInvite,
+  checkInvite,
+  switchUser
+} from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { Status } from '../../../common/enums/UserStatus';
 import { Routine } from 'redux-saga-routines';
@@ -77,7 +85,7 @@ function* toggleUserActivation() {
   }
 }
 
-function* checkInviteTUserToOrganization({ payload }: Routine<any>): Routine<any> {
+function* checkInviteUserToOrganization({ payload }: Routine<any>): Routine<any> {
   try {
     const response = yield call(checkInvite, payload);
     yield put(inviteUserToOrganizationRoutine.success(response));
@@ -86,8 +94,22 @@ function* checkInviteTUserToOrganization({ payload }: Routine<any>): Routine<any
   }
 }
 
+function* switchUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(switchUser, payload);
+    yield put(switchUserToOrganizationRoutine.success(response));
+    yield put(inviteUserToOrganizationRoutine.failure());
+  } catch {
+    yield put(switchUserToOrganizationRoutine.failure());
+  }
+}
+
 function* watchInviteUserToOrganization() {
-  yield takeEvery(inviteUserToOrganizationRoutine.TRIGGER, checkInviteTUserToOrganization);
+  yield takeEvery(inviteUserToOrganizationRoutine.TRIGGER, checkInviteUserToOrganization);
+}
+
+function* watchSwitchUserToOrganization() {
+  yield takeEvery(switchUserToOrganizationRoutine.TRIGGER, switchUserToOrganization);
 }
 
 export default function* settingsSaga() {
@@ -95,6 +117,7 @@ export default function* settingsSaga() {
     watchFetchUsers(),
     watchInviteUser(),
     watchUserActivation(),
-    watchInviteUserToOrganization()
+    watchInviteUserToOrganization(),
+    watchSwitchUserToOrganization()
   ]);
 }

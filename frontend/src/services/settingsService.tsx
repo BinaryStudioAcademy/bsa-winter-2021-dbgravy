@@ -27,3 +27,8 @@ export const checkInvite = async (inviteToken: string) => {
   const response = await api.get(`/api/user/organization/invite/${inviteToken}`);
   return response;
 };
+
+export const switchUser = async (organizationId: string) => {
+  const response = await api.post('/api/user/organization/switch/', { organizationId });
+  return response;
+};

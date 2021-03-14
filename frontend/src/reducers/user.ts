@@ -11,6 +11,7 @@ import {
 } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
 import { Roles } from '../common/enums/UserRoles';
+import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
 
 export interface IUserState {
   user?: IUser;
@@ -168,6 +169,11 @@ export const user = (
       return {
         isLoading: false,
         isAuthorized: false
+      };
+    case switchUserToOrganizationRoutine.SUCCESS:
+      return {
+        ...state,
+        user: payload
       };
     default:
       return state;

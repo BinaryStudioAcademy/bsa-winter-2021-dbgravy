@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -26,17 +26,14 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser, inviteToOrganiza
 
   const onSubmit = (values: IRegisterUser) => {
     const { email, password, firstName, lastName, organizationName } = values;
-    const user = { email, password, firstName, lastName, organizationName };
-    addNewUser(user);
-    const { email, password, firstName, lastName, organisationName } = values;
     const payload = inviteToOrganization.isLoading
       ? { email,
         password,
         firstName,
         lastName,
-        organisationName,
+        organizationName,
         currentOrganizationId: inviteToOrganization.organizationId }
-      : { email, password, firstName, lastName, organisationName };
+      : { email, password, firstName, lastName, organizationName };
     addNewUser(payload);
   };
   const initialValues = {
@@ -106,7 +103,7 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser, inviteToOrganiza
           && (
           <InputField
             label="Organisation's Name"
-            name="organisationName"
+            name="organizationName"
             type="text"
             placeholder="Tesla"
           />
