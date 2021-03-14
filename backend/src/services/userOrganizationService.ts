@@ -1,10 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import { UserRepository } from '../data/repositories/userRepository';
-import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
-import { sendEmail } from '../common/helpers/mailHelper';
 import { OrganizationRepository } from '../data/repositories/organizationRepository';
-import UserOrganizationRepository from '../data/repositories/userOrganizationRepositry';
-// import { sendEmail } from '../common/helpers/mailHelper';
 import { sendMail } from './mailService';
 import { createInviteToOrganizationToken, verifyInviteToken } from '../common/helpers/tokenHelper';
 import { formatResponse } from '../common/mappers/userOrganization';
@@ -12,9 +8,13 @@ import { IUserOrganizationResponse } from '../common/models/userOrganization/IUs
 import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
 import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
-import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
+import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
+import { IInviteUserToOrganization } from '../common/models/userOrganization/IInviteUserToOrganization';
+import { Role } from '../common/enums/Role';
+import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -37,7 +37,6 @@ export const createUserOrganization = async (data: ICreateUserOrganization): Pro
     text: 'link to invite',
     html: '<a href="#">link to invite</a>'
   };
-  // await sendEmail(msg);
   await sendMail(msg);
   return formatResponse(res);
 };
@@ -59,7 +58,6 @@ export const resendInvite = async (email: string, user: ITransportedUser) => {
     text: 'Link to invite',
     html: `<a href=${baseUrl}/${inviteToken}>Link to invite</a>`
   };
-  // const res = await sendEmail(msg);
   const res = await sendMail(msg);
   return res;
 };
@@ -91,7 +89,35 @@ export const getUserCurOrganization = async (
   return response;
 };
 
-export const checkInviteUser = async (inviteToken: string) => {
+export const switchUserToOrganization = async (
+  organizationId: string,
+  user: ITransportedUser
+): Promise<ITransportedUser> => {
+  const organization = await getCustomRepository(OrganizationRepository).getById(organizationId);
+  if (!organization) {
+    throw new CustomError('Organization not found', 404);
+  }
+  const userOrganizationExist = await getCustomRepository(UserOrganizationRepository)
+    .getUserOrganization(organizationId, user.id);
+  if (userOrganizationExist) {
+    throw new CustomError('User already switch to this organization', 400);
+  }
+  await getCustomRepository(UserOrganizationRepository)
+    .addUserOrganization(user.id, {
+      role: Role.DEVELOPER,
+      userId: user.id,
+      organizationId,
+      status: OrganizationStatus.ACTIVE
+    });
+  await getCustomRepository(UserRepository).updateUserFields({
+    id: user.id,
+    currentOrganizationId: organizationId
+  });
+  const switchedUser = await getCustomRepository(UserRepository).getById(user.id);
+  return { ...extractTransportedUser(switchedUser), currentOrganizationId: switchedUser.currentOrganizationId };
+};
+
+export const checkInviteUser = async (inviteToken: string): Promise<IInviteUserToOrganization> => {
   const data = await verifyInviteToken(inviteToken);
   return data;
 };
