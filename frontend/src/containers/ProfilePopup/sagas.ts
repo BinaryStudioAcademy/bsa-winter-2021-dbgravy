@@ -19,11 +19,11 @@ function* fetchUserOrganization() {
   try {
     const response: IUserOrganization = yield call(
       // Will be implemented
-      fetchOrganization, user.id, user.organizationId || ''
+      fetchOrganization, user.id || '', user.organizationId || ''
     );
-    yield put(fetchOrgInfoRoutine.success({ user, currentOrganization: response }));
+    yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
   } catch {
-    yield put(fetchOrgInfoRoutine.failure({ user }));
+    yield put(fetchOrgInfoRoutine.failure());
   }
 }
 
