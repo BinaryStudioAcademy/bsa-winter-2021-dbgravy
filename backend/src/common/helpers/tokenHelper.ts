@@ -16,7 +16,11 @@ export const verifyToken = async (token: string) => await new Promise(resolve =>
   jwt.verify(token, secret, (_err, decoded) => resolve(!!decoded));
 });
 
-// eslint-disable-next-line no-return-await
-export const verifyInviteToken = async (token: string) => jwt.verify(token, secret, (_err, decode) => decode);
+export const verifyInviteToken = async (token: string) => {
+  const inviteData = await new Promise(resolve => {
+    jwt.verify(token, secret, (_err, decoded) => resolve(decoded));
+  });
+  return inviteData as IInviteUserToOrganization;
+};
 
 export const extractUserIdFromTokem = (token: string) => jwt.decode(token) as IRefreshTokenData;
