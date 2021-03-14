@@ -4,6 +4,9 @@ import { IUser } from '../../common/models/user/IUser';
 import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 import { fetchOrganization, postCreateOrganization } from '../../services/userService';
 import { fetchOrgInfoRoutine, createOrganizationRoutine } from './routines';
+import { logotUserRoutine } from '../../scenes/Auth/routines';
+import { removeToken } from '../../services/authService';
+import { clearStorage, getRefreshToken } from '../../common/helpers/storageHelper';
 
 function* watchFetchUserOrganization() {
   yield takeEvery(fetchOrgInfoRoutine.TRIGGER, fetchUserOrganization);
@@ -16,11 +19,11 @@ function* fetchUserOrganization() {
   try {
     const response: IUserOrganization = yield call(
       // Will be implemented
-      fetchOrganization, user.id, user.organizationId || ''
+      fetchOrganization, user.id || '', user.organizationId || ''
     );
-    yield put(fetchOrgInfoRoutine.success({ user, currentOrganization: response }));
+    yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
   } catch {
-    yield put(fetchOrgInfoRoutine.failure({ user }));
+    yield put(fetchOrgInfoRoutine.failure());
   }
 }
 
@@ -46,9 +49,21 @@ function* createOrganization() {
   }
 }
 
+function* logout() {
+  const token = getRefreshToken();
+  yield removeToken(token);
+  yield call(clearStorage);
+  yield put(logotUserRoutine.success());
+}
+
+function* watchLogout() {
+  yield takeEvery(logotUserRoutine.TRIGGER, logout);
+}
+
 export default function* organizationUserSaga() {
   yield all([
     watchFetchUserOrganization(),
-    watchCreateOrganization()
+    watchCreateOrganization(),
+    watchLogout()
   ]);
 }
