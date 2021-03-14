@@ -47,3 +47,7 @@ export const signUpValSchema = Yup.object().shape({
   password: signUpPassword,
   confirmPassword
 });
+
+export const inviteEmailSchema = Yup.object().shape({
+  email
+});

@@ -18,6 +18,8 @@ import { Roles } from '../../../../common/enums/UserRoles';
 import { fetchOrgInfoRoutine } from '../../../../containers/ProfilePopup/routines';
 import Loader from '../../../../components/Loader';
 import { IUserEdit } from '../../../../common/models/user/IUserEdit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
   users: IUser[],
@@ -39,9 +41,12 @@ const Users: React.FC<IProps> = ({
   users, count, isLoading, fetchUsers, inviteNew, reInvite, activation, userChanges, isFailed,
   setShowModal, showModal, fetchUserOrganization, organizationId }) => {
   useEffect(() => {
-    fetchUserOrganization();
     fetchUsers();
   }, [organizationId]);
+
+  useEffect(() => {
+    fetchUserOrganization();
+  }, []);
 
   const [searchBox, setSearch] = useState('');
 
@@ -90,7 +95,12 @@ const Users: React.FC<IProps> = ({
 
   const render = () => {
     if (isFailed) {
-      return <div className={styles.lf}>Failed to fetch...</div>;
+      return (
+        <div className={styles.lf}>
+          {'Failed to get users '}
+          <FontAwesomeIcon icon={faSyncAlt} onClick={fetchUsers} color="grey" />
+        </div>
+      );
     }
     return (
       <Loader isLoading={isLoading} isAbsolute={false}>{displayUsers()}</Loader>
