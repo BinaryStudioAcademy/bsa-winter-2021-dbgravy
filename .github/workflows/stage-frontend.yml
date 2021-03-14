@@ -1,0 +1,37 @@
+name: Stage - Frontend Buil
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [dev]
+    paths: 'frontend/**/*.*'
+
+jobs:
+  jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build
+      run: |
+        cd frontend
+        npm run build
+        
+    - name: Deploy to S3
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --delete
+      env:
+        AWS_S3_BUCKET: dbgravy-stage
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        SOURCE_DIR: 'frontend/build'
