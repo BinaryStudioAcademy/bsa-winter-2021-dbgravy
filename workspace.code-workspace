@@ -12,6 +12,7 @@
 			"fontawesome",
 			"fortawesome",
 			"fullfill",
+			"middlewares",
 			"typeorm",
 			"uuidv"
 		]
