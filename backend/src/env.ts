@@ -5,7 +5,8 @@ dotenv.config();
 
 export const env = {
   app: {
-    port: getOsEnv('PORT') || 3001
+    port: getOsEnv('PORT') || 3001,
+    secret: getOsEnv('SECRET_KEY')
   },
   db: {
     database: getOsEnv('TYPEORM_DATABASE'),
@@ -24,8 +25,8 @@ export const env = {
     }
   },
   sendGrid: {
-    apiKey: process.env.SENDGRID_API_KEY,
-    emailFrom: process.env.SENDGRID_EMAIL_FROM
+    apiKey: getOsEnv('SENDGRID_API_KEY'),
+    emailFrom: getOsEnv('SENDGRID_EMAIL_FROM')
   }
 
 };

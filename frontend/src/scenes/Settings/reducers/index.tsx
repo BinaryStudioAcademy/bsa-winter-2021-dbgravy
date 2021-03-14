@@ -22,7 +22,6 @@ interface IUserState {
     status?: Status
     isLoading: boolean,
     isFailed: boolean
-    isSuccess?: boolean
   },
   showModal: boolean
 }
@@ -32,8 +31,7 @@ const initialState: IUserState = {
   isLoading: true,
   userChanges: {
     isLoading: false,
-    isFailed: false,
-    isSuccess: false
+    isFailed: false
   },
   showModal: false
 };

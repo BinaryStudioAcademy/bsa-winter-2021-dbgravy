@@ -9,19 +9,18 @@ import {
 } from '../routines/index';
 import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
+import { Status } from '../../../common/enums/UserStatus';
 
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
 }
-// Not implemented
-// const selectOrgId = (state: IAppState) => state.user;
+const selectOrgId = (state: IAppState) => state.user.currentOrganization;
 const selectUser = (state: IAppState) => state.settings;
 
 function* fetchUsersList() {
-  // Not implemented
-  // const { organizationId } = select(selectOrgId);
   try {
-    const response: IUser[] = yield call(fetchUsers, '1');
+    const { id } = yield select(selectOrgId);
+    const response: IUser[] = yield call(fetchUsers, id);
     yield put(fetchUsersRoutine.success(response));
   } catch {
     yield put(fetchUsersRoutine.failure());
@@ -40,11 +39,10 @@ function* sendUserInvite() {
   const { role, email } = userChanges;
   try {
     if (!userChanges.new) {
-      // thos
       const response: IUser = yield call(resendInvite, { email, organizationId: '1' });
       yield put(reinviteUserRoutine.success(response));
     } else {
-      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1' });
+      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1', status: Status.Pending });
       yield put(inviteNewUserRoutine.success(response));
       yield put(modalShowRoutine.success());
     }

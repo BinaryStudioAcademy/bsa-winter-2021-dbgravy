@@ -14,6 +14,7 @@ import { Status } from '../../../common/enums/UserStatus';
 import User from '../components/User';
 import InviteModal from '../components/InviteModal';
 import styles from './styles.module.scss';
+import { Roles } from '../../../common/enums/UserRoles';
 
 interface IProps {
   users: IUser[],
@@ -28,10 +29,11 @@ interface IProps {
   showModal: boolean
   userChanges: {
     id?: string,
+    email?: string,
     isLoading?: boolean,
     isFailed?: boolean
   },
-  organizationId: number
+  organizationId: string
 }
 
 const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
@@ -49,7 +51,7 @@ const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
       .filter(
         ({ firstName, lastName, email }) => (
           `${firstName} ${lastName}`.toLowerCase().includes(searchBox.toLowerCase())
-          || email.toLowerCase().includes(searchBox.toLowerCase()))
+          || email?.toLowerCase().includes(searchBox.toLowerCase()))
       )
       .map(({ id, firstName, lastName, email, role, status }) => {
         let action;
@@ -69,12 +71,12 @@ const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
         return (
           <User
             key={id}
-            id={id}
-            firstName={firstName}
-            lastName={lastName}
-            email={email}
-            role={role}
-            status={status}
+            id={id || ''}
+            firstName={firstName || ''}
+            lastName={lastName || ''}
+            email={email || ''}
+            role={role || Roles.Viewer}
+            status={status || Status.Pending}
             action={action}
             clsName={styles.userLine}
             resendInvite={reInvite}
@@ -147,7 +149,7 @@ const mapStateToProps = (state: IAppState) => ({
   isFailed: state.settings.isFailed,
   userChanges: state.settings.userChanges,
   showModal: state.settings.showModal,
-  organizationId: 1
+  organizationId: '1'
 });
 
 const mapDispactchToProps = {

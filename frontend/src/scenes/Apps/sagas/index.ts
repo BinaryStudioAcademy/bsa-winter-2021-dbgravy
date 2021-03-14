@@ -8,7 +8,7 @@ function* fetchApps(): Routine<any> {
     const apps = yield call(appService.getApps);
     yield put(fetchAppRoutine.success(apps));
   } catch (error) {
-    console.log('addApp error:', error.message);
+    console.log('fetchApp error:', error.message);
   }
 }
 

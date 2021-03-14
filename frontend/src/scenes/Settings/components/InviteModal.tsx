@@ -13,7 +13,6 @@ interface IProps {
     id?: string,
     isLoading?: boolean,
     isFailed?: boolean
-    isSuccess?: boolean
   }
 }
 
@@ -63,9 +62,6 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
         new: true
       };
       handleSend(newUser);
-      if (userChanges.isSuccess) {
-        handleClose();
-      }
     } else {
       setEmailValid(false);
     }

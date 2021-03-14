@@ -1,0 +1,85 @@
+
+.container {
+  width: 280px;
+  height: 350px;
+  max-height: 500px;
+  display: flex;
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  flex-direction: column;
+  color: rgb(83, 83, 83);
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+  border-radius: 3px;
+  background: #fff;
+  z-index: 1;
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    padding: 10px 0 0 20px;
+  }
+
+  .block:last-child {
+    border-bottom: none;
+  }
+
+  .block > span {
+    margin: 0 10px 13px 0;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .secondary {
+    color: rgb(143, 143, 143);
+    cursor: default !important;
+    user-select: text !important;
+    padding-left: 10px;
+  }
+
+  .primary {
+    font-weight: 600;
+    color: #000;
+    cursor: default !important;
+    user-select: text !important;
+  }
+
+  .link {
+    color: rgb(98, 176, 212);
+  }
+
+  .block > span > svg {
+    margin-right: 8px;
+  }
+
+  .line {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.failed {
+  display: flex;
+  background: rgb(255, 158, 158);
+  flex-grow: 2;
+  color: #fff;
+  align-items: center;
+}
+
+.loading {
+  background: rgb(170, 217, 255);
+  flex-grow: 2;
+}
+
+.none {
+  display: none
+}
+
+.linklike:hover, .linklike:visited, .linklike:link, .linklike:active
+{
+  color: rgb(83, 83, 83);
+  text-decoration: none;
+  border: none;
+}

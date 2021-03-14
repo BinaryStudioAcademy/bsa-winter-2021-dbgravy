@@ -38,7 +38,7 @@ const User: React.FC<IProps> = ({
         break;
 
       default:
-        resendInvite({ id, status: Status.Pending });
+        resendInvite({ id, email });
     }
   };
 
