@@ -1,7 +1,7 @@
 
 .container {
   width: 280px;
-  height: 350px;
+  height: 220px;
   max-height: 500px;
   display: flex;
   position: absolute;
@@ -19,6 +19,9 @@
     flex-direction: column;
     border-bottom: 1px solid rgb(235, 235, 235);
     padding: 10px 0 0 20px;
+  }
+  .hide{
+    display: none;
   }
 
   .block:last-child {

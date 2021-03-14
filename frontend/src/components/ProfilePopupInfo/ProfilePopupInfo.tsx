@@ -74,7 +74,9 @@ const ProfilePopupInfo: React.FC<IProps> = ({ user, createOrganization, fetchOrg
 
     return (
       <div className={styles.container}>
-        {isLoadFail()}
+        <div className={styles.hide}>
+          {isLoadFail()}
+        </div>
         <div className={styles.block}>
           <span
             onClick={() => setShowCreator(true)}

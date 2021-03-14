@@ -4,10 +4,14 @@ import { IResourcesState } from '../../../reducers/resources';
 import { Roles } from '../../enums/UserRoles';
 import { Status } from '../../enums/UserStatus';
 import { IUser } from '../user/IUser';
+import { IQueryState } from '../../../reducers/queries';
 
 export interface IAppState {
   user: IUserState;
-  application: IAppsState;
+  app: {
+    qur: IQueryState,
+    application: IAppsState
+  }
   resource: IResourcesState;
   settings: {
     users: IUser[],

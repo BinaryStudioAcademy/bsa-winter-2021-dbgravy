@@ -13,6 +13,7 @@ import { IBindingAction } from '../../common/models/callback/IBindingAction';
 import Settings from '../../scenes/Settings';
 import Resources from '../../scenes/Routing/index';
 import Loader from '../../components/Loader';
+import Constructor from '../../scenes/constructor/containers';
 
 interface IProps {
     isLoading: boolean;
@@ -40,6 +41,7 @@ const Routing: React.FC<IProps> = ({
         <PrivateRoute path={Routes.Resources} component={Resources} />
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
+        <PrivateRoute path={Routes.Constructor} component={Constructor} />
       </Switch>
     </Loader>
   );
