@@ -36,7 +36,7 @@ export const updateQueries = async (id: string, data: IUpdateQuery, appId: strin
 };
 
 export const deleteQuery = async (id: string, appId:string): Promise<ITransportedQuery[]> => {
-  await getCustomRepository(QueryRepository).deleteApp(id);
+  await getCustomRepository(QueryRepository).deleteQuery(id);
   const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(appId);
   return queries;
 };

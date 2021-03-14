@@ -80,7 +80,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         queriesApp: [...state.queriesApp, action.payload],
-        queriesAppLength: state.queriesApp.length
+        queriesAppLength: state.queriesApp.length + 1
       };
     case setNewCodeRoutine.TRIGGER:
       return {

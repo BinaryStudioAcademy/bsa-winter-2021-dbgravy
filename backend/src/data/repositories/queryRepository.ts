@@ -22,8 +22,8 @@ export class QueryRepository extends Repository<Query> {
     await this.update(id, data);
   }
 
-  async deleteApp(id: string): Promise<void> {
+  async deleteQuery(id: string): Promise<void> {
     const query = await this.getQueryById(id);
-    this.remove(query);
+    await this.remove(query);
   }
 }

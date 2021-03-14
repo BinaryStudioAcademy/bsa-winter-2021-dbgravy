@@ -89,6 +89,7 @@ const Constructor:React.FC<IProps> = () => {
     dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
   const deleteQuery = () => {
+    console.log(query.selectQuery.selectQueryName);
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
       appId: '3a42e461-222a-45ac-902f-440b4471e51a'
