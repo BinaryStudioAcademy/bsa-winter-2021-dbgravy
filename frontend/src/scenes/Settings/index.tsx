@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/SideBar';
 import Users from './containers/Users';
 
 import styles from './styles.module.scss';

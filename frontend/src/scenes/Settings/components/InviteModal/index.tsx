@@ -1,19 +1,15 @@
 import React, { MouseEvent, KeyboardEvent, ChangeEvent, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { Routine } from 'redux-saga-routines';
-import { Roles } from '../../../common/enums/UserRoles';
-import styles from './styles.module.scss';
+import { Roles } from '../../../../common/enums/UserRoles';
+import { IUserEdit } from '../../../../common/models/user/IUserEdit';
+import styles from '../styles.module.scss';
 
 interface IProps {
   showModal: boolean,
   clsName: string,
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>,
-  handleSend: Routine<any>,
-  userChanges: {
-    id?: string,
-    isLoading?: boolean,
-    isFailed?: boolean
-  }
+  userChanges: IUserEdit,
+  setShowModal: (status: boolean) => void,
+  handleSend: (obj: {email: string, role: Roles, new?: boolean}) => void,
 }
 
 const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handleSend, userChanges }) => {

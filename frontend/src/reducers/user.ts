@@ -34,7 +34,7 @@ export const user = (
     case addNewUserRoutine.TRIGGER:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       };
     case addNewUserRoutine.SUCCESS:
     case fetchUserRoutine.SUCCESS:
