@@ -24,6 +24,7 @@ function* deleteResource() {
   try {
     yield call(resourceService.delResource, resource.id);
     yield put(deleteResourceRoutine.success());
+    yield put(fetchResourceRoutine.trigger());
   } catch {
     yield put(deleteResourceRoutine.failure(resource));
   }
@@ -41,7 +42,7 @@ function* editResource() {
 
 function* watchEditResource() {
   yield takeEvery(deleteResourceRoutine.TRIGGER, deleteResource);
-  yield takeEvery(editResourseRoutine.TRIGGER, editResource);
+  yield takeEvery(editResourseRoutine.REQUEST, editResource);
 }
 
 export default function* resourceSaga() {

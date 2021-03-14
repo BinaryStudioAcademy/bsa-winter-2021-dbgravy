@@ -54,7 +54,6 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
     case editResourseRoutine.TRIGGER:
       return {
         ...state,
-        isLoading: true,
         editResource: {
           ...action.payload,
           isFailed: false

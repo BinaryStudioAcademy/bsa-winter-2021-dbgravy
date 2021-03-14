@@ -42,7 +42,7 @@ const UpdateApp: React.FC<IProps> = ({ app, edit, isShow, showEdit, isFailed }) 
       </Modal.Header>
       <Modal.Body>
         <Form>
-          {!isFailed ? <span>Failed to rename app</span> : null}
+          {isFailed ? <span>Failed to rename app</span> : null}
           <Form.Label className={styles.required}>App name</Form.Label>
           <Form.Control
             required
