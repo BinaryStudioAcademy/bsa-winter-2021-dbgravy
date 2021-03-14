@@ -10,6 +10,8 @@ router
   .get('/invite/:inviteToken', run(req => UOService.checkInviteUser(req.params.inviteToken)))
   .post('/', run(req => UOService.createUserOrganization(req.body)))
   .put('/', run(req => UOService.updateUserOrganization(req.body)))
-  .post('/resend', run(req => UOService.resendInvite(req.body.email)));
+  .post('/resend', run(req => UOService.resendInvite(req.body.email, req.user as ITransportedUser)))
+  .post('/switch', run(req => (
+    UOService.switchUserToOrganization(req.body.organizationId, req.user as ITransportedUser))));
 
 export default router;
