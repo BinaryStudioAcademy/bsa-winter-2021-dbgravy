@@ -72,3 +72,14 @@
   background: rgb(170, 217, 255);
   flex-grow: 2;
 }
+
+.none {
+  display: none
+}
+
+.linklike:hover, .linklike:visited, .linklike:link, .linklike:active
+{
+  color: rgb(83, 83, 83);
+  text-decoration: none;
+  border: none;
+}
