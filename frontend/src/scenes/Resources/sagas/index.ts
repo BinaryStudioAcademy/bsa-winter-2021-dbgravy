@@ -8,7 +8,7 @@ function* fetchResources(): Routine<any> {
     const resources = yield call(resourceService.getResources);
     yield put(fetchResourceRoutine.success(resources));
   } catch (error) {
-    console.log('getResource error:', error.message);
+    yield put(fetchResourceRoutine.failure(error.message));
   }
 }
 
