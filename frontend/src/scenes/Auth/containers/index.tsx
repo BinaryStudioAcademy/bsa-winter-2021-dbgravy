@@ -18,30 +18,32 @@ const Auth: FunctionComponent<IProps> = ({
   loginUser,
   addNewUser
 }: IProps) => (
-  <div className={styles.pageLayout}>
-    <div className={styles.rightSide}>
-      <Route
-        exact
-        path={Routes.SignIn}
-        render={props => (
-          <SignIn
-            {...props}
-            loginUser={loginUser}
-          />
-        )}
-        key={Routes.SignIn}
-      />
-      <Route
-        exact
-        path={Routes.SignUp}
-        render={props => (
-          <SignUp
-            {...props}
-            addNewUser={addNewUser}
-          />
-        )}
-        key={Routes.SignUp}
-      />
+  <div className={styles.pageLayoutWrp}>
+    <div className={styles.pageLayout}>
+      <div className={styles.rightSide}>
+        <Route
+          exact
+          path={Routes.SignIn}
+          render={props => (
+            <SignIn
+              {...props}
+              loginUser={loginUser}
+            />
+          )}
+          key={Routes.SignIn}
+        />
+        <Route
+          exact
+          path={Routes.SignUp}
+          render={props => (
+            <SignUp
+              {...props}
+              addNewUser={addNewUser}
+            />
+          )}
+          key={Routes.SignUp}
+        />
+      </div>
     </div>
   </div>
 );
