@@ -94,3 +94,10 @@ export const updateResource = async (id: string, resourceData: IEditResource): P
   );
   return extractTransportedResource(editedResource);
 };
+
+export const deleteResource = async (id: string): Promise<ITransportedResource> => {
+  const result = await getCustomRepository(ResourceRepository)
+    .deleteResource(id);
+
+  return result;
+};

@@ -25,4 +25,9 @@ export class ResourceRepository extends Repository<Resource> {
     await this.update(id, data);
     return this.getResourceById(id);
   }
+
+  async deleteResource(id: string): Promise<Resource> {
+    const resource = await this.getResourceById(id);
+    return this.remove(resource);
+  }
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { Form, FormControl } from 'react-bootstrap';
 import AddApp from './components/AddApp';
-import { addAppRoutine, fetchAppRoutine } from './routines';
+import { addAppRoutine, deleteAppRoutine, fetchAppRoutine, showEditRoutine } from './routines';
 import { connect } from 'react-redux';
 import AppsList from './containers/AppsList/index';
 import { IApps } from '../../common/models/apps/IApps';
@@ -11,13 +11,16 @@ import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 
 interface IProps {
-  isLoading: boolean,
-  addApp: Function,
-  fetchApps: () => void,
-  apps: IApps[]
+  addApp: (name: string) => void;
+  fetchApps: () => void;
+  deleteApp: (data: { app: IApps }) => void;
+  showEdit: (data: { app: IApps, show: boolean }) => void;
+  isEdit?: boolean;
+  isLoading: boolean;
+  apps: IApps[];
 }
 
-const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp, showEdit, isEdit }) => {
   useEffect(() => {
     fetchApps();
   }, []);
@@ -47,7 +50,12 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading }) => {
             </Form>
           </div>
 
-          <AppsList search={searchValue} appsList={apps} />
+          <AppsList
+            search={searchValue}
+            appsList={apps}
+            deleteApp={deleteApp}
+            showEdit={showEdit}
+          />
         </div>
       </Loader>
     </div>
@@ -61,7 +69,9 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
   addApp: addAppRoutine,
-  fetchApps: fetchAppRoutine
+  fetchApps: fetchAppRoutine,
+  showEdit: showEditRoutine,
+  deleteApp: deleteAppRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Apps);

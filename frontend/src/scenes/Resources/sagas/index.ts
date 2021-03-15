@@ -6,15 +6,17 @@ import {
   createResourceRoutine,
   updateResourceRoutine,
   testResourceRoitine
+  // deleteResourceRoutine
 } from '../routines/index';
 import * as resourceService from '../../../services/resourceService';
+// import { IAppState } from '../../../common/models/store/IAppState';
 
 function* fetchResources(): Routine<any> {
   try {
     const resources = yield call(resourceService.getResources);
     yield put(fetchResourceRoutine.success(resources));
   } catch (error) {
-    console.log('getResources error:', error.message);
+    yield put(fetchResourceRoutine.failure(error.message));
   }
 }
 
@@ -22,6 +24,7 @@ function* watchFetchResources() {
   yield takeEvery(fetchResourceRoutine.TRIGGER, fetchResources);
 }
 
+// <<<<<<< HEAD
 function* getResource({ payload }: Routine<any>): Routine<any> {
   try {
     const resource = yield call(resourceService.getResourceById, payload);
@@ -72,6 +75,34 @@ function* updateResource({ payload }: Routine<any>): Routine<any> {
 
 function* watchUpdateResource() {
   yield takeEvery(updateResourceRoutine.TRIGGER, updateResource);
+  // =======
+  // const selector = (state: IAppState) => state.resource.editResource;
+
+  // function* deleteResource() {
+  //   const { resource } = yield select(selector);
+  //   try {
+  //     yield call(resourceService.delResource, resource.id);
+  //     yield put(deleteResourceRoutine.success());
+  //     yield put(fetchResourceRoutine.trigger());
+  //   } catch {
+  //     yield put(watchEditResource.failure(resource));
+  //   }
+  // }
+
+  // function* editResource() {
+  //   const { resource, updated } = yield select(selector);
+  //   try {
+  //     yield call(resourceService.updateResource, resource.id, updated);
+  //     yield put(deleteResourceRoutine.success());
+  //   } catch {
+  //     yield put(deleteResourceRoutine.failure({ resource, updated }));
+  //   }
+  // }
+
+  // function* watchEditResource() {
+  //   yield takeEvery(deleteResourceRoutine.TRIGGER, deleteResource);
+  //   yield takeEvery(editResourseRoutine.REQUEST, editResource);
+  // >>>>>>> dev
 }
 
 export default function* resourceSaga() {

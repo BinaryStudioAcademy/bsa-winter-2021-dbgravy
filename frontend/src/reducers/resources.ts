@@ -1,9 +1,12 @@
 import { Routine } from 'redux-saga-routines';
+// <<<<<<< HEAD
 import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
   clearResourceRoitine,
   testResourceRoitine
+  // deleteResourceRoutine,
+  // editResourseRoutine
 } from '../scenes/Resources/routines';
 import { IResource } from '../common/models/resources/IResource';
 import { ResourceTypeValue } from '../common/enums/ResourceTypeValue';
@@ -12,8 +15,16 @@ import { ICreateResource } from '../common/models/resources/ICreateResource';
 export interface IResourcesState {
   isLoading: boolean,
   resources: Array<IResource>;
+  // <<<<<<< HEAD
   resource: ICreateResource;
   isConnected: boolean | null;
+  // =======
+  //   editResource?: {
+  //     resource?: IResource,
+  //     updated?: {}
+  //     isFailed: boolean
+  //   }
+  // >>>>>>> dev
 }
 
 const initialState = {
@@ -41,6 +52,7 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
         resources: [...action.payload],
         isLoading: false
       };
+    // <<<<<<< HEAD
     case getResourceByIdRoutine.SUCCESS:
       return {
         ...state,
@@ -65,6 +77,58 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
       return {
         ...state,
         isConnected: true
+        // =======
+        //     case deleteResourceRoutine.TRIGGER:
+        //       return {
+        //         ...state,
+        //         isLoading: true,
+        //         editResource: {
+        //           ...action.payload,
+        //           isFailed: false
+        //         }
+        //       };
+        //     case deleteResourceRoutine.SUCCESS:
+        //       return {
+        //         ...state,
+        //         isLoading: false,
+        //         editResource: {
+        //           isFailed: false
+        //         }
+        //       };
+        //     case deleteResourceRoutine.FAILURE:
+        //       return {
+        //         ...state,
+        //         isLoading: false,
+        //         editResource: {
+        //           ...action.payload,
+        //           isFailed: true
+        //         }
+        //       };
+        //     case editResourseRoutine.TRIGGER:
+        //       return {
+        //         ...state,
+        //         editResource: {
+        //           ...action.payload,
+        //           isFailed: false
+        //         }
+        //       };
+        //     case editResourseRoutine.SUCCESS:
+        //       return {
+        //         ...state,
+        //         isLoading: false,
+        //         editResource: {
+        //           isFailed: false
+        //         }
+        //       };
+        //     case editResourseRoutine.FAILURE:
+        //       return {
+        //         ...state,
+        //         isLoading: false,
+        //         editResource: {
+        //           ...action.payload,
+        //           isFailed: true
+        //         }
+        // >>>>>>> dev
       };
     default:
       return state;

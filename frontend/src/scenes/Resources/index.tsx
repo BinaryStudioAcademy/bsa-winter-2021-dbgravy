@@ -3,9 +3,9 @@ import styles from './styles.module.scss';
 import { Form, FormControl } from 'react-bootstrap';
 import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
-import TableContainer from './containers/TableContainer/index';
+import TableContainer from './components/TableContainer/index';
 import { IResource } from '../../common/models/resources/IResource';
-import { fetchResourceRoutine } from './routines/index';
+import { fetchResourceRoutine, deleteResourceRoutine, updateResourceRoutine } from './routines/index';
 import { IAppState } from '../../common/models/store/IAppState';
 import { connect } from 'react-redux';
 import { Routes } from '../../common/enums/Routes';
@@ -14,13 +14,17 @@ import { Link } from 'react-router-dom';
 interface IProps {
   resources: IResource[],
   isLoading: boolean,
-  fetchResources: () => void
+  fetchResources: () => void,
+  remove: (obj: { resource: IResource }) => void,
+  edit: (obj: { resource: IResource }) => void
 }
 
 const Resources: React.FC<IProps> = ({
   resources,
   isLoading,
-  fetchResources
+  fetchResources,
+  remove,
+  edit
 }) => {
   useEffect(() => {
     fetchResources();
@@ -55,7 +59,7 @@ const Resources: React.FC<IProps> = ({
           </div>
 
           <div className="table-wrp">
-            <TableContainer search={searchValue} resources={resources} />
+            <TableContainer search={searchValue} resources={resources} remove={remove} edit={edit} />
           </div>
         </div>
       </Loader>
@@ -69,7 +73,9 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-  fetchResources: fetchResourceRoutine
+  fetchResources: fetchResourceRoutine,
+  remove: deleteResourceRoutine,
+  edit: updateResourceRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Resources);
