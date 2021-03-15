@@ -7,14 +7,12 @@ import ResourceItem from '../ResourceItem';
 interface IProps {
   search: string;
   resources: IResource[];
-  remove: (obj: { resource: IResource }) => void;
-  edit: (obj: { resource: IResource }) => void;
+  remove: (obj: { resource: IResource }) => void
 }
 const TableContainer: React.FC<IProps> = ({
   search,
   resources,
-  remove,
-  edit
+  remove
 }) => (
   <Table className="table-hover table">
     <thead>
@@ -30,7 +28,7 @@ const TableContainer: React.FC<IProps> = ({
         resources.map(resource => (
           resource.name.includes(search)
             ? (
-              <ResourceItem resource={resource} remove={remove} edit={edit} key={resource.id} />
+              <ResourceItem resource={resource} remove={remove} key={resource.id} />
             )
             : null
         ))

@@ -10,13 +10,11 @@ import styles from './styles.module.scss';
 interface IProps {
   resource: IResource;
   remove: (obj: { resource: IResource }) => void;
-  edit: (obj: { resource: IResource, updated?: Partial<IResource> }) => void;
 }
 
 const ResourceItem: React.FC<IProps> = ({
   resource,
-  remove,
-  edit
+  remove
 }) => {
   const [display, setDisplay] = useState(false);
 

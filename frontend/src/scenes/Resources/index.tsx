@@ -5,7 +5,7 @@ import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 import TableContainer from './components/TableContainer/index';
 import { IResource } from '../../common/models/resources/IResource';
-import { fetchResourceRoutine, deleteResourceRoutine, updateResourceRoutine } from './routines/index';
+import { fetchResourceRoutine, deleteResourceRoutine } from './routines/index';
 import { IAppState } from '../../common/models/store/IAppState';
 import { connect } from 'react-redux';
 import { Routes } from '../../common/enums/Routes';
@@ -15,16 +15,14 @@ interface IProps {
   resources: IResource[],
   isLoading: boolean,
   fetchResources: () => void,
-  remove: (obj: { resource: IResource }) => void,
-  edit: (obj: { resource: IResource }) => void
+  remove: (obj: { resource: IResource }) => void
 }
 
 const Resources: React.FC<IProps> = ({
   resources,
   isLoading,
   fetchResources,
-  remove,
-  edit
+  remove
 }) => {
   useEffect(() => {
     fetchResources();
@@ -59,7 +57,7 @@ const Resources: React.FC<IProps> = ({
           </div>
 
           <div className="table-wrp">
-            <TableContainer search={searchValue} resources={resources} remove={remove} edit={edit} />
+            <TableContainer search={searchValue} resources={resources} remove={remove} />
           </div>
         </div>
       </Loader>
@@ -74,8 +72,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
   fetchResources: fetchResourceRoutine,
-  remove: deleteResourceRoutine,
-  edit: updateResourceRoutine
+  remove: deleteResourceRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Resources);

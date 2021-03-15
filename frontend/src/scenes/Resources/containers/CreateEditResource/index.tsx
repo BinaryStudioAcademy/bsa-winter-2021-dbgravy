@@ -46,7 +46,10 @@ const CreateUpdateResource: React.FC<IProps> = (
   }
 ) => {
   const { id }: IFetchParams = useParams();
+
   useEffect(() => {
+    setDisableCreate(true);
+    setDisableCancel(false);
     if (id) {
       getResource(id);
     }
@@ -55,16 +58,14 @@ const CreateUpdateResource: React.FC<IProps> = (
   const [isDisabledCreateBtn, setDisableCreate] = useState(true);
   const [isDisabledCancelBtn, setDisableCancel] = useState(false);
   const [btnValue, setBtnValue] = useState('');
-  const [isShow, setIsShow] = useState<boolean>(false);
+  const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
     if (isConnected) {
-      setIsShow(false);
-      setDisableCancel(false);
       setDisableCreate(false);
+      setIsShow(false);
     } else if (isConnected === false) {
       setIsShow(true);
-      setDisableCreate(true);
     }
   }, [isConnected]);
 
@@ -74,20 +75,16 @@ const CreateUpdateResource: React.FC<IProps> = (
   };
 
   const testConnection: ThandleSubmitFormData = newResource => {
-    setDisableCancel(true);
-    setDisableCreate(true);
     testResource(newResource);
   };
 
   const handleSubmitFormData: ThandleSubmitFormData = newResource => {
     if (id) {
       editResource(newResource);
-      setDisableCreate(true);
       clear();
       push(Routes.Resources);
     } else {
       addResource(newResource);
-      setDisableCreate(true);
       clear();
       push(Routes.Resources);
     }
@@ -209,7 +206,7 @@ const CreateUpdateResource: React.FC<IProps> = (
                 className="text-primary"
                 type="submit"
                 name="testConnection"
-                onClick={() => setBtnValue('test')}
+                onClick={() => setBtnValue(ButtonEnum.test)}
               >
                 Test connection
               </Button>
@@ -218,7 +215,7 @@ const CreateUpdateResource: React.FC<IProps> = (
                 type="submit"
                 name="createResource"
                 disabled={isDisabledCreateBtn}
-                onClick={() => setBtnValue('create')}
+                onClick={() => setBtnValue(ButtonEnum.create)}
               >
                 createResource&rarr;
               </Button>

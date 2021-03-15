@@ -1,15 +1,15 @@
-import { all, put, call, takeEvery } from 'redux-saga/effects';
+import { all, put, call, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
 import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
   createResourceRoutine,
   updateResourceRoutine,
-  testResourceRoitine
-  // deleteResourceRoutine
+  testResourceRoitine,
+  deleteResourceRoutine
 } from '../routines/index';
 import * as resourceService from '../../../services/resourceService';
-// import { IAppState } from '../../../common/models/store/IAppState';
+import { IAppState } from '../../../common/models/store/IAppState';
 
 function* fetchResources(): Routine<any> {
   try {
@@ -24,13 +24,12 @@ function* watchFetchResources() {
   yield takeEvery(fetchResourceRoutine.TRIGGER, fetchResources);
 }
 
-// <<<<<<< HEAD
 function* getResource({ payload }: Routine<any>): Routine<any> {
   try {
     const resource = yield call(resourceService.getResourceById, payload);
     yield put(getResourceByIdRoutine.success(resource));
   } catch (error) {
-    console.log('getResource error:', error.message);
+    yield put(getResourceByIdRoutine.failure(error.message));
   }
 }
 
@@ -43,7 +42,7 @@ function* addResource({ payload }: Routine<any>): Routine<any> {
     yield call(resourceService.addResource, payload);
     yield put(fetchResourceRoutine.trigger());
   } catch (error) {
-    console.log('addResource error:', error.message);
+    yield put(createResourceRoutine.failure(error.message));
   }
 }
 
@@ -56,7 +55,7 @@ function* testResource({ payload }: Routine<any>): Routine<any> {
     yield call(resourceService.testResource, payload);
     yield put(testResourceRoitine.success());
   } catch (error) {
-    yield put(testResourceRoitine.failure());
+    yield put(testResourceRoitine.failure(error.message));
   }
 }
 
@@ -69,40 +68,28 @@ function* updateResource({ payload }: Routine<any>): Routine<any> {
     yield call(resourceService.updateResource, payload);
     yield put(fetchResourceRoutine.trigger());
   } catch (error) {
-    console.log('editResource error:', error.message);
+    yield put(updateResourceRoutine.failure());
   }
 }
 
 function* watchUpdateResource() {
   yield takeEvery(updateResourceRoutine.TRIGGER, updateResource);
-  // =======
-  // const selector = (state: IAppState) => state.resource.editResource;
+}
 
-  // function* deleteResource() {
-  //   const { resource } = yield select(selector);
-  //   try {
-  //     yield call(resourceService.delResource, resource.id);
-  //     yield put(deleteResourceRoutine.success());
-  //     yield put(fetchResourceRoutine.trigger());
-  //   } catch {
-  //     yield put(watchEditResource.failure(resource));
-  //   }
-  // }
+const selector = (state: IAppState) => state.resource.resource;
 
-  // function* editResource() {
-  //   const { resource, updated } = yield select(selector);
-  //   try {
-  //     yield call(resourceService.updateResource, resource.id, updated);
-  //     yield put(deleteResourceRoutine.success());
-  //   } catch {
-  //     yield put(deleteResourceRoutine.failure({ resource, updated }));
-  //   }
-  // }
+function* deleteResource() {
+  const { resource } = yield select(selector);
+  try {
+    yield call(resourceService.delResource, resource.id);
+    yield put(fetchResourceRoutine.trigger());
+  } catch (error) {
+    yield put(deleteResourceRoutine.failure(error.message));
+  }
+}
 
-  // function* watchEditResource() {
-  //   yield takeEvery(deleteResourceRoutine.TRIGGER, deleteResource);
-  //   yield takeEvery(editResourseRoutine.REQUEST, editResource);
-  // >>>>>>> dev
+function* watchDeleteResource() {
+  yield takeEvery(deleteResourceRoutine.TRIGGER, deleteResource);
 }
 
 export default function* resourceSaga() {
@@ -111,6 +98,7 @@ export default function* resourceSaga() {
     watchGetResource(),
     watchUpdateResource(),
     watchAddResource(),
-    watchTestResource()
+    watchTestResource(),
+    watchDeleteResource()
   ]);
 }

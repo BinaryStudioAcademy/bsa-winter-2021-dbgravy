@@ -4,8 +4,9 @@ import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
   clearResourceRoitine,
-  testResourceRoitine
-  // deleteResourceRoutine,
+  testResourceRoitine,
+  deleteResourceRoutine,
+  updateResourceRoutine
   // editResourseRoutine
 } from '../scenes/Resources/routines';
 import { IResource } from '../common/models/resources/IResource';
@@ -15,19 +16,13 @@ import { ICreateResource } from '../common/models/resources/ICreateResource';
 export interface IResourcesState {
   isLoading: boolean,
   resources: Array<IResource>;
-  // <<<<<<< HEAD
   resource: ICreateResource;
   isConnected: boolean | null;
-  // =======
-  //   editResource?: {
-  //     resource?: IResource,
-  //     updated?: {}
-  //     isFailed: boolean
-  //   }
-  // >>>>>>> dev
+  isFailed: boolean,
+  errorMessage?: string
 }
 
-const initialState = {
+const initialState: IResourcesState = {
   isLoading: true,
   resources: [],
   resource: {
@@ -41,7 +36,9 @@ const initialState = {
     id: '',
     organizationId: ''
   },
-  isConnected: null
+  isConnected: null,
+  isFailed: false,
+  errorMessage: ''
 };
 
 export const resource = (state: IResourcesState = initialState, action: Routine<any>): IResourcesState => {
@@ -50,13 +47,21 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
       return {
         ...state,
         resources: [...action.payload],
-        isLoading: false
+        isLoading: false,
+        isFailed: false,
+        isConnected: null
       };
-    // <<<<<<< HEAD
     case getResourceByIdRoutine.SUCCESS:
       return {
         ...state,
         resource: action.payload
+      };
+    case getResourceByIdRoutine.FAILURE:
+      return {
+        ...state,
+        isFailed: true,
+        errorMessage: action.payload
+
       };
     case clearResourceRoitine.TRIGGER:
       return {
@@ -71,64 +76,35 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
     case testResourceRoitine.FAILURE:
       return {
         ...state,
-        isConnected: false
+        isConnected: false,
+        errorMessage: action.payload,
+        isFailed: true
       };
     case testResourceRoitine.SUCCESS:
       return {
         ...state,
         isConnected: true
-        // =======
-        //     case deleteResourceRoutine.TRIGGER:
-        //       return {
-        //         ...state,
-        //         isLoading: true,
-        //         editResource: {
-        //           ...action.payload,
-        //           isFailed: false
-        //         }
-        //       };
-        //     case deleteResourceRoutine.SUCCESS:
-        //       return {
-        //         ...state,
-        //         isLoading: false,
-        //         editResource: {
-        //           isFailed: false
-        //         }
-        //       };
-        //     case deleteResourceRoutine.FAILURE:
-        //       return {
-        //         ...state,
-        //         isLoading: false,
-        //         editResource: {
-        //           ...action.payload,
-        //           isFailed: true
-        //         }
-        //       };
-        //     case editResourseRoutine.TRIGGER:
-        //       return {
-        //         ...state,
-        //         editResource: {
-        //           ...action.payload,
-        //           isFailed: false
-        //         }
-        //       };
-        //     case editResourseRoutine.SUCCESS:
-        //       return {
-        //         ...state,
-        //         isLoading: false,
-        //         editResource: {
-        //           isFailed: false
-        //         }
-        //       };
-        //     case editResourseRoutine.FAILURE:
-        //       return {
-        //         ...state,
-        //         isLoading: false,
-        //         editResource: {
-        //           ...action.payload,
-        //           isFailed: true
-        //         }
-        // >>>>>>> dev
+      };
+    case updateResourceRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isFailed: true,
+        errorMessage: action.payload
+      };
+    case deleteResourceRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true,
+        resource: action.payload,
+        isFailed: false
+      };
+    case deleteResourceRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isFailed: true,
+        errorMessage: action.payload
       };
     default:
       return state;
