@@ -8,7 +8,6 @@ import { IUserOrganizationResponse } from '../common/models/userOrganization/IUs
 import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
 import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
-import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';

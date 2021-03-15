@@ -1,15 +1,13 @@
 import { Routine } from 'redux-saga-routines';
-import { Roles } from '../../../common/enums/UserRoles';
-import { Status } from '../../../common/enums/UserStatus';
 import { IUser } from '../../../common/models/user/IUser';
 import { IUserEdit } from '../../../common/models/user/IUserEdit';
 import {
   fetchUsersRoutine,
   inviteNewUserRoutine,
-  reinviteUserRoutine,
-  userActivationRoutine,
+  inviteUserToOrganizationRoutine,
   modalShowRoutine,
-  inviteUserToOrganizationRoutine
+  reinviteUserRoutine,
+  userActivationRoutine
 } from '../routines';
 import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
 

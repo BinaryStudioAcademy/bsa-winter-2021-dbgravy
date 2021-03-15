@@ -1,16 +1,7 @@
 import { Routine } from 'redux-saga-routines';
-import {
-  fetchOrgInfoRoutine,
-  createOrganizationRoutine
-} from '../containers/ProfilePopup/routines';
-import {
-  fetchUserRoutine,
-  loginUserRoutine,
-  addNewUserRoutine,
-  logotUserRoutine
-} from '../scenes/Auth/routines';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../containers/ProfilePopup/routines';
+import { addNewUserRoutine, fetchUserRoutine, loginUserRoutine, logotUserRoutine } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
-import { Roles } from '../common/enums/UserRoles';
 import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
 import { IUserOrganization } from '../common/models/user/IUserOrganization';
 

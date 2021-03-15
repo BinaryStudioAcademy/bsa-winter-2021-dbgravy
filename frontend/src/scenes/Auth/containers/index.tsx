@@ -19,31 +19,32 @@ interface IProps {
 }
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
-  addNewUser
+  addNewUser,
+  inviteToOrganization
 }: IProps) => (
   <div className={styles.pageLayoutWrp}>
     <div className={styles.pageLayout}>
-    <div className={styles.rightSide}>
-      <Route
-        exact
-        path={Routes.SignIn}
-        render={props => (
-          <SignIn
-            {...props}
-            loginUser={loginUser}
-            inviteToOrganization={inviteToOrganization}
-          />
-        )}
-        key={Routes.SignIn}
-      />
-      <Route
-        exact
-        path={Routes.SignUp}
-        render={props => (
-          <SignUp
-            {...props}
-            addNewUser={addNewUser}
-            inviteToOrganization={inviteToOrganization}
+      <div className={styles.rightSide}>
+        <Route
+          exact
+          path={Routes.SignIn}
+          render={props => (
+            <SignIn
+              {...props}
+              loginUser={loginUser}
+              inviteToOrganization={inviteToOrganization}
+            />
+          )}
+          key={Routes.SignIn}
+        />
+        <Route
+          exact
+          path={Routes.SignUp}
+          render={props => (
+            <SignUp
+              {...props}
+              addNewUser={addNewUser}
+              inviteToOrganization={inviteToOrganization}
             />
           )}
           key={Routes.SignUp}

@@ -45,7 +45,11 @@ export const removeToken = async (token: string): Promise<void> => {
   await refreshTokenRepository.deleteToken(token);
 };
 
-export const login = async (user: ITransportedUser, token?: string, currentOrganizationId?: string): Promise<IAuthUser> => {
+export const login = async (
+  user: ITransportedUser,
+  token?: string,
+  currentOrganizationId?: string
+): Promise<IAuthUser> => {
   if (token) {
     await removeToken(token);
   }
