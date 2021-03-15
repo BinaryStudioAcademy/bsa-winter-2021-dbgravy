@@ -46,6 +46,16 @@ const Constructor:React.FC<IProps> = () => {
         isOpen: false
       }));
     } else {
+      const runTitle = query.selectQuery.runAutomatically ? 'Run query only when manually triggered'
+        : 'Run query automatically when inputs change';
+      dispatch(setSelectQueryRoutine.success({
+        id: query.selectQuery.selectQueryId,
+        name: query.selectQuery.selectQueryName,
+        code: query.selectQuery.selectQueryCode,
+        runAutomatically: query.selectQuery.runAutomatically,
+        showConfirm: query.selectQuery.showConfirm,
+        runTitle
+      }));
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength}`,
         code: query.selectQuery.selectQueryCode,
