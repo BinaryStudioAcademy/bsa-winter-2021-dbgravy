@@ -30,4 +30,4 @@ jobs:
         region: ${{ secrets.AWS_REGION }}
         version_label: stage-${{ github.sha }}
         deployment_package: deploy.zip
-        wait_for_deployment: false
+        wait_for_deployment: true
