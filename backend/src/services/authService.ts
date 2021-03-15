@@ -40,13 +40,12 @@ const saveRefreshToken = async (token: string, userId: string) => {
 
 export const getUserDataFromToken = (data: ITokenData): Promise<ITokenData> => Promise.resolve(data);
 
-export const removeToken = async (token: any): Promise<any> => {
+export const removeToken = async (token: string): Promise<void> => {
   const refreshTokenRepository = getCustomRepository(RefreshTokenRepository);
-  const res = refreshTokenRepository.deleteToken(token);
-  return res;
+  await refreshTokenRepository.deleteToken(token);
 };
 
-export const login = async (token: string | null, user: ITransportedUser): Promise<IAuthUser> => {
+export const login = async (user: ITransportedUser, token?: string): Promise<IAuthUser> => {
   if (token) {
     await removeToken(token);
   }
@@ -88,7 +87,7 @@ export const register = async (organizationName: string, user: IRegisterUser): P
     email: updatedUser.email,
     status: OrganizationStatus.ACTIVE
   });
-  return login(null, extractTransportedUser(updatedUser));
+  return login(extractTransportedUser(updatedUser));
 };
 
-export const refreshToken = (rt: string | null, user: ITransportedUser): Promise<IAuthUser> => login(rt, user);
+export const refreshToken = (user: ITransportedUser, rt?: string): Promise<IAuthUser> => login(user, rt);
