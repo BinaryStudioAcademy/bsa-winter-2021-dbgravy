@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import styles from './style.module.scss';
 import { connect } from 'react-redux';
 import SignIn from '../components/SignIn';
@@ -11,8 +11,8 @@ import { IBindingCallback1 } from '../../../common/models/callback/IBindingCallb
 import { addNewUserRoutine, loginUserRoutine } from '../routines';
 
 interface IProps {
-    loginUser: IBindingCallback1<ILoginUser>;
-    addNewUser: IBindingCallback1<IRegisterUser>;
+  loginUser: IBindingCallback1<ILoginUser>;
+  addNewUser: IBindingCallback1<IRegisterUser>;
 }
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
@@ -21,28 +21,30 @@ const Auth: FunctionComponent<IProps> = ({
   <div className={styles.pageLayoutWrp}>
     <div className={styles.pageLayout}>
       <div className={styles.rightSide}>
-        <Route
-          exact
-          path={Routes.SignIn}
-          render={props => (
-            <SignIn
-              {...props}
-              loginUser={loginUser}
-            />
-          )}
-          key={Routes.SignIn}
-        />
-        <Route
-          exact
-          path={Routes.SignUp}
-          render={props => (
-            <SignUp
-              {...props}
-              addNewUser={addNewUser}
-            />
-          )}
-          key={Routes.SignUp}
-        />
+        <Switch>
+          <Route
+            exact
+            path={Routes.SignIn}
+            render={props => (
+              <SignIn
+                {...props}
+                loginUser={loginUser}
+              />
+            )}
+            key={Routes.SignIn}
+          />
+          <Route
+            exact
+            path={Routes.SignUp}
+            render={props => (
+              <SignUp
+                {...props}
+                addNewUser={addNewUser}
+              />
+            )}
+            key={Routes.SignUp}
+          />
+        </Switch>
       </div>
     </div>
   </div>

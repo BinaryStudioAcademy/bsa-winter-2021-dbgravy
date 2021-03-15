@@ -11,7 +11,7 @@ import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCa
 import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
 
 interface IProps {
-    addNewUser: IBindingCallback1<IRegisterUser>;
+  addNewUser: IBindingCallback1<IRegisterUser>;
 }
 
 export const SignUp: FunctionComponent<IProps> = ({ addNewUser }) => {
