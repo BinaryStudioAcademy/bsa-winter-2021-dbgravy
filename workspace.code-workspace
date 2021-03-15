@@ -13,6 +13,7 @@
 			"formik",
 			"fortawesome",
 			"fullfill",
+			"middlewares",
 			"typeorm",
 			"uuidv"
 		]
