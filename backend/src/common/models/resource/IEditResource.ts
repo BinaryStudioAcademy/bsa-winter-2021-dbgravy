@@ -8,4 +8,5 @@ export interface IEditResource {
   dbName: string,
   dbUserName: string,
   dbPassword: string,
+  organizationId: string
 }

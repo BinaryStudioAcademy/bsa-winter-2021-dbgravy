@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import { Container, Form, Button, ButtonGroup } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container, Form, Button, ButtonGroup, Modal } from 'react-bootstrap';
 import {
   getResourceByIdRoutine,
   createResourceRoutine,
   updateResourceRoutine,
-  clearResourceRoitine
+  clearResourceRoitine,
+  testResourceRoitine
 } from '../../routines';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -17,16 +18,19 @@ import styles from './styles.module.scss';
 import { Routes } from '../../../../common/enums/Routes';
 import InputField from '../../../../components/InputField';
 import { IAppState } from '../../../../common/models/store/IAppState';
+import { ButtonEnum } from '../../enums/ButtonEnum';
 
 interface IProps {
   resource: ICreateResource,
   getResource: Function;
   addResource: ThandleSubmitFormData;
   editResource: ThandleSubmitFormData;
-  clear: ()=> void;
+  testResource: ThandleSubmitFormData;
+  clear: () => void;
   history: {
     push(url: string): void;
   };
+  isConnected: boolean | null;
 }
 
 const CreateUpdateResource: React.FC<IProps> = (
@@ -36,6 +40,8 @@ const CreateUpdateResource: React.FC<IProps> = (
     addResource,
     editResource,
     clear,
+    testResource,
+    isConnected,
     history: { push }
   }
 ) => {
@@ -46,24 +52,67 @@ const CreateUpdateResource: React.FC<IProps> = (
     }
   }, []);
 
+  const [isDisabledCreateBtn, setDisableCreate] = useState(true);
+  const [isDisabledCancelBtn, setDisableCancel] = useState(false);
+  const [btnValue, setBtnValue] = useState('');
+  const [isShow, setIsShow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isConnected) {
+      setIsShow(false);
+      setDisableCancel(false);
+      setDisableCreate(false);
+    } else if (isConnected === false) {
+      setIsShow(true);
+      setDisableCreate(true);
+    }
+  }, [isConnected]);
+
   const onCancel = () => {
     clear();
     push(Routes.Resources);
   };
 
+  const testConnection: ThandleSubmitFormData = newResource => {
+    setDisableCancel(true);
+    setDisableCreate(true);
+    testResource(newResource);
+  };
+
   const handleSubmitFormData: ThandleSubmitFormData = newResource => {
     if (id) {
       editResource(newResource);
+      setDisableCreate(true);
       clear();
       push(Routes.Resources);
     } else {
       addResource(newResource);
+      setDisableCreate(true);
       clear();
       push(Routes.Resources);
     }
   };
+
+  const showModal = (isShown: boolean) => (
+    <Modal show={isShown} onHide={() => setIsShow(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Connection error!</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <p>Testing failed</p>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="close" onClick={() => setIsShow(false)}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
   return (
     <Container className="container-md max-vh-100">
+      {
+        showModal(isShow)
+      }
       <header className="pt-4">
         <h1>
           {
@@ -75,16 +124,17 @@ const CreateUpdateResource: React.FC<IProps> = (
       <Formik
         validationSchema={resourceSchema}
         initialValues={resource}
-        onSubmit={handleSubmitFormData}
+        onSubmit={values => {
+          if (btnValue === ButtonEnum.create) handleSubmitFormData(values);
+          else if (btnValue === ButtonEnum.test) testConnection(values);
+        }}
         key={resource.id}
       >
         {({
           handleSubmit,
           handleChange,
-          handleBlur,
           touched,
-          errors,
-          isSubmitting
+          errors
         }) => (
 
           <Form onSubmit={handleSubmit}>
@@ -123,7 +173,7 @@ const CreateUpdateResource: React.FC<IProps> = (
             <InputField
               label="Host"
               name="host"
-              type="url"
+              type="text"
               placeholder=""
               labelClassName
             />
@@ -152,13 +202,14 @@ const CreateUpdateResource: React.FC<IProps> = (
               type="password"
               placeholder="password"
             />
-            <Button onClick={onCancel} variant="light">Back</Button>
+            <Button disabled={isDisabledCancelBtn} onClick={onCancel} variant="light">Back</Button>
             <ButtonGroup className="float-right">
               <Button
                 variant="light"
                 className="text-primary"
                 type="submit"
                 name="testConnection"
+                onClick={() => setBtnValue('test')}
               >
                 Test connection
               </Button>
@@ -166,6 +217,8 @@ const CreateUpdateResource: React.FC<IProps> = (
                 variant="secondary"
                 type="submit"
                 name="createResource"
+                disabled={isDisabledCreateBtn}
+                onClick={() => setBtnValue('create')}
               >
                 createResource&rarr;
               </Button>
@@ -179,14 +232,16 @@ const CreateUpdateResource: React.FC<IProps> = (
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  resource: rootState.resource.resource
+  resource: rootState.resource.resource,
+  isConnected: rootState.resource.isConnected
 });
 
 const mapDispatchToProps = {
   getResource: getResourceByIdRoutine,
   addResource: createResourceRoutine,
   editResource: updateResourceRoutine,
-  clear: clearResourceRoitine
+  clear: clearResourceRoitine,
+  testResource: testResourceRoitine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateUpdateResource);

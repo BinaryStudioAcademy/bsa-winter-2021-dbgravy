@@ -9,5 +9,8 @@ export const getResources = () => api.get<IResource[]>('/api/resources', {});
 
 export const addResource = (resource: ICreateResource) => api.post<ICreateResource>('/api/resources', { resource });
 
+export const testResource = (resource: ICreateResource) => api
+  .post<boolean>('/api/resources/test', { resource });
+
 export const updateResource = (resource: IEditResource) => api
   .put<ICreateResource>(`/api/resources/${resource.id}`, { resource });

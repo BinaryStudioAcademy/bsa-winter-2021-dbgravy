@@ -2,7 +2,8 @@ import { Routine } from 'redux-saga-routines';
 import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
-  clearResourceRoitine
+  clearResourceRoitine,
+  testResourceRoitine
 } from '../scenes/Resources/routines';
 import { IResource } from '../common/models/resources/IResource';
 import { ResourceTypeValue } from '../common/enums/ResourceTypeValue';
@@ -11,7 +12,8 @@ import { ICreateResource } from '../common/models/resources/ICreateResource';
 export interface IResourcesState {
   isLoading: boolean,
   resources: Array<IResource>;
-  resource: ICreateResource
+  resource: ICreateResource;
+  isConnected: boolean | null;
 }
 
 const initialState = {
@@ -27,7 +29,8 @@ const initialState = {
     dbPassword: '',
     id: '',
     organizationId: ''
-  }
+  },
+  isConnected: null
 };
 
 export const resource = (state: IResourcesState = initialState, action: Routine<any>): IResourcesState => {
@@ -47,6 +50,21 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
       return {
         ...state,
         resource: initialState.resource
+      };
+    case testResourceRoitine.TRIGGER:
+      return {
+        ...state,
+        isConnected: null
+      };
+    case testResourceRoitine.FAILURE:
+      return {
+        ...state,
+        isConnected: false
+      };
+    case testResourceRoitine.SUCCESS:
+      return {
+        ...state,
+        isConnected: true
       };
     default:
       return state;

@@ -9,4 +9,5 @@ export interface ICreateResource {
   dbName: string,
   dbUserName: string,
   dbPassword: string,
+  organizationId: string
 }

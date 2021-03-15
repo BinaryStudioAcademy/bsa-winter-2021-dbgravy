@@ -1,8 +1,11 @@
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, createConnection } from 'typeorm';
 import { ResourceRepository } from '../data/repositories/resourceRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
-import { extractTransportedResources, extractTransportedResource } from '../common/mappers/resourceExtrator';
+import {
+  extractTransportedResources,
+  extractTransportedResource
+} from '../common/mappers/resourceExtrator';
 import { ITransportedResource } from '../common/models/resource/ITransportedResource';
 import { ICreateResource } from '../common/models/resource/ICreateResource';
 import { IEditResource } from '../common/models/resource/IEditResource';
@@ -17,11 +20,19 @@ export const getResources = async (user: ITransportedUser): Promise<ITransported
   return extractTransportedResources(resources);
 };
 
+export const checkResourceExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
+  const resource = await getCustomRepository(ResourceRepository)
+    .getResourceByNameByOrganizationId(name, organizationId);
+  if (resource) {
+    throw new CustomError('Resource name already exists', 400);
+  }
+};
+
 export const addResource = async (resourceData: ICreateResource,
   user: ITransportedUser): Promise<ITransportedResource> => {
   const { currentOrganizationId } = user;
   const { name, type, host, port, dbName, dbUserName, dbPassword } = resourceData;
-  // await checkAppExistByNameByOrganizationId(name, currentOrganizationId);
+  await checkResourceExistByNameByOrganizationId(name, currentOrganizationId);
   const createdResource = await getCustomRepository(ResourceRepository).addResource(
     {
       name,
@@ -45,8 +56,30 @@ export const getResourceById = async (id: string): Promise<ITransportedResource>
   return extractTransportedResource(resource);
 };
 
+export const testResource = async (resourceData: ICreateResource): Promise<boolean> => {
+  try {
+    const connection = await createConnection({
+      name: resourceData.name,
+      type: resourceData.type,
+      host: resourceData.host,
+      port: resourceData.port,
+      username: resourceData.dbUserName,
+      password: resourceData.dbPassword,
+      database: resourceData.dbName,
+      synchronize: true,
+      logging: false
+    });
+    const { isConnected } = connection;
+    connection.close();
+    return isConnected;
+  } catch (error) {
+    throw new CustomError('Testing failed', 400);
+  }
+};
+
 export const updateResource = async (id: string, resourceData: IEditResource): Promise<ITransportedResource> => {
-  const { name, type, host, port, dbName, dbUserName, dbPassword } = resourceData;
+  const { name, type, host, port, dbName, dbUserName, dbPassword, organizationId } = resourceData;
+  await checkResourceExistByNameByOrganizationId(name, organizationId);
   const editedResource = await getCustomRepository(ResourceRepository).updateResource(
     id,
     {
@@ -59,6 +92,5 @@ export const updateResource = async (id: string, resourceData: IEditResource): P
       dbPassword
     }
   );
-  // console.log(editedResource);
   return extractTransportedResource(editedResource);
 };

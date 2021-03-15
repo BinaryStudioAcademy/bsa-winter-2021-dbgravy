@@ -4,7 +4,8 @@ import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
   createResourceRoutine,
-  updateResourceRoutine
+  updateResourceRoutine,
+  testResourceRoitine
 } from '../routines/index';
 import * as resourceService from '../../../services/resourceService';
 
@@ -47,6 +48,19 @@ function* watchAddResource() {
   yield takeEvery(createResourceRoutine.TRIGGER, addResource);
 }
 
+function* testResource({ payload }: Routine<any>): Routine<any> {
+  try {
+    yield call(resourceService.testResource, payload);
+    yield put(testResourceRoitine.success());
+  } catch (error) {
+    yield put(testResourceRoitine.failure());
+  }
+}
+
+function* watchTestResource() {
+  yield takeEvery(testResourceRoitine.TRIGGER, testResource);
+}
+
 function* updateResource({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(resourceService.updateResource, payload);
@@ -65,6 +79,7 @@ export default function* resourceSaga() {
     watchFetchResources(),
     watchGetResource(),
     watchUpdateResource(),
-    watchAddResource()
+    watchAddResource(),
+    watchTestResource()
   ]);
 }
