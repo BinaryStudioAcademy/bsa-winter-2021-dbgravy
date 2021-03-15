@@ -26,13 +26,14 @@ export const getUserOrganization = async (organizationId: string, userId: string
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
   const user = await getCustomRepository(UserRepository).getByEmail(data.email);
   const res = await getCustomRepository(UserOrganizationRepository).addUserOrganization(user.id, data);
-  const msg = {
-    to: data.email,
-    subject: 'invite to organization',
-    text: 'link to invite',
-    html: '<a href="#">link to invite</>'
-  };
-  await sendEmail(msg);
+  // const msg = {
+  //   to: data.email,
+  //   subject: 'invite to organization',
+  //   text: 'link to invite',
+  //   html: '<a href="#">link to invite</>'
+  // };
+  // await sendEmail(msg);
+  // Email sending throw with error 500/400
   return formatResponse(res);
 };
 
