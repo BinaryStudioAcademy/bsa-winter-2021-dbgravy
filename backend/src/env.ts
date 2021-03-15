@@ -31,6 +31,7 @@ export const env = {
   mail: {
     mail: getOsEnv('NODEMAILER_MAIL'),
     password: getOsEnv('NODEMAIL_PASS')
-  }
+  },
+  baseUrl: getOsEnv('BASE_URL')
 
 };
