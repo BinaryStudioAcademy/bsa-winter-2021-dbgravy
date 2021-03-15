@@ -31,7 +31,6 @@ const Home: React.FunctionComponent<IProps> = (
       switchUserToOrganization(inviteToOrganization.organizationId);
     }
   }, [isAuthorized, inviteToOrganization]);
-
   return (
     <>
       <Loader isLoading={!inviteToOrganization.isLoading}>

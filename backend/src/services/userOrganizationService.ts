@@ -13,8 +13,8 @@ import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { IInviteUserToOrganization } from '../common/models/userOrganization/IInviteUserToOrganization';
-import { Role } from '../common/enums/Role';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
+import { env } from '../env';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -31,11 +31,16 @@ export const getUserOrganization = async (organizationId: string, userId: string
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
   const user = await getCustomRepository(UserRepository).getByEmail(data.email);
   const res = await getCustomRepository(UserOrganizationRepository).addUserOrganization(user.id, data);
+  const { name } = await getCustomRepository(OrganizationRepository).getById(data.organizationId);
+  const inviteToken = createInviteToOrganizationToken({
+    email: data.email,
+    name,
+    organizationId: data.organizationId });
   const msg = {
     to: data.email,
-    subject: 'invite to organization',
-    text: 'link to invite',
-    html: '<a href="#">link to invite</a>'
+    subject: `Invite to ${name} organization`,
+    text: 'Link to invite',
+    html: `<a href=${env.baseUrl}/${inviteToken}>Link to invite</a>`
   };
   await sendMail(msg);
   return formatResponse(res);
@@ -50,13 +55,12 @@ export const resendInvite = async (email: string, user: ITransportedUser) => {
   const { currentOrganizationId } = user;
   const { name } = await getCustomRepository(OrganizationRepository).getById(currentOrganizationId);
   const inviteToken = createInviteToOrganizationToken({ email, name, organizationId: currentOrganizationId });
-  const baseUrl = 'http://localhost:3000';
 
   const msg = {
     to: email,
     subject: `Invite to ${name} organization`,
     text: 'Link to invite',
-    html: `<a href=${baseUrl}/${inviteToken}>Link to invite</a>`
+    html: `<a href=${env.baseUrl}/${inviteToken}>Link to invite</a>`
   };
   const res = await sendMail(msg);
   return res;
@@ -96,13 +100,12 @@ export const switchUserToOrganization = async (
     throw new CustomError('Organization not found', 404);
   }
   const userOrganizationExist = await getCustomRepository(UserOrganizationRepository)
-    .getUserOrganization(organizationId, user.id);
+    .getOrganizationUserByUserIdByStatus(user.id, organizationId, OrganizationStatus.ACTIVE);
   if (userOrganizationExist) {
     throw new CustomError('User already switch to this organization', 400);
   }
   await getCustomRepository(UserOrganizationRepository)
-    .addUserOrganization(user.id, {
-      role: Role.DEVELOPER,
+    .updateUserOrganization({
       userId: user.id,
       organizationId,
       status: OrganizationStatus.ACTIVE
