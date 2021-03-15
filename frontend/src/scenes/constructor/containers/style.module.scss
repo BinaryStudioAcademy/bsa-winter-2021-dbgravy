@@ -121,18 +121,15 @@
   border-bottom: 1px solid #d9d9d9;
 }
 
-.buttonSpread:hover{
-  background-color: #5392f1;
-}
 .dropMenu{
   margin-right: 15px;
 }
-.dropMenu button{
+.dropMenu button,.dropMenuChange button{
   background-color:white;
   border-color: #d9d9d9;
   color: black;
 }
-.dropMenu button::after{
+.dropMenu button::after,.dropMenuChange button::after{
   content: none;
 }
 a.delete{
@@ -140,4 +137,16 @@ a.delete{
 }
 a.delete:hover{
   color: red;
+}
+
+.dropMenuChange button{
+  width: 400px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color:#d9d9d9;
+  border-color: black;
+  color: black;
+}
+.checkBox{
+  margin-left: 20px;
 }

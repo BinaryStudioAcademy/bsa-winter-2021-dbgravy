@@ -7,18 +7,28 @@ import { IAppState } from '../../../../common/models/store/IAppState';
 interface IProps {
     id:string,
     name:string,
-    code?:string
+    code?:string,
+    runAutomatically:boolean|undefined,
+    showConfirm:boolean|undefined
 }
 
-const QueryBlock:FunctionComponent<IProps> = ({ id, name, code }) => {
-  const isOpen = true;
+const QueryBlock:FunctionComponent<IProps> = ({ id, name, code, runAutomatically, showConfirm }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const selectQuery = ():void|any => {
-    if (query.selectQuery.selectQueryCode === query.setNewCode) {
-      dispatch(setSelectQueryRoutine.success({ id, name, code }));
+    if (query.selectQuery.selectQueryCode === query.setNewCode
+        && query.selectQuery.runAutomatically === query.setNewRun
+        && query.selectQuery.showConfirm === query.setNewConfirm
+    ) {
+      const runTitle = runAutomatically ? 'Run query only when manually triggered'
+        : 'Run query automatically when inputs change';
+      dispatch(setSelectQueryRoutine.success({
+        id, name, code, runAutomatically, showConfirm, runTitle
+      }));
     } else {
-      dispatch(setWaiterQueryRoutine.trigger({ id, name, code, isOpen }));
+      dispatch(setWaiterQueryRoutine.trigger({
+        id, name, code, runAutomatically, showConfirm, isOpen: true, isDuplicate: false
+      }));
     }
   };
   return (

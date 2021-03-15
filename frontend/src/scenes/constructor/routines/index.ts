@@ -9,3 +9,5 @@ export const deleteSelectQueryRoutine = createRoutine('DELETE_QUERY');
 export const setNewCodeRoutine = createRoutine('SET_NEW_CODE_QUERY');
 export const setWaiterQueryRoutine = createRoutine('WAIT_QUERY');
 export const setNewNameQueryRoutine = createRoutine('SER_NEW_CODE_QUERY');
+export const setNewRunRoutine = createRoutine('CHANGE_RUN_QUERY');
+export const setNewConfirmRoutine = createRoutine('CHANGE_CONFIRM_QUERY');

@@ -30,7 +30,10 @@ export const addQuery = async (query: ICreateQuery): Promise<ITransportedQuery> 
 export const updateQueries = async (id: string, data: IUpdateQuery, appId: string): Promise<ITransportedQuery[]> => {
   if (data.name) {
     await getCustomRepository(QueryRepository).updateQuery(id, { name: data.name });
-  } else await getCustomRepository(QueryRepository).updateQuery(id, { code: data.code });
+  } else {
+    await getCustomRepository(QueryRepository).updateQuery(id, {
+      code: data.code, runAutomatically: data.runAutomatically, showConfirm: data.showConfirm });
+  }
   const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(appId);
   return queries;
 };

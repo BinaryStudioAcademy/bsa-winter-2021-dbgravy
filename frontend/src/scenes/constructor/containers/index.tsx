@@ -10,7 +10,12 @@ import {
   setNewCodeRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
-  fetchQueryRoutine, setNewNameQueryRoutine, saveSelectQueryRoutine, deleteSelectQueryRoutine
+  fetchQueryRoutine,
+  setNewNameQueryRoutine,
+  saveSelectQueryRoutine,
+  deleteSelectQueryRoutine,
+  setNewRunRoutine,
+  setNewConfirmRoutine
 } from '../routines';
 
 interface IProps {
@@ -28,25 +33,48 @@ const Constructor:React.FC<IProps> = () => {
     isOpen: false
   }));
   const handleCloseNext = () => {
-    dispatch(setSelectQueryRoutine.success({
-      id: query.waitingQuery.QueryId,
-      name: query.waitingQuery.QueryName,
-      code: query.waitingQuery.QueryCode,
-      isOpen: false,
-      NewCode: query.waitingQuery.QueryCode
-    }));
+    if (!query.isDuplicate) {
+      const runTitle = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
+        : 'Run query automatically when inputs change';
+      dispatch(setSelectQueryRoutine.success({
+        id: query.waitingQuery.QueryId,
+        name: query.waitingQuery.QueryName,
+        code: query.waitingQuery.QueryCode,
+        runAutomatically: query.waitingQuery.runAutomatically,
+        showConfirm: query.waitingQuery.showConfirm,
+        runTitle,
+        isOpen: false
+      }));
+    } else {
+      dispatch(duplicateSelectQueryRoutine.trigger({
+        name: `query${query.queriesAppLength}`,
+        code: query.selectQuery.selectQueryCode,
+        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
+        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        runAutomatically: query.selectQuery.runAutomatically,
+        showConfirm: query.selectQuery.showConfirm
+      }));
+    }
   };
   const saveCode = () => {
-    if (query.selectQuery.selectQueryCode !== query.setNewCode) {
+    if (query.selectQuery.selectQueryCode !== query.setNewCode
+    || query.selectQuery.runAutomatically !== query.setNewRun
+    || query.selectQuery.showConfirm !== query.setNewConfirm
+    ) {
       dispatch(saveSelectQueryRoutine.trigger({
-        data: { code: query.setNewCode },
+        data: { code: query.setNewCode, runAutomatically: query.setNewRun, showConfirm: query.setNewConfirm },
         id: query.selectQuery.selectQueryId,
         appId: '3a42e461-222a-45ac-902f-440b4471e51a'
       }));
+      const runTitle = query.setNewRun ? 'Run query only when manually triggered'
+        : 'Run query automatically when inputs change';
       dispatch(setSelectQueryRoutine.success({
         id: query.selectQuery.selectQueryId,
         name: query.setNewName,
-        code: query.setNewCode
+        code: query.setNewCode,
+        runAutomatically: query.setNewRun,
+        showConfirm: query.setNewConfirm,
+        runTitle
       }));
     }
   };
@@ -63,7 +91,10 @@ const Constructor:React.FC<IProps> = () => {
         id: query.selectQuery.selectQueryId,
         name: query.setNewName,
         code: query.selectQuery.selectQueryCode,
-        isOpen: false
+        runAutomatically: query.selectQuery.runAutomatically,
+        showConfirm: query.selectQuery.showConfirm,
+        isOpen: false,
+        runTitle: query.runAutomaticallyTitle
       }));
       setEditNameField(true);
     } else {
@@ -71,14 +102,37 @@ const Constructor:React.FC<IProps> = () => {
     }
   };
   const duplicateQuery = () => {
-    dispatch(duplicateSelectQueryRoutine.trigger({
-      name: `query${query.queriesAppLength}`,
-      code: query.selectQuery.selectQueryCode,
-      appId: '3a42e461-222a-45ac-902f-440b4471e51a',
-      resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
-      runAutomatically: true,
-      showConfirm: true
-    }));
+    if (query.selectQuery.selectQueryCode === query.setNewCode
+        && query.selectQuery.runAutomatically === query.setNewRun
+        && query.selectQuery.showConfirm === query.setNewConfirm) {
+      dispatch(duplicateSelectQueryRoutine.trigger({
+        name: `query${query.queriesAppLength}`,
+        code: query.selectQuery.selectQueryCode,
+        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
+        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        runAutomatically: query.selectQuery.runAutomatically,
+        showConfirm: query.selectQuery.showConfirm
+      }));
+    } else {
+      dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
+    }
+  };
+  const changeRunFalse = () => {
+    if (query.setNewRun) {
+      dispatch(setNewRunRoutine.trigger({ status: false, title: 'Run query automatically when inputs change' }));
+    }
+  };
+  const changeRunTrue = () => {
+    if (!query.setNewRun) {
+      dispatch(setNewRunRoutine.trigger({ status: true, title: 'Run query only when manually triggered' }));
+    }
+  };
+  const changeConfirm = () => {
+    if (query.setNewConfirm) {
+      dispatch(setNewConfirmRoutine.trigger(false));
+    } else {
+      dispatch(setNewConfirmRoutine.trigger(true));
+    }
   };
   function changeName(e:any) {
     const { target } = e;
@@ -89,7 +143,6 @@ const Constructor:React.FC<IProps> = () => {
     dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
   const deleteQuery = () => {
-    console.log(query.selectQuery.selectQueryName);
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
       appId: '3a42e461-222a-45ac-902f-440b4471e51a'
@@ -145,6 +198,12 @@ const Constructor:React.FC<IProps> = () => {
             </Form.Group>
           </Form.Group>
           <Form.Group controlId="ControlTextarea">
+            <DropdownButton id="dropdown-change" title={query.runAutomaticallyTitle} className={style.dropMenuChange}>
+              <Dropdown.Item href="#" onClick={changeRunTrue}>Run query only when manually triggered</Dropdown.Item>
+              <Dropdown.Item href="#" onClick={changeRunFalse}>
+                Run query automatically when inputs change
+              </Dropdown.Item>
+            </DropdownButton>
             <Form.Label className={style.row} />
             <Form.Control
               as="textarea"
@@ -153,7 +212,27 @@ const Constructor:React.FC<IProps> = () => {
               onChange={changeCode}
               className={style.codeEditor}
             />
+            <Form.Label className={style.row} />
           </Form.Group>
+          {
+            query.setNewConfirm ? (
+              <Form.Check
+                type="checkbox"
+                label="Show a confirmation modal before running"
+                className={style.checkBox}
+                onClick={changeConfirm}
+                checked
+              />
+            )
+              : (
+                <Form.Check
+                  type="checkbox"
+                  label="Show a confirmation modal before running"
+                  className={style.checkBox}
+                  onClick={changeConfirm}
+                />
+              )
+          }
         </Form.Group>
       </Form>
       <Modal

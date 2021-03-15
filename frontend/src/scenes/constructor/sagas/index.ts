@@ -52,7 +52,6 @@ function* watchUpdateNameQueryRequest() {
 function* deleteSelectQuery({ payload }: Routine<any>) {
   try {
     const queries:Array<IQuery> = yield call(deleteQuery, payload);
-    console.log(queries);
     yield put(fetchQueryRoutine.success(queries));
     yield put(openQueryRoutine.success(queries));
   } catch (error) {

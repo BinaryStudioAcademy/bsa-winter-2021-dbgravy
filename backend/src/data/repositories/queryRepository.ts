@@ -18,7 +18,7 @@ export class QueryRepository extends Repository<Query> {
     return response;
   }
 
-  async updateQuery(id: string, data: Partial<IUpdateQuery>): Promise<void> {
+  async updateQuery(id: string, data: Required<IUpdateQuery>|Partial<IUpdateQuery>): Promise<void> {
     await this.update(id, data);
   }
 

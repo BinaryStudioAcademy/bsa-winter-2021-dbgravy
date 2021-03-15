@@ -1,7 +1,7 @@
 import api from '../common/helpers/apiHelper';
 import { IQuery } from '../common/models/apps/querys';
 import { ICreateQuery } from '../common/models/query/ICreateQuery';
-import { IUpdateQueryName } from '../common/models/query/IUpdateQueryName';
+import { IUpdateQuery } from '../common/models/query/IUpdateQuery';
 import { IDeleteQuery } from '../common/models/query/IDeleteQuery';
 
 export const addQuery = async ({ name, code, appId, resourceId, showConfirm, runAutomatically }:ICreateQuery) => {
@@ -22,7 +22,7 @@ export const fetchQueries = async (id:string) => {
   return response;
 };
 
-export const updateQuery = async ({ id, data, appId }: IUpdateQueryName) => {
+export const updateQuery = async ({ id, data, appId }: IUpdateQuery) => {
   const body = {
     data,
     appId
