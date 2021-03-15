@@ -13,6 +13,7 @@ import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { CustomError } from '../common/models/error/CustomError';
 import { ErrorCode } from '../common/enums/ErrorCode';
+import { RefreshTokenRepository } from '../data/repositories/refreshTokenRepository';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -85,6 +86,7 @@ passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
       const user: User = await userRepository.getById(id);
       return done(null, extractTransportedUser(user));
     }
+    await getCustomRepository(RefreshTokenRepository).deleteToken(refreshToken);
     throw new CustomError('Refresh token is invalid.', 401);
   } catch (err) {
     return done(err);

@@ -19,10 +19,10 @@ interface IProps {
 }
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
-  addNewUser,
-  inviteToOrganization
+  addNewUser
 }: IProps) => (
-  <div className={styles.pageLayout}>
+  <div className={styles.pageLayoutWrp}>
+    <div className={styles.pageLayout}>
     <div className={styles.rightSide}>
       <Route
         exact
@@ -44,10 +44,11 @@ const Auth: FunctionComponent<IProps> = ({
             {...props}
             addNewUser={addNewUser}
             inviteToOrganization={inviteToOrganization}
-          />
-        )}
-        key={Routes.SignUp}
-      />
+            />
+          )}
+          key={Routes.SignUp}
+        />
+      </div>
     </div>
   </div>
 );

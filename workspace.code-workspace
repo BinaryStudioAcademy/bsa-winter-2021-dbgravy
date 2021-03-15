@@ -10,8 +10,10 @@
 	"settings": {
 		"cSpell.words": [
 			"fontawesome",
+			"formik",
 			"fortawesome",
 			"fullfill",
+			"middlewares",
 			"typeorm",
 			"uuidv"
 		]

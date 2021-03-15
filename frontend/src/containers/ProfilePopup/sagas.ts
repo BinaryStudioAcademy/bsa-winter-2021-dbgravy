@@ -19,11 +19,11 @@ function* fetchUserOrganization() {
   try {
     const response: IUserOrganization = yield call(
       // Will be implemented
-      fetchOrganization, user.id, user.organizationId || ''
+      fetchOrganization, user.id || '', user.organizationId || ''
     );
-    yield put(fetchOrgInfoRoutine.success({ user, currentOrganization: response }));
+    yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
   } catch {
-    yield put(fetchOrgInfoRoutine.failure({ user }));
+    yield put(fetchOrgInfoRoutine.failure());
   }
 }
 
@@ -51,9 +51,14 @@ function* createOrganization() {
 
 function* logout() {
   const token = getRefreshToken();
-  yield removeToken(token);
-  yield call(clearStorage);
-  yield put(logotUserRoutine.success());
+  try {
+    yield removeToken(token);
+    yield call(clearStorage);
+    yield put(logotUserRoutine.success());
+  } catch {
+    yield call(clearStorage);
+    yield put(logotUserRoutine.success());
+  }
 }
 
 function* watchLogout() {

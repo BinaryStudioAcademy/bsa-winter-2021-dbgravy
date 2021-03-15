@@ -1,8 +1,9 @@
 import React from 'react';
-import { Routine } from 'redux-saga-routines';
-import { Status } from '../../../common/enums/UserStatus';
-import { Roles } from '../../../common/enums/UserRoles';
-import styles from './styles.module.scss';
+import { Status } from '../../../../common/enums/UserStatus';
+import { Roles } from '../../../../common/enums/UserRoles';
+import styles from '../styles.module.scss';
+import Loader from '../../../../components/Loader';
+import { IUserEdit } from '../../../../common/models/user/IUserEdit';
 
 interface IProps {
   id: string
@@ -13,19 +14,16 @@ interface IProps {
   status: Status
   action: string;
   clsName: string,
-  resendInvite: Routine<any>,
-  activateUser: Routine<any>,
-  userChanges: {
-    id?: string,
-    isLoading?: boolean,
-    isFailed?: boolean
-  }
+  userChanges: IUserEdit,
+  resendInvite: (obj: { id: string, email: string, role?: Roles }) => void,
+  activateUser: (obj: { id: string, status: Status }) => void,
 }
 
 const User: React.FC<IProps> = ({
   id, firstName, lastName, email, role, status,
   action, clsName, resendInvite, activateUser, userChanges }) => {
   const firstLetter = (s: string) => s[0];
+  const toCapital = (string: string) => `${string[0].toUpperCase()}${string.slice(1)}`;
 
   const onClick = () => {
     switch (status) {
@@ -43,7 +41,7 @@ const User: React.FC<IProps> = ({
   };
 
   const renderAction = () => (userChanges.id === id && userChanges.isLoading
-    ? <div>Loading...</div>
+    ? <Loader isLoading={userChanges.isLoading} isAbsolute={false} />
     : (
       <span
         className={styles.action}
@@ -67,8 +65,8 @@ const User: React.FC<IProps> = ({
           <span>{email}</span>
         </div>
       </div>
-      <span className={styles.userRole}>{role}</span>
-      <span className={styles.userStatus}>{status}</span>
+      <span className={styles.userRole}>{toCapital(role)}</span>
+      <span className={styles.userStatus}>{toCapital(status)}</span>
       {renderAction()}
     </div>
   );

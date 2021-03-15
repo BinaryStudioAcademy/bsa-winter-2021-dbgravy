@@ -8,6 +8,7 @@ import { IUserOrganizationResponse } from '../common/models/userOrganization/IUs
 import { ICreateUserOrganization } from '../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../common/models/userOrganization/IUpdateUserOrganization';
 import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
+import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
@@ -62,30 +63,28 @@ export const resendInvite = async (email: string, user: ITransportedUser) => {
   return res;
 };
 
-export const getUserCurOrganization = async (
-  userId: string,
-  organizationId: string
-): Promise<IUserOrganization> => {
+export const getUserCurOrganization = async (user: ITransportedUser): Promise<IUserOrganization> => {
+  const { currentOrganizationId, id: userId } = user;
   const organization = await getCustomRepository(
     OrganizationRepository
-  ).getById(organizationId);
+  ).getById(currentOrganizationId);
 
-  if (!organizationId) {
+  if (!organization) {
     throw new CustomError('Organization not found', 404);
   }
 
   const userOrganization = await getCustomRepository(
     UserOrganizationRepository
-  ).getOrganizationUser(userId, organizationId);
+  ).getOrganizationUser(userId, organization.id);
 
   if (!userOrganization) {
     throw new CustomError('There is no user in organization', 404);
   }
 
   const { role } = userOrganization;
-  const { name } = organization;
+  const { name, id } = organization;
 
-  const response: IUserOrganization = { role, name };
+  const response: IUserOrganization = { role, name, id };
   return response;
 };
 

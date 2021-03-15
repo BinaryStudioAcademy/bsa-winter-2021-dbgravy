@@ -3,5 +3,5 @@ export interface ITransportedUser {
     email: string
     firstName: string
     lastName: string
-    currentOrganizationId?: string
+    currentOrganizationId: string
 }
