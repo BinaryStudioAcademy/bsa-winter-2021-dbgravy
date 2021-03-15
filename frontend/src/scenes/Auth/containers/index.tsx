@@ -9,7 +9,6 @@ import { ILoginUser } from '../../../common/models/auth/ILoginUser';
 import { IRegisterUser } from '../../../common/models/auth/IRegisterUser';
 import { IBindingCallback1 } from '../../../common/models/callback/IBindingCallback1';
 import { addNewUserRoutine, loginUserRoutine } from '../routines';
-import NotFound from '../../NotFound/components/NotFound';
 
 interface IProps {
   loginUser: IBindingCallback1<ILoginUser>;
@@ -44,7 +43,6 @@ const Auth: FunctionComponent<IProps> = ({
           )}
           key={Routes.SignUp}
         />
-        <Route path="*" component={NotFound} />
       </Switch>
     </div>
   </div>

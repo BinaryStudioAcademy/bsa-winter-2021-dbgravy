@@ -8,11 +8,6 @@
   margin: 0 auto;
   border-radius: 6px;
   background-color: white;
-  height: 100vh;
-  overflow:auto;
-  -ms-overflow-style: none;
-  overflow: -moz-scrollbars-none;
-  &::-webkit-scrollbar { width: 0; }
 }
 .header {
   font-weight: 600;
