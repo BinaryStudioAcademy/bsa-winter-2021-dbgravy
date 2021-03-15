@@ -3,12 +3,12 @@ import styles from './styles.module.scss';
 import { Formik, Form } from 'formik';
 import { signInValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
 import InputField from '../../../../components/InputField';
-import { Button } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 import { ILoginUser } from '../../../../common/models/auth/ILoginUser';
 import { Link } from 'react-router-dom';
 import { Routes } from '../../../../common/enums/Routes';
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
-import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
+import logo from '../../../../images/Logo.svg';
 
 interface IProps {
   loginUser: IBindingCallback1<ILoginUser>;
@@ -35,7 +35,7 @@ const SignIn: FunctionComponent<IProps> = ({
   return (
     <div className={styles.signIn}>
       <header className={styles.signInHeader}>
-        <Logo className={styles.logo} />
+        <Image src={logo} alt="db-gravy-logo" />
         <h1 className={styles.header}>
           Welcome back
         </h1>
