@@ -1,9 +1,10 @@
 import { env } from '../env';
 import { transporter } from '../config/nodeMailer';
+import { IMail } from '../common/models/mail/IMail';
 
 const { mail: from } = env.mail;
 
-export const sendMail = async ({ to, subject, text, html }: any) => {
+export const sendMail = async ({ to, subject, text, html }: IMail) => {
   const mailOptions = {
     from,
     to,
@@ -23,6 +24,6 @@ export const sendMail = async ({ to, subject, text, html }: any) => {
   });
 };
 
-export const sendInviteLinkMail = async (msg: any) => {
+export const sendInviteLinkMail = async (msg: IMail) => {
   await sendMail(msg);
 };
