@@ -14,3 +14,18 @@ export const getResources = async (user: ITransportedUser): Promise<ITransported
   }
   return extractTransportedResources(resources);
 };
+
+export const deleteResource = async (id: string): Promise<ITransportedResource> => {
+  const result = await getCustomRepository(ResourceRepository)
+    .deleteResource(id);
+
+  return result;
+};
+
+export const updateResource = async (
+  id: string, data: Partial<ITransportedResource>
+): Promise<ITransportedResource> => {
+  const result = await getCustomRepository(ResourceRepository)
+    .updateResource(id, data);
+  return result;
+};
