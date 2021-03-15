@@ -228,6 +228,7 @@ const Constructor:React.FC<IProps> = () => {
             query.setNewConfirm ? (
               <Form.Check
                 type="checkbox"
+                id="checkbox"
                 label="Show a confirmation modal before running"
                 className={style.checkBox}
                 onClick={changeConfirm}
@@ -237,6 +238,7 @@ const Constructor:React.FC<IProps> = () => {
               : (
                 <Form.Check
                   type="checkbox"
+                  id="checkbox"
                   label="Show a confirmation modal before running"
                   className={style.checkBox}
                   onClick={changeConfirm}
