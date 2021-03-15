@@ -1,45 +1,51 @@
 import React, { ChangeEvent, useState, useEffect } from 'react';
 import { Button, FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { Routine } from 'redux-saga-routines';
 import {
   fetchUsersRoutine,
   inviteNewUserRoutine,
   modalShowRoutine,
   reinviteUserRoutine,
-  userActivationRoutine } from '../routines';
-import { IUser } from '../../../common/models/user/IUser';
-import { IAppState } from '../../../common/models/store/IAppState';
-import { Status } from '../../../common/enums/UserStatus';
-import User from '../components/User';
-import InviteModal from '../components/InviteModal';
+  userActivationRoutine
+} from '../../routines';
+import { IUser } from '../../../../common/models/user/IUser';
+import { IAppState } from '../../../../common/models/store/IAppState';
+import { Status } from '../../../../common/enums/UserStatus';
+import User from '../../components/User';
+import InviteModal from '../../components/InviteModal';
 import styles from './styles.module.scss';
-import { Roles } from '../../../common/enums/UserRoles';
+import { Roles } from '../../../../common/enums/UserRoles';
+import { fetchOrgInfoRoutine } from '../../../../containers/ProfilePopup/routines';
+import Loader from '../../../../components/Loader';
+import { IUserEdit } from '../../../../common/models/user/IUserEdit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
   users: IUser[],
   count: number,
+  organizationId?: string,
   isLoading: boolean,
   isFailed: boolean,
-  fetchUsers: Routine<any>,
-  inviteNew: Routine<any>,
-  reInvite: Routine<any>,
-  activation: Routine<any>,
-  setShowModal: Routine<any>,
   showModal: boolean
-  userChanges: {
-    id?: string,
-    email?: string,
-    isLoading?: boolean,
-    isFailed?: boolean
-  },
-  organizationId: string
+  userChanges: IUserEdit,
+  fetchUserOrganization: () => void,
+  fetchUsers: () => void,
+  inviteNew: (obj: { email: string, role: Roles, new?: boolean }) => void,
+  reInvite: (obj: { id: string, email: string, role?: Roles, new?: boolean }) => void,
+  activation: (obj: { id: string, status: Status }) => void,
+  setShowModal: (status: boolean) => void,
 }
 
-const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
-  inviteNew, reInvite, activation, userChanges, isFailed, setShowModal, showModal, organizationId }) => {
+const Users: React.FC<IProps> = ({
+  users, count, isLoading, fetchUsers, inviteNew, reInvite, activation, userChanges, isFailed,
+  setShowModal, showModal, fetchUserOrganization, organizationId }) => {
   useEffect(() => {
-    fetchUsers(organizationId);
+    fetchUsers();
+  }, [organizationId]);
+
+  useEffect(() => {
+    fetchUserOrganization();
   }, []);
 
   const [searchBox, setSearch] = useState('');
@@ -88,16 +94,17 @@ const Users: React.FC<IProps> = ({ users, count, isLoading, fetchUsers,
   );
 
   const render = () => {
-    if (isLoading) {
-      return <div className={styles.lf}>Loading...</div>;
-    }
-
     if (isFailed) {
-      return <div className={styles.lf}>Failed to fetch...</div>;
+      return (
+        <div className={styles.lf}>
+          {'Failed to get users '}
+          <FontAwesomeIcon icon={faSyncAlt} onClick={fetchUsers} color="grey" />
+        </div>
+      );
     }
-
-    const currentUsers = displayUsers();
-    return currentUsers;
+    return (
+      <Loader isLoading={isLoading} isAbsolute={false}>{displayUsers()}</Loader>
+    );
   };
 
   return (
@@ -149,7 +156,7 @@ const mapStateToProps = (state: IAppState) => ({
   isFailed: state.settings.isFailed,
   userChanges: state.settings.userChanges,
   showModal: state.settings.showModal,
-  organizationId: '1'
+  organizationId: state.user.currentOrganization?.id
 });
 
 const mapDispactchToProps = {
@@ -157,7 +164,8 @@ const mapDispactchToProps = {
   inviteNew: inviteNewUserRoutine,
   reInvite: reinviteUserRoutine,
   activation: userActivationRoutine,
-  setShowModal: modalShowRoutine
+  setShowModal: modalShowRoutine,
+  fetchUserOrganization: fetchOrgInfoRoutine
 };
 
 export default connect(mapStateToProps, mapDispactchToProps)(Users);

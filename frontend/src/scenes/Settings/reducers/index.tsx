@@ -1,7 +1,6 @@
 import { Routine } from 'redux-saga-routines';
-import { Roles } from '../../../common/enums/UserRoles';
-import { Status } from '../../../common/enums/UserStatus';
 import { IUser } from '../../../common/models/user/IUser';
+import { IUserEdit } from '../../../common/models/user/IUserEdit';
 import {
   fetchUsersRoutine,
   inviteNewUserRoutine,
@@ -14,15 +13,7 @@ interface IUserState {
   users: IUser[],
   isLoading: boolean,
   isFailed?: boolean,
-  userChanges: {
-    id?: string
-    email?: string,
-    role?: Roles,
-    new?: boolean
-    status?: Status
-    isLoading: boolean,
-    isFailed: boolean
-  },
+  userChanges: IUserEdit
   showModal: boolean
 }
 

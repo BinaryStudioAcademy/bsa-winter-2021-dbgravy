@@ -51,9 +51,14 @@ function* createOrganization() {
 
 function* logout() {
   const token = getRefreshToken();
-  yield removeToken(token);
-  yield call(clearStorage);
-  yield put(logotUserRoutine.success());
+  try {
+    yield removeToken(token);
+    yield call(clearStorage);
+    yield put(logotUserRoutine.success());
+  } catch {
+    yield call(clearStorage);
+    yield put(logotUserRoutine.success());
+  }
 }
 
 function* watchLogout() {
