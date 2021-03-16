@@ -27,25 +27,25 @@ const Auth: FunctionComponent<IProps> = ({
       <div className={styles.rightSide}>
         <Switch>
           <Route
-          exact
-          path={Routes.SignIn}
-          render={props => (
-            <SignIn
-              {...props}
-              loginUser={loginUser}
-              inviteToOrganization={inviteToOrganization}
-            />
-          )}
-          key={Routes.SignIn}
-        />
-        <Route
-          exact
-          path={Routes.SignUp}
-          render={props => (
-            <SignUp
-              {...props}
-              addNewUser={addNewUser}
-              inviteToOrganization={inviteToOrganization}
+            exact
+            path={Routes.SignIn}
+            render={props => (
+              <SignIn
+                {...props}
+                loginUser={loginUser}
+                inviteToOrganization={inviteToOrganization}
+              />
+            )}
+            key={Routes.SignIn}
+          />
+          <Route
+            exact
+            path={Routes.SignUp}
+            render={props => (
+              <SignUp
+                {...props}
+                addNewUser={addNewUser}
+                inviteToOrganization={inviteToOrganization}
               />
             )}
             key={Routes.SignUp}
