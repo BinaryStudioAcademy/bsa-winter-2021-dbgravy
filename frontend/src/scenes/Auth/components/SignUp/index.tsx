@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Button } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { signUpValSchema as validationSchema } from '../../../../common/models/formik/ValidationSchemas';
 import { IRegisterUser } from '../../../../common/models/auth/IRegisterUser';
 import { Routes } from '../../../../common/enums/Routes';
 import InputField from '../../../../components/InputField';
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
-import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
+import logo from '../../../../images/Logo.svg';
 import { IInviteToOrganization } from '../../../../common/models/userOrganization/IInviteToOrganization';
 import styles from './styles.module.scss';
 
@@ -46,7 +46,7 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser, inviteToOrganiza
 
   return (
     <div className={styles.signUp}>
-      <Logo className={styles.logo} />
+      <Image src={logo} alt="db-gravy-logo" />
       <h1 className={styles.header}>
         Sign up
       </h1>

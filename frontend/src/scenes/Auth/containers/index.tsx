@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import styles from './style.module.scss';
 import { connect } from 'react-redux';
 import SignIn from '../components/SignIn';
@@ -25,7 +25,8 @@ const Auth: FunctionComponent<IProps> = ({
   <div className={styles.pageLayoutWrp}>
     <div className={styles.pageLayout}>
       <div className={styles.rightSide}>
-        <Route
+        <Switch>
+          <Route
           exact
           path={Routes.SignIn}
           render={props => (
@@ -45,10 +46,11 @@ const Auth: FunctionComponent<IProps> = ({
               {...props}
               addNewUser={addNewUser}
               inviteToOrganization={inviteToOrganization}
-            />
-          )}
-          key={Routes.SignUp}
-        />
+              />
+            )}
+            key={Routes.SignUp}
+          />
+        </Switch>
       </div>
     </div>
   </div>

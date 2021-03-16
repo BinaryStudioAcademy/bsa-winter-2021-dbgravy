@@ -14,11 +14,12 @@ import Settings from '../../scenes/Settings';
 import Resources from '../../scenes/Routing/index';
 import Loader from '../../components/Loader';
 import Home from '../Home/index';
+import NotFound from '../../scenes/NotFound/components/NotFound';
 
 interface IProps {
-    isLoading: boolean;
-    isAuthorized: boolean;
-    fetchUser: IBindingAction;
+  isLoading: boolean;
+  isAuthorized: boolean;
+  fetchUser: IBindingAction;
 }
 
 const Routing: React.FC<IProps> = ({
@@ -42,6 +43,7 @@ const Routing: React.FC<IProps> = ({
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
         <Route path={Routes.Invite} component={Home} />
+        <PublicRoute path="*" component={NotFound} />
       </Switch>
     </Loader>
   );
