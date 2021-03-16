@@ -5,14 +5,16 @@ import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
 
 interface IProps {
-  label: string;
-  name: string;
-  type: string;
-  placeholder?: string;
-  link?: string;
-  linkDescription?: string;
-  linkClassName?: string;
-  labelClassName?: boolean
+    label: string;
+    name: string;
+    type: string;
+    value?: string;
+    placeholder?: string;
+    link?: string;
+    linkDescription?: string;
+    linkClassName?: string;
+    labelClassName?: boolean
+    disabled?: boolean;
 }
 
 const InputField: React.FC<IProps> = ({
@@ -21,6 +23,7 @@ const InputField: React.FC<IProps> = ({
   linkDescription,
   linkClassName,
   labelClassName,
+  disabled = false,
   ...props
 }: IProps) => {
   const [field, meta] = useField(props);
@@ -61,6 +64,7 @@ const InputField: React.FC<IProps> = ({
         <FormControl
           id={label}
           aria-label={label}
+          disabled={disabled}
           {...field}
           {...props}
           className={classname}

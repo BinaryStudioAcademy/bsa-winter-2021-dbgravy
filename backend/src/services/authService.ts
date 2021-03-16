@@ -45,11 +45,23 @@ export const removeToken = async (token: string): Promise<void> => {
   await refreshTokenRepository.deleteToken(token);
 };
 
-export const login = async (user: ITransportedUser, token?: string): Promise<IAuthUser> => {
+export const login = async (
+  user: ITransportedUser,
+  currentOrganizationId?: string,
+  token?: string
+): Promise<IAuthUser> => {
   if (token) {
     await removeToken(token);
   }
   const { id } = user;
+  if (currentOrganizationId) {
+    await getCustomRepository(UserRepository).updateCurrentOrganizationId(id, currentOrganizationId);
+    await getCustomRepository(UserOrganizationRepository).updateUserOrganization({
+      userId: id,
+      organizationId: currentOrganizationId,
+      status: OrganizationStatus.ACTIVE
+    });
+  }
   const accessToken = createAccessToken(id);
   const refreshToken = createRefreshToken(id);
   saveRefreshToken(refreshToken, id);
@@ -75,19 +87,37 @@ export const register = async (organizationName: string, user: IRegisterUser): P
   };
   const savedUser: User = await userRepository.createUser(newUser);
 
-  const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({
-    name: organizationName, createdByUserId: savedUser.id });
-  await userRepository.updateUserFields({ id: savedUser.id, currentOrganizationId: newOrganization.id });
-  const updatedUser = await userRepository.getById(savedUser.id);
-  const role = Role.ADMIN;
-  await getCustomRepository(UserOrganizationRepository).addUserOrganization(updatedUser.id, {
-    role,
-    userId: updatedUser.id,
-    organizationId: updatedUser.currentOrganizationId,
-    email: updatedUser.email,
-    status: OrganizationStatus.ACTIVE
-  });
-  return login(extractTransportedUser(updatedUser));
+  const addNewOrganization = async (name: string, createdUser: User): Promise<User> => {
+    const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({
+      name, createdByUserId: createdUser.id });
+    await userRepository.updateUserFields({ id: createdUser.id, currentOrganizationId: newOrganization.id });
+    const updatedUser = await userRepository.getById(createdUser.id);
+    const role = Role.ADMIN;
+    await getCustomRepository(UserOrganizationRepository).addUserOrganization(updatedUser.id, {
+      role,
+      userId: updatedUser.id,
+      organizationId: updatedUser.currentOrganizationId,
+      email: updatedUser.email,
+      status: OrganizationStatus.ACTIVE
+    });
+    return updatedUser;
+  };
+
+  const joinInviteUserToOrganization = async (createdUser: User): Promise<User> => {
+    await getCustomRepository(UserOrganizationRepository).updateUserOrganization({
+      userId: createdUser.id,
+      organizationId: createdUser.currentOrganizationId,
+      status: OrganizationStatus.ACTIVE
+    });
+    const invitedUser = await getCustomRepository(UserRepository).getById(createdUser.id);
+    return invitedUser;
+  };
+
+  const newAddedUser = !userData.currentOrganizationId
+    ? await addNewOrganization(organizationName, savedUser)
+    : await joinInviteUserToOrganization(savedUser);
+
+  return login(extractTransportedUser(newAddedUser));
 };
 
 export const refreshToken = (user: ITransportedUser, rt?: string): Promise<IAuthUser> => login(user, rt);

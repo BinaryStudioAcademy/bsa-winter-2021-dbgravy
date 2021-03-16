@@ -3,4 +3,5 @@ export interface IRegisterUser {
     password: string
     firstName: string
     lastName: string
+    currentOrganizationId?: string
 }

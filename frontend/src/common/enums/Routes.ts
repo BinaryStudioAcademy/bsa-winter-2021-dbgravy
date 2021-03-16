@@ -6,5 +6,6 @@ export enum Routes {
   Apps = '/apps',
   Settings = '/settings',
   Resources = '/resources',
-  ResourcesAddEdit = '/resources/edit'
+  ResourcesAddEdit = '/resources/edit',
+  Invite = '/:inviteToken',
 }
