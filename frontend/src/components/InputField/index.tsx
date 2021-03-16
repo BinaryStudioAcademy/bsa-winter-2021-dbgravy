@@ -24,7 +24,7 @@ const InputField: React.FC<IProps> = ({
   ...props
 }: IProps) => {
   const [field, meta] = useField(props);
-  const labelClass = labelClassName;
+
   const { name } = props;
   let classname = '';
   if (name === 'password' || name === 'confirmPassword') {
@@ -36,10 +36,10 @@ const InputField: React.FC<IProps> = ({
     <div className={`${styles.inputContainer} w-100`}>
       <div className={styles.labelRow}>
         {
-          labelClass
+          labelClassName
             ? (
               <label
-                className={[styles.inputLabel, styles.labelClass].join(' ')}
+                className={[styles.inputLabel, styles.labelClassName].join(' ')}
                 htmlFor={label}
               >
                 {label}

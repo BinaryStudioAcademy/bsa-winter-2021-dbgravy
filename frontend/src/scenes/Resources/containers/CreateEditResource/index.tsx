@@ -4,11 +4,11 @@ import {
   getResourceByIdRoutine,
   createResourceRoutine,
   updateResourceRoutine,
-  clearResourceRoitine,
-  testResourceRoitine
+  clearResourceRoutine,
+  testResourceRoutine
 } from '../../routines';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { RouteComponentProps, useParams } from 'react-router-dom';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import { Formik } from 'formik';
 import resourceSchema from '../../../../common/models/formik/resourceSchema';
@@ -27,9 +27,7 @@ interface IProps {
   editResource: ThandleSubmitFormData;
   testResource: ThandleSubmitFormData;
   clear: () => void;
-  history: {
-    push(url: string): void;
-  };
+  history: RouteComponentProps['history'];
   isConnected: boolean | null;
 }
 
@@ -237,8 +235,8 @@ const mapDispatchToProps = {
   getResource: getResourceByIdRoutine,
   addResource: createResourceRoutine,
   editResource: updateResourceRoutine,
-  clear: clearResourceRoitine,
-  testResource: testResourceRoitine
+  clear: clearResourceRoutine,
+  testResource: testResourceRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateUpdateResource);

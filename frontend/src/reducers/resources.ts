@@ -1,13 +1,11 @@
 import { Routine } from 'redux-saga-routines';
-// <<<<<<< HEAD
 import {
   fetchResourceRoutine,
   getResourceByIdRoutine,
-  clearResourceRoitine,
-  testResourceRoitine,
+  clearResourceRoutine,
+  testResourceRoutine,
   deleteResourceRoutine,
   updateResourceRoutine
-  // editResourseRoutine
 } from '../scenes/Resources/routines';
 import { IResource } from '../common/models/resources/IResource';
 import { ResourceTypeValue } from '../common/enums/ResourceTypeValue';
@@ -63,24 +61,24 @@ export const resource = (state: IResourcesState = initialState, action: Routine<
         errorMessage: action.payload
 
       };
-    case clearResourceRoitine.TRIGGER:
+    case clearResourceRoutine.TRIGGER:
       return {
         ...state,
         resource: initialState.resource
       };
-    case testResourceRoitine.TRIGGER:
+    case testResourceRoutine.TRIGGER:
       return {
         ...state,
         isConnected: null
       };
-    case testResourceRoitine.FAILURE:
+    case testResourceRoutine.FAILURE:
       return {
         ...state,
         isConnected: false,
         errorMessage: action.payload,
         isFailed: true
       };
-    case testResourceRoitine.SUCCESS:
+    case testResourceRoutine.SUCCESS:
       return {
         ...state,
         isConnected: true

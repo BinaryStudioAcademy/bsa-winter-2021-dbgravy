@@ -5,7 +5,7 @@ import {
   getResourceByIdRoutine,
   createResourceRoutine,
   updateResourceRoutine,
-  testResourceRoitine,
+  testResourceRoutine,
   deleteResourceRoutine
 } from '../routines/index';
 import * as resourceService from '../../../services/resourceService';
@@ -53,14 +53,14 @@ function* watchAddResource() {
 function* testResource({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(resourceService.testResource, payload);
-    yield put(testResourceRoitine.success());
+    yield put(testResourceRoutine.success());
   } catch (error) {
-    yield put(testResourceRoitine.failure(error.message));
+    yield put(testResourceRoutine.failure(error.message));
   }
 }
 
 function* watchTestResource() {
-  yield takeEvery(testResourceRoitine.TRIGGER, testResource);
+  yield takeEvery(testResourceRoutine.TRIGGER, testResource);
 }
 
 function* updateResource({ payload }: Routine<any>): Routine<any> {
