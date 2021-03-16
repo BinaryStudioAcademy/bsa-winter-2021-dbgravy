@@ -1,9 +1,11 @@
+import { ResourceTypeValue } from '../../enums/ResourceTypeValue';
+
 export interface IResource {
   id: string,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: Date,
+  updatedAt?: Date,
   name: string,
-  type: string,
+  type: ResourceTypeValue,
   host: string,
   port: number,
   dbName: string,

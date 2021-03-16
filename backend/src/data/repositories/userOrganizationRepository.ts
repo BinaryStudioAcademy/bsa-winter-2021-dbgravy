@@ -87,6 +87,20 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     return userOrganization;
   }
 
+  async getOrganizationUserByUserIdByStatus(
+    userId: string,
+    organizationId: string,
+    status: string
+  ): Promise<UserOrganization> {
+    const userOrganization: UserOrganization = await this.findOne({
+      where: {
+        userId,
+        organizationId,
+        status
+      } });
+    return userOrganization;
+  }
+
   async addUserOrganizationOwner(userId: string, organizationId: string): Promise<UserOrganization> {
     const userOrganization = {
       userId,

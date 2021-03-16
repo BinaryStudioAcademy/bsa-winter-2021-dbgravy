@@ -40,6 +40,10 @@ export const signInValSchema = Yup.object().shape({
   password: signInPassword
 });
 
+export const emailValSchema = Yup.object().shape({
+  email
+});
+
 export const signUpValSchema = Yup.object().shape({
   firstName,
   lastName,
