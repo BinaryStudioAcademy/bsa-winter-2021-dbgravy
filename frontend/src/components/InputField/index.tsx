@@ -8,10 +8,12 @@ interface IProps {
     label: string;
     name: string;
     type: string;
+    value?: string;
     placeholder?: string;
     link?: string;
     linkDescription?: string;
     linkClassName?: string;
+    disabled?: boolean;
 }
 
 const InputField :React.FC<IProps> = ({
@@ -19,6 +21,7 @@ const InputField :React.FC<IProps> = ({
   link,
   linkDescription,
   linkClassName,
+  disabled = false,
   ...props
 }: IProps) => {
   const [field, meta] = useField(props);
@@ -47,6 +50,7 @@ const InputField :React.FC<IProps> = ({
         <FormControl
           id={label}
           aria-label={label}
+          disabled={disabled}
           {...field}
           {...props}
           className={classname}

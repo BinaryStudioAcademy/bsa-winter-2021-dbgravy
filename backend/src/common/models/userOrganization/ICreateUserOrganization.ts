@@ -6,5 +6,5 @@ export interface ICreateUserOrganization {
     status: OrganizationStatus,
     userId: string,
     organizationId: string,
-    email: string
+    email?: string
 }

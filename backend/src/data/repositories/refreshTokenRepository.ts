@@ -26,4 +26,9 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
       throw new CustomError(e, 404);
     }
   }
+
+  async findToken(value: string) {
+    const token = await this.findOne({ where: { value } });
+    return token;
+  }
 }

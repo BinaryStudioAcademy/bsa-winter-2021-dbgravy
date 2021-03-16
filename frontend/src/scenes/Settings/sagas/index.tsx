@@ -5,11 +5,21 @@ import {
   inviteNewUserRoutine,
   reinviteUserRoutine,
   userActivationRoutine,
-  modalShowRoutine
+  modalShowRoutine,
+  inviteUserToOrganizationRoutine,
+  switchUserToOrganizationRoutine
 } from '../routines/index';
-import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/settingsService';
+import {
+  fetchUsers,
+  sendInvite,
+  putUserChanges,
+  resendInvite,
+  checkInvite,
+  switchUser
+} from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { Status } from '../../../common/enums/UserStatus';
+import { Routine } from 'redux-saga-routines';
 
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
@@ -33,16 +43,15 @@ function* watchInviteUser() {
 }
 
 function* sendUserInvite() {
-  // Not implemented
-  // const { organizationId } = select(selectOrgId);
+  const { id: organizationId } = yield select(selectOrgId);
   const { userChanges } = yield select(selectUser);
   const { role, email } = userChanges;
   try {
     if (!userChanges.new) {
-      const response: IUser = yield call(resendInvite, { email, organizationId: '1' });
+      const response: IUser = yield call(resendInvite, { email, organizationId });
       yield put(reinviteUserRoutine.success(response));
     } else {
-      const response: IUser = yield call(sendInvite, { email, role, organizationId: '1', status: Status.Pending });
+      const response: IUser = yield call(sendInvite, { email, role, organizationId, status: Status.Pending });
       yield put(inviteNewUserRoutine.success(response));
       yield put(modalShowRoutine.success());
     }
@@ -61,22 +70,50 @@ function* watchUserActivation() {
 }
 
 function* toggleUserActivation() {
-  // Not implemented
-  // const { organizationId } = select(selectOrgId);
+  const { id: organizationId } = yield select(selectOrgId);
   try {
     const { userChanges } = yield select(selectUser);
     const { id, status } = userChanges;
-    const response: IUser = yield call(putUserChanges, { userId: id, status, organizationId: '1' });
+    const response: IUser = yield call(putUserChanges, { userId: id, status, organizationId });
     yield put(userActivationRoutine.success(response));
   } catch {
     yield put(userActivationRoutine.failure());
   }
 }
 
+function* checkInviteUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(checkInvite, payload);
+    yield put(inviteUserToOrganizationRoutine.success(response));
+  } catch {
+    yield put(inviteUserToOrganizationRoutine.failure());
+  }
+}
+
+function* switchUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(switchUser, payload);
+    yield put(switchUserToOrganizationRoutine.success(response));
+    yield put(inviteUserToOrganizationRoutine.failure());
+  } catch {
+    yield put(switchUserToOrganizationRoutine.failure());
+  }
+}
+
+function* watchInviteUserToOrganization() {
+  yield takeEvery(inviteUserToOrganizationRoutine.TRIGGER, checkInviteUserToOrganization);
+}
+
+function* watchSwitchUserToOrganization() {
+  yield takeEvery(switchUserToOrganizationRoutine.TRIGGER, switchUserToOrganization);
+}
+
 export default function* settingsSaga() {
   yield all([
     watchFetchUsers(),
     watchInviteUser(),
-    watchUserActivation()
+    watchUserActivation(),
+    watchInviteUserToOrganization(),
+    watchSwitchUserToOrganization()
   ]);
 }

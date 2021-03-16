@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import styles from './style.module.scss';
 import { connect } from 'react-redux';
 import SignIn from '../components/SignIn';
@@ -25,53 +25,74 @@ interface IProps {
   forgotPassword: IBindingCallback1<IForgotPasswordInput>;
   resetPassword: IBindingCallback1<IResetPasswordInput>;
 }
+
+import { IAppState } from '../../../common/models/store/IAppState';
+import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
+
+interface IProps {
+  loginUser: IBindingCallback1<ILoginUser>;
+  addNewUser: IBindingCallback1<IRegisterUser>;
+  inviteToOrganization: IInviteToOrganization;
+}
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
   addNewUser,
   forgotPassword,
   resetPassword,
+  inviteToOrganization
 }: IProps) => (
-  <div className={styles.pageLayout}>
-    <div className={styles.rightSide}>
-      <Switch>
-        <Route
-          exact
-          path={Routes.SignIn}
-          render={props => (
-            <SignIn
-              {...props}
-              loginUser={loginUser}
-            />
-          )}
-          key={Routes.SignIn}
-        />
-        <Route
-          exact
-          path={Routes.SignUp}
-          render={props => (
-            <SignUp
-              {...props}
-              addNewUser={addNewUser}
-            />
-          )}
-          key={Routes.SignUp}
-        />
-        <Route
-          exact
-          path={Routes.ForgotPassword}
-          render={props => <ForgotPassword {...props} forgotPassword={forgotPassword} />}
-          key={Routes.ForgotPassword}
-        />
-        <Route
-          exact
-          path={Routes.ResetPassword}
-          render={props => <ResetPassword {...props} resetPassword={resetPassword} />}
-          key={Routes.ResetPassword}
-        />
-      </Switch>
+  <div className={styles.pageLayoutWrp}>
+    <div className={styles.pageLayout}>
+      <div className={styles.rightSide}>
+        <Switch>
+          <Route
+            exact
+            path={Routes.SignIn}
+            render={props => (
+              <SignIn
+                {...props}
+                loginUser={loginUser}
+                inviteToOrganization={inviteToOrganization}
+              />
+            )}
+            key={Routes.SignIn}
+          />
+          <Route
+            exact
+            path={Routes.SignUp}
+            render={props => (
+              <SignUp
+                {...props}
+                addNewUser={addNewUser}
+                inviteToOrganization={inviteToOrganization}
+              />
+            )}
+            key={Routes.SignUp}
+          />
+          <Route
+            exact
+            path={Routes.ForgotPassword}
+            render={props => <ForgotPassword {...props} forgotPassword={forgotPassword} />}
+            key={Routes.ForgotPassword}
+          />
+          <Route
+            exact
+            path={Routes.ResetPassword}
+            render={props => <ResetPassword {...props} resetPassword={resetPassword} />}
+            key={Routes.ResetPassword}
+          />
+        </Switch>
+      </div>
     </div>
   </div>
 );
+
+const mapStateToProps = (state: IAppState) => {
+  const { settings: { inviteToOrganization } } = state;
+  return {
+    inviteToOrganization
+  };
+};
 
 const mapDispatchToProps = {
   loginUser: loginUserRoutine,
@@ -80,4 +101,4 @@ const mapDispatchToProps = {
   resetPassword: resetPasswordRoutine
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

@@ -20,7 +20,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     'user.lastName'
   ];
   async addUserOrganization(userId: string, data: ICreateUserOrganization): Promise<IUserOrganization> {
-    const userOrganization = await this.findOne({ where: { userId } });
+    const userOrganization = await this.findOne({ where: { userId, organizationId: data.organizationId } });
     if (userOrganization) {
       throw new CustomError('User already invited.', 400);
     }
@@ -84,6 +84,20 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
   }
   async getOrganizationUser(userId: string, organizationId: string): Promise<UserOrganization> {
     const userOrganization: UserOrganization = await this.findOne({ where: { userId, organizationId } });
+    return userOrganization;
+  }
+
+  async getOrganizationUserByUserIdByStatus(
+    userId: string,
+    organizationId: string,
+    status: string
+  ): Promise<UserOrganization> {
+    const userOrganization: UserOrganization = await this.findOne({
+      where: {
+        userId,
+        organizationId,
+        status
+      } });
     return userOrganization;
   }
 

@@ -13,6 +13,7 @@ import { User } from '../data/entities/User';
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { CustomError } from '../common/models/error/CustomError';
 import { ErrorCode } from '../common/enums/ErrorCode';
+import { RefreshTokenRepository } from '../data/repositories/refreshTokenRepository';
 
 const options: IJwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -44,14 +45,17 @@ passport.use(
   'sign-up',
   new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' },
-    async ({ body: { email, firstName, lastName } }, _username, password, done): Promise<void> => {
+    async ({ body: { email, firstName, lastName, currentOrganizationId } },
+      _username, password, done): Promise<void> => {
       try {
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
         if (userByEmail) {
           throw new CustomError('Email is already taken.', 401, ErrorCode.UserAlreadyExists);
         }
-        return done(null, { email, password, firstName, lastName } as IRegisterUser);
+        return currentOrganizationId
+          ? done(null, { email, password, firstName, lastName, currentOrganizationId } as IRegisterUser)
+          : done(null, { email, password, firstName, lastName } as IRegisterUser);
       } catch (err) {
         return done(err);
       }
@@ -82,6 +86,7 @@ passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
       const user: User = await userRepository.getById(id);
       return done(null, extractTransportedUser(user));
     }
+    await getCustomRepository(RefreshTokenRepository).deleteToken(refreshToken);
     throw new CustomError('Refresh token is invalid.', 401);
   } catch (err) {
     return done(err);

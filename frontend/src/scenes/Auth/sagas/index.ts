@@ -15,6 +15,7 @@ import {
   forgotPassword,
   resetPassword
 } from '../../../services/authService';
+import { inviteUserToOrganizationRoutine } from '../../Settings/routines';
 import { IAuthServerResponse } from '../../../common/models/auth/AuthServerResponse';
 import { IUser } from '../../../common/models/user/IUser';
 import { setTokens, clearStorage } from '../../../common/helpers/storageHelper';
@@ -39,6 +40,7 @@ function* loginUserRequest({ payload }: Routine<any>) {
     const { accessToken, refreshToken, user }: IAuthServerResponse = yield call(login, payload);
     setTokens({ accessToken, refreshToken });
     yield put(loginUserRoutine.success(user));
+    yield put(inviteUserToOrganizationRoutine.failure());
   } catch (error) {
     yield put(loginUserRoutine.failure(error.message));
   }
@@ -53,6 +55,7 @@ function* addNewUserRequest({ payload }: any): Routine<any> {
     const { accessToken, refreshToken, user }: IAuthServerResponse = yield call(registration, payload);
     setTokens({ accessToken, refreshToken });
     yield put(addNewUserRoutine.success(user));
+    yield put(inviteUserToOrganizationRoutine.failure());
   } catch (error) {
     const message = errorHelper(error.code);
     yield put(loginUserRoutine.failure(message));

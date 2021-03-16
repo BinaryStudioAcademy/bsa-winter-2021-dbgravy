@@ -5,8 +5,8 @@ import { Routes } from '../../common/enums/Routes';
 
 const ResourceRouting = () => (
   <Switch>
-    <Route path={Routes.Resources} component={Resources} />
-    <Route path={Routes.ResourcesEdit} component={() => <div>edit</div>} />
+    <Route exact path={Routes.Resources} component={Resources} />
+    <Route exact path={Routes.ResourcesEdit} component={() => <div>edit</div>} />
   </Switch>
 );
 

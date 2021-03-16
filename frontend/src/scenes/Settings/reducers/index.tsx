@@ -1,29 +1,23 @@
 import { Routine } from 'redux-saga-routines';
-import { Roles } from '../../../common/enums/UserRoles';
-import { Status } from '../../../common/enums/UserStatus';
 import { IUser } from '../../../common/models/user/IUser';
+import { IUserEdit } from '../../../common/models/user/IUserEdit';
 import {
   fetchUsersRoutine,
   inviteNewUserRoutine,
+  inviteUserToOrganizationRoutine,
+  modalShowRoutine,
   reinviteUserRoutine,
-  userActivationRoutine,
-  modalShowRoutine
+  userActivationRoutine
 } from '../routines';
+import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
 
 interface IUserState {
   users: IUser[],
   isLoading: boolean,
   isFailed?: boolean,
-  userChanges: {
-    id?: string
-    email?: string,
-    role?: Roles,
-    new?: boolean
-    status?: Status
-    isLoading: boolean,
-    isFailed: boolean
-  },
-  showModal: boolean
+  userChanges: IUserEdit
+  showModal: boolean,
+  inviteToOrganization: IInviteToOrganization
 }
 
 const initialState: IUserState = {
@@ -33,7 +27,14 @@ const initialState: IUserState = {
     isLoading: false,
     isFailed: false
   },
-  showModal: false
+  showModal: false,
+  inviteToOrganization: {
+    isLoading: false,
+    organizationName: '',
+    organizationId: '',
+    email: '',
+    invitedBy: ''
+  }
 };
 
 export const reducer = (state: IUserState = initialState, { type, payload }: Routine<any>): IUserState => {
@@ -110,6 +111,22 @@ export const reducer = (state: IUserState = initialState, { type, payload }: Rou
       return {
         ...state,
         showModal: true
+      };
+    case inviteUserToOrganizationRoutine.SUCCESS:
+      return {
+        ...state,
+        inviteToOrganization: { ...payload, organizationName: payload.name, isLoading: true }
+      };
+    case inviteUserToOrganizationRoutine.FAILURE:
+      return {
+        ...state,
+        inviteToOrganization: {
+          isLoading: false,
+          organizationName: '',
+          organizationId: '',
+          email: '',
+          invitedBy: ''
+        }
       };
     default:
       return state;

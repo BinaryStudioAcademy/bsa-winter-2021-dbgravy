@@ -1,8 +1,5 @@
 import { Routine } from 'redux-saga-routines';
-import {
-  fetchOrgInfoRoutine,
-  createOrganizationRoutine
-} from '../containers/ProfilePopup/routines';
+
 import {
   fetchUserRoutine,
   loginUserRoutine,
@@ -11,7 +8,9 @@ import {
   forgotPasswordRoutine,
   resetPasswordRoutine
 } from '../scenes/Auth/routines';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../containers/ProfilePopup/routines';
 import { IUser } from '../common/models/user/IUser';
+import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
 import { IUserOrganization } from '../common/models/user/IUserOrganization';
 
 export interface IUserState {
@@ -34,10 +33,24 @@ export const user = (
 ): IUserState => {
   switch (type) {
     case addNewUserRoutine.TRIGGER:
+    case fetchUserRoutine.TRIGGER:
+    case loginUserRoutine.TRIGGER:
+    case forgotPasswordRoutine.TRIGGER:
+    case resetPasswordRoutine.TRIGGER:
       return {
         ...state,
         isLoading: true
       };
+
+    case forgotPasswordRoutine.SUCCESS:
+    case forgotPasswordRoutine.FAILURE:
+    case resetPasswordRoutine.SUCCESS:
+    case resetPasswordRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      };
+
     case addNewUserRoutine.SUCCESS:
     case fetchUserRoutine.SUCCESS:
     case loginUserRoutine.SUCCESS: {
@@ -61,34 +74,16 @@ export const user = (
         isAuthorized: Boolean(payload?.id)
       };
     }
+
     case addNewUserRoutine.FAILURE:
-      return {
-        ...state,
-        isLoading: false,
-        isAuthorized: false
-      };
-    case fetchUserRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
     case fetchUserRoutine.FAILURE:
-      return {
-        ...state,
-        isLoading: false,
-        isAuthorized: false
-      };
-    case loginUserRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
     case loginUserRoutine.FAILURE:
       return {
         ...state,
         isLoading: false,
         isAuthorized: false
       };
+
     case fetchOrgInfoRoutine.TRIGGER:
       return {
         ...state,
@@ -160,40 +155,11 @@ export const user = (
         isAuthorized: false,
         user: {}
       };
-    case forgotPasswordRoutine.SUCCESS:
-      return {
-        ...state,
-        isLoading: false
-      };
 
-    case forgotPasswordRoutine.FAILURE:
+    case switchUserToOrganizationRoutine.SUCCESS:
       return {
         ...state,
-        isLoading: false
-      };
-
-    case forgotPasswordRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
-
-    case resetPasswordRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
-
-    case resetPasswordRoutine.SUCCESS:
-      return {
-        ...state,
-        isLoading: false
-      };
-
-    case resetPasswordRoutine.FAILURE:
-      return {
-        ...state,
-        isLoading: false
+        user: payload
       };
 
     default:

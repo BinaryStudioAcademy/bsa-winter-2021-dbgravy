@@ -4,23 +4,26 @@ import { ILoginUser } from '../common/models/auth/ILoginUser';
 import { IAuthServerResponse } from '../common/models/auth/AuthServerResponse';
 import { IForgotPasswordInput } from '../common/models/auth/IForgotPasswordInput';
 
-export const login = async ({ email, password }: ILoginUser) => {
+export const login = async ({ email, password, currentOrganizationId }: ILoginUser) => {
   const payload = {
     email,
-    password
+    password,
+    currentOrganizationId
   };
   const response = await api.post<IAuthServerResponse>('/api/auth/sign-in', payload);
   return response;
 };
 
-export const registration = async ({ email, password, firstName, lastName, organizationName }: IRegisterUser) => {
-  const body = {
-    email,
-    password,
-    firstName,
-    lastName,
-    organizationName
-  };
+export const registration = async (
+  { email, password, firstName, lastName, organizationName, currentOrganizationId }: IRegisterUser
+) => {
+  const body = currentOrganizationId
+    ? { email,
+      password,
+      firstName,
+      lastName,
+      currentOrganizationId }
+    : { email, password, firstName, lastName, organizationName };
   const response = await api.post('/api/auth/sign-up', body);
   return response;
 };
