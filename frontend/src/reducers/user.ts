@@ -7,7 +7,9 @@ import {
   fetchUserRoutine,
   loginUserRoutine,
   addNewUserRoutine,
-  logotUserRoutine
+  logotUserRoutine,
+  forgotPasswordRoutine,
+  resetPasswordRoutine
 } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
 import { IUserOrganization } from '../common/models/user/IUserOrganization';
@@ -158,6 +160,42 @@ export const user = (
         isAuthorized: false,
         user: {}
       };
+    case forgotPasswordRoutine.SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      };
+
+    case forgotPasswordRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      };
+
+    case forgotPasswordRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
+
+    case resetPasswordRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
+
+    case resetPasswordRoutine.SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      };
+
+    case resetPasswordRoutine.FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      };
+
     default:
       return state;
   }

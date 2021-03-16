@@ -3,6 +3,8 @@ export enum Routes {
   Auth = '/auth/:page',
   SignUp = '/auth/sign-up',
   SignIn = '/auth/sign-in',
+  ResetPassword = '/auth/reset-password',
+  ForgotPassword = '/auth/forgot-password',
   Apps = '/apps',
   Settings = '/settings',
   Resources = '/resources',

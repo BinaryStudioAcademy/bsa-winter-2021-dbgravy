@@ -2,6 +2,7 @@ import api from '../common/helpers/apiHelper';
 import { IRegisterUser } from '../common/models/auth/IRegisterUser';
 import { ILoginUser } from '../common/models/auth/ILoginUser';
 import { IAuthServerResponse } from '../common/models/auth/AuthServerResponse';
+import { IForgotPasswordInput } from '../common/models/auth/IForgotPasswordInput';
 
 export const login = async ({ email, password }: ILoginUser) => {
   const payload = {
@@ -32,4 +33,12 @@ export const fetchUser = async () => {
 export const removeToken = async (token: string | null) => {
   const response = await api.delete<IAuthServerResponse>('/api/auth/tokens', { token });
   return response;
+};
+
+export const forgotPassword = async (forgotpassword: IForgotPasswordInput) => {
+  await api.put('/api/auth/forgotpass', forgotpassword);
+};
+
+export const resetPassword = async (password: string, token: string) => {
+  await api.put('/api/auth/resetpass', { password, token });
 };
