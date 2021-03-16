@@ -9,14 +9,18 @@ import { ILoginUser } from '../../../common/models/auth/ILoginUser';
 import { IRegisterUser } from '../../../common/models/auth/IRegisterUser';
 import { IBindingCallback1 } from '../../../common/models/callback/IBindingCallback1';
 import { addNewUserRoutine, loginUserRoutine } from '../routines';
+import { IAppState } from '../../../common/models/store/IAppState';
+import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
 
 interface IProps {
-  loginUser: IBindingCallback1<ILoginUser>;
-  addNewUser: IBindingCallback1<IRegisterUser>;
+    loginUser: IBindingCallback1<ILoginUser>;
+    addNewUser: IBindingCallback1<IRegisterUser>;
+    inviteToOrganization: IInviteToOrganization;
 }
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
-  addNewUser
+  addNewUser,
+  inviteToOrganization
 }: IProps) => (
   <div className={styles.pageLayoutWrp}>
     <div className={styles.pageLayout}>
@@ -29,6 +33,7 @@ const Auth: FunctionComponent<IProps> = ({
               <SignIn
                 {...props}
                 loginUser={loginUser}
+                inviteToOrganization={inviteToOrganization}
               />
             )}
             key={Routes.SignIn}
@@ -40,6 +45,7 @@ const Auth: FunctionComponent<IProps> = ({
               <SignUp
                 {...props}
                 addNewUser={addNewUser}
+                inviteToOrganization={inviteToOrganization}
               />
             )}
             key={Routes.SignUp}
@@ -50,9 +56,16 @@ const Auth: FunctionComponent<IProps> = ({
   </div>
 );
 
+const mapStateToProps = (state: IAppState) => {
+  const { settings: { inviteToOrganization } } = state;
+  return {
+    inviteToOrganization
+  };
+};
+
 const mapDispatchToProps = {
   loginUser: loginUserRoutine,
   addNewUser: addNewUserRoutine
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

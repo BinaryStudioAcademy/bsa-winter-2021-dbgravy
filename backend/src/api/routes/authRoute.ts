@@ -12,7 +12,8 @@ const router: Router = Router();
 // user added to the request (req.user) in a strategy, see passport config
 router
   .post('/token', refreshTokenMiddleware, run(req => refreshToken(req.user as ITransportedUser, req.body.refreshToken)))
-  .post('/sign-in', authenticationMiddleware, run(req => login(req.user as ITransportedUser)))
+  .post('/sign-in', authenticationMiddleware, run(req => (
+    login(req.user as ITransportedUser, req.body.currentOrganizationId))))
   .post('/sign-up', registrationMiddleware, run(req => register(req.body.organizationName, req.user as IRegisterUser)))
   .delete('/tokens', run(req => removeToken(req.body.token)));
 
