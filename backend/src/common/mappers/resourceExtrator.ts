@@ -21,3 +21,4 @@ export const extractTransportedResource = (resource: Resource): ITransportedReso
 
 export const extractTransportedResources = (resources: Resource[]): ITransportedResource[] => (
   resources.map((resource: Resource) => extractTransportedResource(resource)));
+

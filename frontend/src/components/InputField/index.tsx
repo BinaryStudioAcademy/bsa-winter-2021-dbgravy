@@ -13,18 +13,21 @@ interface IProps {
     link?: string;
     linkDescription?: string;
     linkClassName?: string;
+    labelClassName?: boolean
     disabled?: boolean;
 }
 
-const InputField :React.FC<IProps> = ({
+const InputField: React.FC<IProps> = ({
   label,
   link,
   linkDescription,
   linkClassName,
+  labelClassName,
   disabled = false,
   ...props
 }: IProps) => {
   const [field, meta] = useField(props);
+
   const { name } = props;
   let classname = '';
   if (name === 'password' || name === 'confirmPassword') {
@@ -35,7 +38,18 @@ const InputField :React.FC<IProps> = ({
   return (
     <div className={`${styles.inputContainer} w-100`}>
       <div className={styles.labelRow}>
-        <label className={styles.inputLabel} htmlFor={label}>{label}</label>
+        {
+          labelClassName
+            ? (
+              <label
+                className={[styles.inputLabel, styles.labelClassName].join(' ')}
+                htmlFor={label}
+              >
+                {label}
+              </label>
+            )
+            : <label className={styles.inputLabel} htmlFor={label}>{label}</label>
+        }
         {link
           ? (
             <Link
