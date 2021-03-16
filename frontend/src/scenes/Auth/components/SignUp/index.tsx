@@ -9,7 +9,6 @@ import InputField from '../../../../components/InputField';
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
 import { ReactComponent as Logo } from '../../../../assets/images/logo.svg';
 import { IInviteToOrganization } from '../../../../common/models/userOrganization/IInviteToOrganization';
-
 import styles from './styles.module.scss';
 
 interface IProps {

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAccessToken } from '../../common/helpers/storageHelper';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Redirect, Switch, Route } from 'react-router-dom';
 import { Routes } from '../../common/enums/Routes';
 import { IAppState } from '../../common/models/store/IAppState';
@@ -42,7 +41,7 @@ const Routing: React.FC<IProps> = ({
         <PrivateRoute path={Routes.Resources} component={Resources} />
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
-        <Route path="/:inviteToken" component={Home} />
+        <Route path={Routes.Invite} component={Home} />
       </Switch>
     </Loader>
   );
