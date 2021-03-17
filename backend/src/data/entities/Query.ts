@@ -1,7 +1,9 @@
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { App } from './App';
+import { Button } from './Button';
 import { Resource } from './Resource';
+import { Table } from './Table';
 import { Trigger } from './Trigger';
 
 @Entity()
@@ -34,4 +36,10 @@ export class Query extends AbstractEntity {
 
   @ManyToOne(() => Resource, resource => resource.queries)
   resource: Resource;
+
+  @OneToMany(() => Table, table => table.query)
+  table: Query[];
+
+  @OneToMany(() => Button, button => button.query)
+  button: Button[];
 }
