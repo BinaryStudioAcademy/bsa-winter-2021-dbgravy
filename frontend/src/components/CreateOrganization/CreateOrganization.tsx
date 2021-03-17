@@ -31,7 +31,9 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setOrgName(e.target.value);
-    setup({ user });
+    if (user?.newOrganization?.isFailed || user?.newOrganization?.isSuccess) {
+      setup({ user });
+    }
   };
 
   const onSend = () => {
