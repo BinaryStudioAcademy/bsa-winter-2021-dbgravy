@@ -17,10 +17,10 @@ export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
       synchronize: true,
       logging: false
     });
-    const rawData = await connection.manager.query(queryData.code);
-    console.log(rawData);
+    const rowData = await connection.manager.query(queryData.code);
+    console.log(rowData);
     connection.close();
-    return rawData;
+    return rowData;
   } catch {
     throw new CustomError('Connection failed', 400);
   }

@@ -5,7 +5,8 @@ import * as queryService from '../../services/queryService';
 
 function* runQuery({ payload }: Routine<any>): Routine<any> {
   try {
-    yield call(queryService.runQuery, payload);
+    const resultData = yield call(queryService.runQuery, payload);
+    yield put(runQueryRoutine.success(resultData));
   } catch (error) {
     console.log('error');
     yield put(runQueryRoutine.failure(error));
