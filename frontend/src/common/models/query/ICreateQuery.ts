@@ -1,3 +1,5 @@
+import { ITrigger } from './ITrigger';
+
 export interface ICreateQuery {
     name: string;
     code:string;
@@ -5,4 +7,5 @@ export interface ICreateQuery {
     resourceId?:string;
     runAutomatically: boolean;
     showConfirm: boolean;
+    triggers:Array<ITrigger>|[]
 }

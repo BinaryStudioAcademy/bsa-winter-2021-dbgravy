@@ -17,6 +17,8 @@ import {
   setNewRunRoutine,
   setNewConfirmRoutine
 } from '../routines';
+import QueriesListForTriggers from '../components/triggerList';
+import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 
 interface IProps {
     id:string
@@ -25,16 +27,27 @@ interface IProps {
 const Constructor:React.FC<IProps> = () => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
-  const [editNameField, setEditNameField] = useState(true);
+  const [editNameField, setEditNameField] = useState<boolean>(true);
+  const [searchValue, setSearchValue] = useState<string>('');
   const handleClose = () => dispatch(setWaiterQueryRoutine.trigger({
     id: '',
     name: '',
     code: '',
     isOpen: false
   }));
-  const handleCloseNext = () => {
+  const isDataChange:boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
+      || query.selectQuery.runAutomatically !== query.setNewRun
+      || query.selectQuery.showConfirm !== query.setNewConfirm
+  );
+  const isTriggersChange:boolean = (
+    query.selectQuery.selectQueryTriggers.every(
+      element => [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].includes(element)
+              && query.selectQuery.selectQueryTriggers.length
+              === [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].length
+    ));
+  const handleCloseNext = ():void => {
     if (!query.isDuplicate) {
-      const runTitle = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
+      const runTitle:string = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
       dispatch(setSelectQueryRoutine.success({
         id: query.waitingQuery.QueryId,
@@ -42,17 +55,19 @@ const Constructor:React.FC<IProps> = () => {
         code: query.waitingQuery.QueryCode,
         runAutomatically: query.waitingQuery.runAutomatically,
         showConfirm: query.waitingQuery.showConfirm,
+        triggers: query.waitingQuery.QueryTriggers,
         runTitle,
         isOpen: false
       }));
     } else {
-      const runTitle = query.selectQuery.runAutomatically ? 'Run query only when manually triggered'
+      const runTitle:string = query.selectQuery.runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
       dispatch(setSelectQueryRoutine.success({
         id: query.selectQuery.selectQueryId,
         name: query.selectQuery.selectQueryName,
         code: query.selectQuery.selectQueryCode,
         runAutomatically: query.selectQuery.runAutomatically,
+        triggers: query.selectQuery.selectQueryTriggers,
         showConfirm: query.selectQuery.showConfirm,
         runTitle
       }));
@@ -61,18 +76,20 @@ const Constructor:React.FC<IProps> = () => {
         code: query.selectQuery.selectQueryCode,
         appId: '3a42e461-222a-45ac-902f-440b4471e51a',
         resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
       }));
     }
   };
-  const saveCode = () => {
-    if (query.selectQuery.selectQueryCode !== query.setNewCode
-    || query.selectQuery.runAutomatically !== query.setNewRun
-    || query.selectQuery.showConfirm !== query.setNewConfirm
-    ) {
+  const saveCode = ():void => {
+    if (isDataChange) {
       dispatch(saveSelectQueryRoutine.trigger({
-        data: { code: query.setNewCode, runAutomatically: query.setNewRun, showConfirm: query.setNewConfirm },
+        data: { code: query.setNewCode,
+          runAutomatically: query.setNewRun,
+          showConfirm: query.setNewConfirm,
+          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+        },
         id: query.selectQuery.selectQueryId,
         appId: '3a42e461-222a-45ac-902f-440b4471e51a'
       }));
@@ -83,6 +100,7 @@ const Constructor:React.FC<IProps> = () => {
         name: query.setNewName,
         code: query.setNewCode,
         runAutomatically: query.setNewRun,
+        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         showConfirm: query.setNewConfirm,
         runTitle
       }));
@@ -102,6 +120,7 @@ const Constructor:React.FC<IProps> = () => {
         name: query.setNewName,
         code: query.selectQuery.selectQueryCode,
         runAutomatically: query.selectQuery.runAutomatically,
+        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         showConfirm: query.selectQuery.showConfirm,
         isOpen: false,
         runTitle: query.runAutomaticallyTitle
@@ -111,20 +130,20 @@ const Constructor:React.FC<IProps> = () => {
       setEditNameField(true);
     }
   };
-  const duplicateQuery = () => {
-    if (query.selectQuery.selectQueryCode === query.setNewCode
-        && query.selectQuery.runAutomatically === query.setNewRun
-        && query.selectQuery.showConfirm === query.setNewConfirm) {
+  const duplicateQuery = ():void => {
+    if (isDataChange || !isTriggersChange) {
+      dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
+    } else {
+      dispatch(setWaiterQueryRoutine.trigger({ isOpen: false, isDuplicate: true }));
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength}`,
         code: query.selectQuery.selectQueryCode,
         appId: '3a42e461-222a-45ac-902f-440b4471e51a',
         resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
       }));
-    } else {
-      dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
     }
   };
   const changeRunFalse = () => {
@@ -167,7 +186,15 @@ const Constructor:React.FC<IProps> = () => {
       <Form className={style.wrapper} onClick={closeNameEditor}>
         <Form.Group controlId="queryLeftSide" className={style.LeftSide}>
           <Form.Group className={style.searchWrapper} controlId="exampleForm.ControlInput1">
-            <Form.Control type="Search" placeholder="Search" className={style.searchInput} />
+            <Form.Control
+              type="Text"
+              placeholder="Search"
+              className={style.searchInput}
+              onChange={
+                ev => setSearchValue(ev.target.value)
+              }
+              value={searchValue}
+            />
             <Button variant="primary" type="submit" className={style.newBtn}>
               +New
             </Button>
@@ -177,7 +204,7 @@ const Constructor:React.FC<IProps> = () => {
               Showing all:
               {query.queriesAppLength}
             </Form.Label>
-            <QueriesList queryList={query.queriesApp} />
+            <QueriesList queryList={query.queriesApp} search={searchValue} />
           </Form.Group>
         </Form.Group>
         <Form.Group controlId="queryRightSide" className={style.RightSide}>
@@ -223,8 +250,7 @@ const Constructor:React.FC<IProps> = () => {
               className={style.codeEditor}
             />
             <Form.Label className={style.row} />
-          </Form.Group>
-          {
+            {
             query.setNewConfirm ? (
               <Form.Check
                 type="checkbox"
@@ -232,7 +258,7 @@ const Constructor:React.FC<IProps> = () => {
                 label="Show a confirmation modal before running"
                 className={style.checkBox}
                 onClick={changeConfirm}
-                checked
+                defaultChecked
               />
             )
               : (
@@ -245,6 +271,15 @@ const Constructor:React.FC<IProps> = () => {
                 />
               )
           }
+            <Form.Label className={style.row} />
+            <div className={style.baseMargin}>On success trigger</div>
+            <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
+            <div className={style.baseMargin}>On failure trigger</div>
+            <QueriesListForUnSuccessTriggers
+              queryList={query.queriesApp}
+              triggerList={query.setNewUnSuccessTriggers}
+            />
+          </Form.Group>
         </Form.Group>
       </Form>
       <Modal

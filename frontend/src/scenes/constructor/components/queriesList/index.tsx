@@ -5,23 +5,30 @@ import QueryBlock from '../QueryBlock';
 import { Form } from 'react-bootstrap';
 
 interface IProps {
-    queryList:Array<IQuery>
+    queryList:Array<IQuery>,
+    search:string
 }
 
 const QueriesList:FunctionComponent<IProps> = ({
-  queryList
+  queryList,
+  search
 }) => (
   <Form.Control as="select" multiple className={style.queriesList}>
     {
         queryList.map(query => (
-          <QueryBlock
-            id={query.id}
-            name={query.name}
-            key={query.id}
-            code={query.code}
-            runAutomatically={query.runAutomatically}
-            showConfirm={query.showConfirm}
-          />
+          query.name.toLowerCase().includes(search.trim().toLowerCase())
+            ? (
+              <QueryBlock
+                id={query.id}
+                name={query.name}
+                key={query.id}
+                code={query.code}
+                runAutomatically={query.runAutomatically}
+                showConfirm={query.showConfirm}
+                triggers={query.triggers}
+              />
+            )
+            : null
         ))
         }
   </Form.Control>

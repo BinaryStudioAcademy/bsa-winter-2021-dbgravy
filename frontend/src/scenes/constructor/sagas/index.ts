@@ -12,6 +12,7 @@ import { addQuery, deleteQuery, fetchQueries, updateQuery } from '../../../servi
 function* fetchQuery({ payload }: Routine<any>) {
   try {
     const queries:Array<IQuery> = yield call(fetchQueries, payload.id);
+    console.log(queries);
     yield put(fetchQueryRoutine.success(queries));
     yield put(openQueryRoutine.success(queries));
   } catch (error) {
@@ -39,6 +40,7 @@ function* watchSaveQueryRequest() {
 function* updateQueryData({ payload }: Routine<any>) {
   try {
     const queries:Array<IQuery> = yield call(updateQuery, payload);
+    console.log(queries);
     yield put(fetchQueryRoutine.success(queries));
   } catch (error) {
     console.log(error.message);

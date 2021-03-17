@@ -3,6 +3,7 @@ import { ITransportedQuery } from '../common/models/query/ITransportedQuery';
 import { QueryRepository } from '../data/repositories/queryRepository';
 import { ICreateQuery } from '../common/models/query/ICreateQuery';
 import { IUpdateQuery } from '../common/models/query/IUpdateQuery';
+import { TriggerRepository } from '../data/repositories/triggerRepository';
 
 export const getQueries = async (id: string): Promise<ITransportedQuery[]> => {
   const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(id);
@@ -13,7 +14,7 @@ export const getQueries = async (id: string): Promise<ITransportedQuery[]> => {
 };
 
 export const addQuery = async (query: ICreateQuery): Promise<ITransportedQuery> => {
-  const { name, code, appId, resourceId, showConfirm, runAutomatically } = query;
+  const { name, code, appId, resourceId, showConfirm, runAutomatically, triggers } = query;
   const queries = await getCustomRepository(QueryRepository).addQuery(
     {
       name,
@@ -24,7 +25,10 @@ export const addQuery = async (query: ICreateQuery): Promise<ITransportedQuery> 
       runAutomatically
     }
   );
-  return queries;
+
+  await getCustomRepository(TriggerRepository).addQuery(triggers, queries.id);
+  const queryWithTriggers = await getCustomRepository(QueryRepository).getQueryById(queries.id);
+  return queryWithTriggers;
 };
 
 export const updateQueries = async (id: string, data: IUpdateQuery, appId: string): Promise<ITransportedQuery[]> => {
@@ -33,12 +37,14 @@ export const updateQueries = async (id: string, data: IUpdateQuery, appId: strin
   } else {
     await getCustomRepository(QueryRepository).updateQuery(id, {
       code: data.code, runAutomatically: data.runAutomatically, showConfirm: data.showConfirm });
+    await getCustomRepository(TriggerRepository).updateTriggerArray(data.triggers, id);
   }
-  const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(appId);
+  const queries = await getQueries(appId);
   return queries;
 };
 
 export const deleteQuery = async (id: string, appId:string): Promise<ITransportedQuery[]> => {
+  await getCustomRepository(TriggerRepository).deleteTriggers(id);
   await getCustomRepository(QueryRepository).deleteQuery(id);
   const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(appId);
   return queries;

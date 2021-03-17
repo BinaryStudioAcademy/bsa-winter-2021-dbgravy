@@ -5,12 +5,13 @@ import { IUpdateQuery } from '../../common/models/query/IUpdateQuery';
 
 @EntityRepository(Query)
 export class QueryRepository extends Repository<Query> {
-  getAllQueryByAppId(appId: string): Promise<Array<Query>> {
-    return this.find({ where: { appId } });
+  async getAllQueryByAppId(appId: string): Promise<Array<Query>> {
+    const response = await this.find({ where: { appId }, relations: ['triggers'] });
+    return response;
   }
 
   getQueryById(id: string): Promise<Query> {
-    return this.findOne({ where: { id } });
+    return this.findOne({ where: { id }, relations: ['triggers'] });
   }
 
   async addQuery(query: ICreateQuery): Promise<Query> {

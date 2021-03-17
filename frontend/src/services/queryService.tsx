@@ -4,14 +4,16 @@ import { ICreateQuery } from '../common/models/query/ICreateQuery';
 import { IUpdateQuery } from '../common/models/query/IUpdateQuery';
 import { IDeleteQuery } from '../common/models/query/IDeleteQuery';
 
-export const addQuery = async ({ name, code, appId, resourceId, showConfirm, runAutomatically }:ICreateQuery) => {
+export const addQuery = async ({ name, code, appId, resourceId, showConfirm, runAutomatically,
+  triggers }:ICreateQuery) => {
   const body = {
     name,
     code,
     appId,
     resourceId,
     showConfirm,
-    runAutomatically
+    runAutomatically,
+    triggers
   };
   const response = await api.post<IQuery>('/api/queries', body);
   return response;

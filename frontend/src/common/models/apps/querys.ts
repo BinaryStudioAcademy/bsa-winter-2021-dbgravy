@@ -1,3 +1,5 @@
+import { ITrigger } from '../query/ITrigger';
+
 export interface IQuery {
     id: string,
     name: string,
@@ -6,4 +8,5 @@ export interface IQuery {
     resourceId:string,
     runAutomatically?:boolean,
     showConfirm?:boolean;
+    triggers:Array<ITrigger>|[]
 }

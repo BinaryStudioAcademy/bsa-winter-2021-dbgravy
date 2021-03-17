@@ -1,3 +1,5 @@
+import { ITrigger } from './Trigger';
+
 export interface ITransportedQuery {
     id: string;
     name: string;
@@ -6,4 +8,5 @@ export interface ITransportedQuery {
     resourceId?:string;
     runAutomatically?:boolean;
     showConfirm?:boolean;
+    triggers?: Array<ITrigger>|[]
 }
