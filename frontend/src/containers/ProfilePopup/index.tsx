@@ -6,19 +6,22 @@ import ProfilePopupInfo from '../../components/ProfilePopupInfo/ProfilePopupInfo
 import { connect } from 'react-redux';
 import { IUser } from '../../common/models/user/IUser';
 import { logotUserRoutine } from '../../scenes/Auth/routines';
+import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 
 interface IProps {
-  user?: IUser,
+  user: IUser,
+  organization?: IUserOrganization
   fetchOrganization: (user?: IUser) => void,
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
-  logout: () => void
+  logout: () => void,
+  setup: (payload: { user?: IUser }) => void,
 }
 
 const ProfilePopup: React.FC<IProps> = (
-  { user, fetchOrganization, createOrganization, fullfill, logout }
+  { user, fetchOrganization, createOrganization, fullfill, logout, organization, setup }
 ) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
 
   return (
     <div>
@@ -28,26 +31,29 @@ const ProfilePopup: React.FC<IProps> = (
         showDetails={setShowDetails}
         details={showDetails}
       />
-      {showDetails ? (
-        <ProfilePopupInfo
-          user={user}
-          fetchOrganization={fetchOrganization}
-          createOrganization={createOrganization}
-          fullfill={fullfill}
-          logout={logout}
-        />
-      ) : null}
+      <ProfilePopupInfo
+        isShow={showDetails}
+        user={user}
+        fetchOrganization={fetchOrganization}
+        createOrganization={createOrganization}
+        fullfill={fullfill}
+        logout={logout}
+        setup={setup}
+        organization={organization}
+      />
     </div>
   );
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.user
+  user: state.user.user,
+  organization: state.user.currentOrganization
 });
 
 const mapDispatchToProps = {
   fetchOrganization: fetchOrgInfoRoutine,
-  createOrganization: createOrganizationRoutine,
+  createOrganization: createOrganizationRoutine.request,
+  setup: createOrganizationRoutine.trigger,
   fullfill: createOrganizationRoutine.fulfill,
   logout: logotUserRoutine
 };

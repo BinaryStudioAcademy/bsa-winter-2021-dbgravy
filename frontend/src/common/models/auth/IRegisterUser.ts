@@ -2,6 +2,7 @@ export interface IRegisterUser {
     email: string;
     password: string;
     firstName: string;
-    lastName:string;
-    organisationName:string;
+    lastName: string;
+    organizationName: string;
+    currentOrganizationId?: string
 }

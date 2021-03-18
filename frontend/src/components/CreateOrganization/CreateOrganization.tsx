@@ -9,10 +9,11 @@ interface IProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
   create: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
+  setup: (payload: { user?: IUser }) => void,
   user?: IUser
 }
 
-const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill }) => {
+const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill, setup }) => {
   useEffect(() => {
     if (user?.newOrganization?.isLoading === true
       && user?.newOrganization?.isFailed === true) {
@@ -28,7 +29,12 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill 
 
   const [organizationName, setOrgName] = useState('');
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => setOrgName(e.target.value);
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setOrgName(e.target.value);
+    if (user?.newOrganization?.isFailed || user?.newOrganization?.isSuccess) {
+      setup({ user });
+    }
+  };
 
   const onSend = () => {
     create({ user, newOrganization: { name: organizationName } });
@@ -55,10 +61,11 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill 
         value={organizationName}
         onChange={onChange}
       />
-      <div className={user?.newOrganization?.isFailed ? styles.error : styles.po}>
+      <div className={user?.newOrganization?.isFailed ? styles.error : styles.post}>
         {user?.newOrganization?.isLoading
           ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
         {user?.newOrganization?.isFailed ? 'Failed to create new organization.' : ''}
+        {user?.newOrganization?.isSuccess ? 'Organization succesfully created' : ''}
       </div>
       <div className={styles.btnsContainer}>
         <div

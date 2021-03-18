@@ -1,27 +1,22 @@
 import { Routine } from 'redux-saga-routines';
-import {
-  fetchOrgInfoRoutine,
-  createOrganizationRoutine
-} from '../containers/ProfilePopup/routines';
-import {
-  fetchUserRoutine,
-  loginUserRoutine,
-  addNewUserRoutine,
-  logotUserRoutine
-} from '../scenes/Auth/routines';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../containers/ProfilePopup/routines';
+import { addNewUserRoutine, fetchUserRoutine, loginUserRoutine, logotUserRoutine } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
-import { Roles } from '../common/enums/UserRoles';
+import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
+import { IUserOrganization } from '../common/models/user/IUserOrganization';
 
 export interface IUserState {
-  user?: IUser;
+  user: IUser;
   isLoading: boolean;
   isAuthorized: boolean;
+  currentOrganization?: IUserOrganization
 }
 
-// dev only
 const initialState = {
   isLoading: false,
-  isAuthorized: false
+  isAuthorized: false,
+  user: {},
+  currentOrganization: {}
 };
 
 export const user = (
@@ -41,8 +36,6 @@ export const user = (
         id,
         firstName,
         lastName,
-        role,
-        status,
         organizationId,
         email
       } = payload;
@@ -52,8 +45,6 @@ export const user = (
           id,
           firstName,
           lastName,
-          role,
-          status,
           organizationId,
           email
         },
@@ -92,39 +83,41 @@ export const user = (
     case fetchOrgInfoRoutine.TRIGGER:
       return {
         ...state,
-        user: {
-          ...payload,
-          currentOrganization: {
-            name: '',
-            role: Roles.Viewer,
-            isLoading: true,
-            isFailed: false
-          }
+        currentOrganization: {
+          ...state.currentOrganization,
+          isLoading: true,
+          isFailed: false
         }
       };
     case fetchOrgInfoRoutine.SUCCESS:
       return {
         ...state,
-        user: {
-          ...payload.user,
-          currentOrganization: {
-            ...payload.currentOrganization,
-            isLoading: false,
-            isFailed: false
-          }
+        currentOrganization: {
+          ...payload.currentOrganization,
+          isLoading: false,
+          isFailed: false
         }
       };
     case fetchOrgInfoRoutine.FAILURE:
       return {
         ...state,
-        user: {
-          ...payload.user,
-          currentOrganization: {
-            isFailed: true
-          }
+        currentOrganization: {
+          ...state.currentOrganization
         }
       };
     case createOrganizationRoutine.TRIGGER:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {
+            isLoading: false,
+            isFailed: false,
+            isSuccess: false
+          }
+        }
+      };
+    case createOrganizationRoutine.REQUEST:
       return {
         ...state,
         user: {
@@ -142,7 +135,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: false
+            isFailed: false,
+            isSuccess: true
           }
         }
       };
@@ -152,7 +146,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: true
+            isFailed: true,
+            isSuccess: false
           }
         }
       };
@@ -164,10 +159,16 @@ export const user = (
           newOrganization: {}
         }
       };
-    case logotUserRoutine.TRIGGER:
+    case logotUserRoutine.SUCCESS:
       return {
         isLoading: false,
-        isAuthorized: false
+        isAuthorized: false,
+        user: {}
+      };
+    case switchUserToOrganizationRoutine.SUCCESS:
+      return {
+        ...state,
+        user: payload
       };
     default:
       return state;
