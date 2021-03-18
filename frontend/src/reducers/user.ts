@@ -115,6 +115,18 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
+            isLoading: false,
+            isFailed: false,
+            isSuccess: false
+          }
+        }
+      };
+    case createOrganizationRoutine.REQUEST:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {
             ...payload.newOrganization,
             isLoading: true,
             isFailed: false
@@ -127,7 +139,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: false
+            isFailed: false,
+            isSuccess: true
           }
         }
       };
@@ -137,7 +150,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: true
+            isFailed: true,
+            isSuccess: false
           }
         }
       };

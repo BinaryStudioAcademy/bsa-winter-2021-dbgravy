@@ -1,0 +1,51 @@
+.container {
+  overflow: auto;
+  color: rgb(43, 43, 43);
+  font-size: 15px;
+
+  .grid {
+    overflow: visible!important;
+
+    div {
+      border-bottom: 1px solid rgb(236, 236, 236);
+      border-right: 1px solid rgb(206, 206, 206);
+      padding-left: 10px;
+      display: flex;
+      align-items: center;
+      overflow: hidden!important;
+      white-space: nowrap;
+
+      svg {
+        margin-left: 5px;
+      }
+
+      span {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 20px;
+        color: rgb(66, 208, 255);
+        user-select: none;
+      }
+    }
+  }
+}
+
+.table {
+  box-shadow: 1px 1px 9px -1px rgba(0,0,0,0.41);
+  border-radius: 5px;
+  overflow: auto;
+  max-width: 1280px;
+  max-height: 960px;
+
+  span {
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    bottom: -20px;
+    left: 20px;
+    margin-bottom: 10px;
+  }
+}
