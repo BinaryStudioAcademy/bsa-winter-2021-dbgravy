@@ -83,7 +83,7 @@ const Constructor:React.FC<IProps> = () => {
     }
   };
   const saveCode = ():void => {
-    if (isDataChange) {
+    if (isDataChange || isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
         data: { code: query.setNewCode,
           runAutomatically: query.setNewRun,
@@ -136,7 +136,7 @@ const Constructor:React.FC<IProps> = () => {
     } else {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: false, isDuplicate: true }));
       dispatch(duplicateSelectQueryRoutine.trigger({
-        name: `query${query.queriesAppLength}`,
+        name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
         appId: '3a42e461-222a-45ac-902f-440b4471e51a',
         resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
