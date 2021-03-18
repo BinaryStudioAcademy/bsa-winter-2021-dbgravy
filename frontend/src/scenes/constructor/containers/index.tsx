@@ -21,10 +21,11 @@ import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 
 interface IProps {
-    id:string
+    id:string,
+    resourceId:string
 }
 
-const Constructor:React.FC<IProps> = () => {
+const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
@@ -74,8 +75,8 @@ const Constructor:React.FC<IProps> = () => {
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength}`,
         code: query.selectQuery.selectQueryCode,
-        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        appId: id,
+        resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -91,7 +92,7 @@ const Constructor:React.FC<IProps> = () => {
           triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
         },
         id: query.selectQuery.selectQueryId,
-        appId: '3a42e461-222a-45ac-902f-440b4471e51a'
+        appId: id
       }));
       const runTitle = query.setNewRun ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
@@ -112,7 +113,7 @@ const Constructor:React.FC<IProps> = () => {
     } else if (query.setNewName !== query.selectQuery.selectQueryName) {
       dispatch(saveSelectQueryRoutine.trigger({
         id: query.selectQuery.selectQueryId,
-        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
+        appId: id,
         data: { name: query.setNewName }
       }));
       dispatch(setSelectQueryRoutine.success({
@@ -138,8 +139,8 @@ const Constructor:React.FC<IProps> = () => {
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
-        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        appId: id,
+        resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -174,11 +175,10 @@ const Constructor:React.FC<IProps> = () => {
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
-      appId: '3a42e461-222a-45ac-902f-440b4471e51a'
+      appId: id
     }));
   };
   useEffect(() => {
-    const id = '3a42e461-222a-45ac-902f-440b4471e51a';
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
   return (
