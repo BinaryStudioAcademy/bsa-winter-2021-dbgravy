@@ -28,11 +28,11 @@ const confirmPassword = Yup.string()
   .required('Password is required');
 
 const firstName = Yup.string()
-  .required('first Name is required')
+  .required('First Name is required')
   .max(100, 'first name should be no longer 100 characters');
 
 const lastName = Yup.string()
-  .required('Full Name is required')
+  .required('Last Name is required')
   .max(10, 'Full name should be no longer 100 characters');
 
 export const signInValSchema = Yup.object().shape({

@@ -79,8 +79,8 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  isLoading: rootState.application.isLoading,
-  apps: rootState.application.apps
+  isLoading: rootState.app.application.isLoading,
+  apps: rootState.app.application.apps
 });
 
 const mapDispatchToProps = {

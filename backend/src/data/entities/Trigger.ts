@@ -12,6 +12,7 @@ export class Trigger extends BaseEntity {
   triggerQueryId: string;
 
   @Column()
+  @PrimaryColumn()
   success: boolean;
 
   @ManyToOne(() => Query, query => query.triggers)

@@ -27,7 +27,7 @@ function* addApp({ payload }: Routine<any>): Routine<any> {
   }
 }
 
-const selectApp = (state: IAppState) => state.application.editedApp;
+const selectApp = (state: IAppState) => state.app.application.editedApp;
 
 function* deleteApp() {
   const { app } = yield select(selectApp);
