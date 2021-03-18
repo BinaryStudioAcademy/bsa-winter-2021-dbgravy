@@ -4,7 +4,7 @@ import { IResourcesState } from '../../../reducers/resources';
 import { Roles } from '../../enums/UserRoles';
 import { Status } from '../../enums/UserStatus';
 import { IUser } from '../user/IUser';
-import { IQueryState } from '../../../reducers/queries';
+import { IQueryState } from '../query/IQueryState';
 import { IInviteToOrganization } from '../userOrganization/IInviteToOrganization';
 
 export interface IAppState {

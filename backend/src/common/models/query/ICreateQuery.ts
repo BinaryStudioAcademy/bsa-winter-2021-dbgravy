@@ -7,5 +7,5 @@ export interface ICreateQuery {
     resourceId:string;
     runAutomatically:boolean;
     showConfirm:boolean;
-    triggers?: Array<ITrigger>|[]
+    triggers?: Array<ITrigger>;
 }

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.scss';
 import { IAppState } from '../../../common/models/store/IAppState';
 import Loader from '../../../components/Loader';
-import { Button, Form, DropdownButton, Dropdown, Modal } from 'react-bootstrap';
+import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
   setNewCodeRoutine,
@@ -19,69 +19,25 @@ import {
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
+import { deepArray } from '../../../common/helpers/arrayHelper';
+import ModalWindow from '../components/ModalWindow';
 
 interface IProps {
     id:string
+    resourceId:string
 }
 
-const Constructor:React.FC<IProps> = ({ id }) => {
+const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
-  const handleClose = () => dispatch(setWaiterQueryRoutine.trigger({
-    id: '',
-    name: '',
-    code: '',
-    isOpen: false
-  }));
   const isDataChange:boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
       || query.selectQuery.runAutomatically !== query.setNewRun
       || query.selectQuery.showConfirm !== query.setNewConfirm
   );
-  const isTriggersChange:boolean = (
-    query.selectQuery.selectQueryTriggers.every(
-      element => [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].includes(element)
-              && query.selectQuery.selectQueryTriggers.length
-              === [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].length
-    ));
-  const handleCloseNext = ():void => {
-    if (!query.isDuplicate) {
-      const runTitle:string = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
-      dispatch(setSelectQueryRoutine.success({
-        id: query.waitingQuery.QueryId,
-        name: query.waitingQuery.QueryName,
-        code: query.waitingQuery.QueryCode,
-        runAutomatically: query.waitingQuery.runAutomatically,
-        showConfirm: query.waitingQuery.showConfirm,
-        triggers: query.waitingQuery.QueryTriggers,
-        runTitle,
-        isOpen: false
-      }));
-    } else {
-      const runTitle:string = query.selectQuery.runAutomatically ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
-      dispatch(setSelectQueryRoutine.success({
-        id: query.selectQuery.selectQueryId,
-        name: query.selectQuery.selectQueryName,
-        code: query.selectQuery.selectQueryCode,
-        runAutomatically: query.selectQuery.runAutomatically,
-        triggers: query.selectQuery.selectQueryTriggers,
-        showConfirm: query.selectQuery.showConfirm,
-        runTitle
-      }));
-      dispatch(duplicateSelectQueryRoutine.trigger({
-        name: `query${query.queriesAppLength}`,
-        code: query.selectQuery.selectQueryCode,
-        appId: id,
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
-        triggers: query.selectQuery.selectQueryTriggers,
-        runAutomatically: query.selectQuery.runAutomatically,
-        showConfirm: query.selectQuery.showConfirm
-      }));
-    }
-  };
+  const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
+    [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
   const saveCode = ():void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
@@ -140,7 +96,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
         appId: id,
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -156,7 +112,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: '',
         appId: id,
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        resourceId,
         triggers: [],
         runAutomatically: true,
         showConfirm: true
@@ -191,7 +147,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
-      appId: '3a42e461-222a-45ac-902f-440b4471e51a'
+      appId: id
     }));
   };
   useEffect(() => {
@@ -298,25 +254,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
           </Form.Group>
         </Form.Group>
       </Form>
-      <Modal
-        show={query.isOpen}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          You didnt save your query. Are you sure you want to discard changes?.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleCloseNext}>Ok</Button>
-        </Modal.Footer>
-      </Modal>
+      <ModalWindow />
     </Loader>
   );
 };

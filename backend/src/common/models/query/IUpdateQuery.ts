@@ -5,5 +5,5 @@ export interface IUpdateQuery {
     code?:string;
     runAutomatically?:boolean;
     showConfirm?:boolean;
-    triggers:Array<ITrigger>|[];
+    triggers:Array<ITrigger>;
 }

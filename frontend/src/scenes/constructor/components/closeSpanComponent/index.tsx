@@ -5,6 +5,7 @@ import {
   setSuccessTriggersRoutine,
   setUnSuccessTriggersRoutine
 } from '../../routines';
+import { Button } from 'react-bootstrap';
 import { IAppState } from '../../../../common/models/store/IAppState';
 
 interface IProps {
@@ -29,10 +30,9 @@ const SpanCloseComponent:FunctionComponent<IProps> = ({ id, status }) => {
     }
   };
   return (
-  // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/control-has-associated-label
-    <span onClick={selectQuery} className={style.span} role="button" tabIndex={0}>
+    <Button onClick={selectQuery} className={style.span} role="button" tabIndex={0}>
       ☓
-    </span>
+    </Button>
   );
 };
 

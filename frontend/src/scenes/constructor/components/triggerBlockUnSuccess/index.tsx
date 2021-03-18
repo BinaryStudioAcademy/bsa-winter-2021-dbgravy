@@ -10,7 +10,7 @@ interface IProps {
     name:string
     code?:string
     status:boolean
-    triggers:Array<ITrigger>|[]
+    triggers:Array<ITrigger>
     runAutomatically:boolean|undefined
     showConfirm:boolean|undefined
 }

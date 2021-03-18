@@ -7,7 +7,7 @@ export class TriggerRepository extends Repository<Trigger> {
   async getAllTriggersByQueryId(queryId: string): Promise<Array<Trigger>>|null {
     return this.find({ where: { queryId } });
   }
-  async addQuery(triggers:Array<ITrigger>|[], id:string): Promise<void> {
+  async addQuery(triggers:Array<ITrigger>, id:string): Promise<void> {
     await Promise.all(triggers.map(async (element:{ triggerQueryId: string; success: boolean; }) => {
       await this.create({
         queryId: id,
@@ -18,25 +18,19 @@ export class TriggerRepository extends Repository<Trigger> {
   }
   async deleteTriggers(id: string): Promise<void> {
     const triggers = await this.getAllTriggersByQueryId(id);
-    const triggers2 = await this.find({ where: { triggerQueryId: id } });
-    triggers.forEach(element => {
-      this.remove(element);
-    });
-    await triggers2.forEach(element => {
-      this.remove(element);
-    });
+    const triggersQuery = await this.find({ where: { triggerQueryId: id } });
+    await this.remove(triggers);
+    await this.remove(triggersQuery);
   }
-  async updateTriggerArray(triggerArray:Array<ITrigger>|[], id: string): Promise<void> {
+  async updateTriggerArray(triggerArray:Array<ITrigger>, id: string): Promise<void> {
     const triggers = await this.getAllTriggersByQueryId(id);
-    await Promise.all(triggers.map(async element => {
-      await this.remove(element);
+    const newTriggers = triggerArray.map(element => ({
+      queryId: id,
+      triggerQueryId: element.triggerQueryId,
+      success: element.success
     }));
-    await Promise.all(triggerArray.map(async (element:{ triggerQueryId: string; success: boolean; }) => {
-      await this.create({
-        queryId: id,
-        triggerQueryId: element.triggerQueryId,
-        success: element.success
-      }).save();
-    }));
+    await this.remove(triggers);
+    await this.create(newTriggers);
+    await this.save(newTriggers);
   }
 }

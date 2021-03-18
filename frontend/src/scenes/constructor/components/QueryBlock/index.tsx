@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectQueryRoutine, setWaiterQueryRoutine } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ITrigger } from '../../../../common/models/query/ITrigger';
+import { deepArray } from '../../../../common/helpers/arrayHelper';
 
 interface IProps {
     id:string,
     name:string,
     code?:string,
-    triggers:Array<ITrigger>|[],
+    triggers:Array<ITrigger>,
     runAutomatically:boolean|undefined,
     showConfirm:boolean|undefined
 }
@@ -20,12 +21,8 @@ const QueryBlock:FunctionComponent<IProps> = ({ id, name, code, runAutomatically
   const isDataChange = (query.selectQuery.selectQueryCode === query.setNewCode
       && query.selectQuery.runAutomatically === query.setNewRun
       && query.selectQuery.showConfirm === query.setNewConfirm);
-  const isTriggersChange:boolean = (
-    query.selectQuery.selectQueryTriggers.every(
-      element => [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].includes(element)
-          && query.selectQuery.selectQueryTriggers.length
-          === [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers].length
-    ));
+  const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
+    [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
   const selectQuery = ():void|any => {
     if (isDataChange && isTriggersChange) {
       const runTitle = runAutomatically ? 'Run query only when manually triggered'

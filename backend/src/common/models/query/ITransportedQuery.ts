@@ -8,5 +8,5 @@ export interface ITransportedQuery {
     resourceId?:string;
     runAutomatically?:boolean;
     showConfirm?:boolean;
-    triggers?: Array<ITrigger>|[]
+    triggers?: Array<ITrigger>;
 }

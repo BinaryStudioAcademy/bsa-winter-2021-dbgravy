@@ -10,7 +10,7 @@ import SpanCloseComponent from '../closeSpanComponent';
 
 interface IProps {
     queryList:Array<IQuery>
-    triggerList:Array<ITrigger>|[]
+    triggerList:Array<ITrigger>
 }
 
 const QueriesListForUnSuccessTriggers:FunctionComponent<IProps> = ({

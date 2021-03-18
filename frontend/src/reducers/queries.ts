@@ -1,4 +1,3 @@
-import { IQuery } from '../common/models/apps/querys';
 import { Routine } from 'redux-saga-routines';
 import {
   duplicateSelectQueryRoutine,
@@ -13,37 +12,7 @@ import {
   setWaiterQueryRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
-
-export interface IQueryState {
-  queriesApp: Array<IQuery>;
-  selectQuery:{
-    selectQueryId: string,
-    selectQueryName: string,
-    selectQueryCode: string,
-    selectQueryTriggers:Array<ITrigger>|[],
-    runAutomatically: boolean,
-    showConfirm: boolean
-  },
-  setNewCode:string,
-  setNewRun: boolean,
-  runAutomaticallyTitle:string,
-  setNewName:string,
-  setNewConfirm:boolean,
-  setNewSuccessTriggers:Array<ITrigger>|[],
-  setNewUnSuccessTriggers:Array<ITrigger>|[],
-  queriesAppLength:number,
-  isLoading: boolean,
-  isOpen:boolean,
-  isDuplicate:boolean,
-  waitingQuery:{
-    QueryId?:string,
-    QueryName?:string,
-    QueryCode?:string,
-    QueryTriggers:Array<ITrigger>|[],
-    runAutomatically: boolean,
-    showConfirm: boolean
-  }
-}
+import { IQueryState } from '../common/models/query/IQueryState';
 
 const initialState:IQueryState = {
   queriesApp: [],
@@ -66,10 +35,10 @@ const initialState:IQueryState = {
   isOpen: false,
   isDuplicate: false,
   waitingQuery: {
-    QueryId: '',
-    QueryName: '',
-    QueryCode: '',
-    QueryTriggers: [],
+    queryId: '',
+    queryName: '',
+    queryCode: '',
+    queryTriggers: [],
     runAutomatically: false,
     showConfirm: false
   },
@@ -77,8 +46,8 @@ const initialState:IQueryState = {
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
-  let successTriggers:Array<ITrigger>|[] = [];
-  let UnSuccessTriggers:Array<ITrigger>|[] = [];
+  let successTriggers:Array<ITrigger> = [];
+  let UnSuccessTriggers:Array<ITrigger> = [];
   switch (action.type) {
     case fetchQueryRoutine.SUCCESS:
       return {
@@ -90,15 +59,15 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
     case openQueryRoutine.SUCCESS:
       const runTitle = action.payload[0].runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
-      action.payload[0].triggers.find((element:ITrigger) => {
+      action.payload[0].triggers.forEach((element:ITrigger) => {
         if (element.success) {
           successTriggers = [...successTriggers, element];
-        } return null;
+        }
       });
-      action.payload[0].triggers.find((element:ITrigger) => {
+      action.payload[0].triggers.forEach((element:ITrigger) => {
         if (!element.success) {
           UnSuccessTriggers = [...UnSuccessTriggers, element];
-        } return null;
+        }
       });
       return {
         ...state,
@@ -119,32 +88,33 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         runAutomaticallyTitle: runTitle
       };
     case setSelectQueryRoutine.SUCCESS:
-      action.payload.triggers.find((element:ITrigger) => {
+      action.payload.triggers.forEach((element:ITrigger) => {
         if (element.success) {
           successTriggers = [...successTriggers, element];
-        } return null;
+        }
       });
-      action.payload.triggers.find((element:ITrigger) => {
+      action.payload.triggers.forEach((element:ITrigger) => {
         if (!element.success) {
           UnSuccessTriggers = [...UnSuccessTriggers, element];
-        } return null;
+        }
       });
+      const { id, name, code, triggers, showConfirm, runAutomatically } = action.payload;
       return {
         ...state,
         selectQuery: {
-          selectQueryId: action.payload.id,
-          selectQueryName: action.payload.name,
-          selectQueryCode: action.payload.code,
-          selectQueryTriggers: action.payload.triggers,
-          showConfirm: action.payload.showConfirm,
-          runAutomatically: action.payload.runAutomatically
+          selectQueryId: id,
+          selectQueryName: name,
+          selectQueryCode: code,
+          selectQueryTriggers: triggers,
+          showConfirm,
+          runAutomatically
         },
         runAutomaticallyTitle: action.payload.runTitle,
         isOpen: action.payload.isOpen,
-        setNewCode: action.payload.code,
-        setNewName: action.payload.name,
-        setNewConfirm: action.payload.showConfirm,
-        setNewRun: action.payload.runAutomatically,
+        setNewCode: code,
+        setNewName: name,
+        setNewConfirm: showConfirm,
+        setNewRun: runAutomatically,
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers
       };
@@ -200,10 +170,10 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         waitingQuery: {
-          QueryId: action.payload.id,
-          QueryName: action.payload.name,
-          QueryCode: action.payload.code,
-          QueryTriggers: action.payload.triggers,
+          queryId: action.payload.id,
+          queryName: action.payload.name,
+          queryCode: action.payload.code,
+          queryTriggers: action.payload.triggers,
           showConfirm: action.payload.showConfirm,
           runAutomatically: action.payload.runAutomatically
         },

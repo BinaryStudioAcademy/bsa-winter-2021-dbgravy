@@ -10,14 +10,9 @@ import { IQuery } from '../../../common/models/apps/querys';
 import { addQuery, deleteQuery, fetchQueries, updateQuery } from '../../../services/queryService';
 
 function* fetchQuery({ payload }: Routine<any>) {
-  try {
-    const queries:Array<IQuery> = yield call(fetchQueries, payload.id);
-    console.log(queries);
-    yield put(fetchQueryRoutine.success(queries));
-    yield put(openQueryRoutine.success(queries));
-  } catch (error) {
-    console.log(error.message);
-  }
+  const queries:Array<IQuery> = yield call(fetchQueries, payload.id);
+  yield put(fetchQueryRoutine.success(queries));
+  yield put(openQueryRoutine.success(queries));
 }
 
 function* watchQueryRequest() {
@@ -25,12 +20,8 @@ function* watchQueryRequest() {
 }
 
 function* saveQuery({ payload }: Routine<any>) {
-  try {
-    const queries:IQuery = yield call(addQuery, payload);
-    yield put(duplicateSelectQueryRoutine.success(queries));
-  } catch (error) {
-    console.log(error.message);
-  }
+  const queries:IQuery = yield call(addQuery, payload);
+  yield put(duplicateSelectQueryRoutine.success(queries));
 }
 
 function* watchSaveQueryRequest() {
@@ -38,13 +29,8 @@ function* watchSaveQueryRequest() {
 }
 
 function* updateQueryData({ payload }: Routine<any>) {
-  try {
-    const queries:Array<IQuery> = yield call(updateQuery, payload);
-    console.log(queries);
-    yield put(fetchQueryRoutine.success(queries));
-  } catch (error) {
-    console.log(error.message);
-  }
+  const queries:Array<IQuery> = yield call(updateQuery, payload);
+  yield put(fetchQueryRoutine.success(queries));
 }
 
 function* watchUpdateNameQueryRequest() {
@@ -52,13 +38,9 @@ function* watchUpdateNameQueryRequest() {
 }
 
 function* deleteSelectQuery({ payload }: Routine<any>) {
-  try {
-    const queries:Array<IQuery> = yield call(deleteQuery, payload);
-    yield put(fetchQueryRoutine.success(queries));
-    yield put(openQueryRoutine.success(queries));
-  } catch (error) {
-    console.log(error.message);
-  }
+  const queries:Array<IQuery> = yield call(deleteQuery, payload);
+  yield put(fetchQueryRoutine.success(queries));
+  yield put(openQueryRoutine.success(queries));
 }
 
 function* watchDeleteQueryRequest() {
