@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
+import { ExtractJwt, Strategy as JwtStrategy, VerifiedCallback } from 'passport-jwt';
 import { Strategy as CustomStrategy } from 'passport-custom';
 import { getCustomRepository } from 'typeorm';
 import { compare } from '../common/helpers/cryptoHelper';
@@ -92,3 +92,21 @@ passport.use('refresh-jwt', new CustomStrategy(async (req, done) => {
     return done(err);
   }
 }));
+
+const validateUser = async (id: string, done: VerifiedCallback) => {
+  try {
+    const user = await getCustomRepository(UserRepository).getById(id);
+    return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
+  } catch (err) {
+    return done(err);
+  }
+};
+
+const options2 = {
+  jwtFromRequest: ExtractJwt.fromBodyField('token'),
+  secretOrKey: secret
+};
+
+passport.use('new-pass', new JwtStrategy(options2, async ({ id }: { id: string }, done) => (
+  validateUser(id, done)
+)));
