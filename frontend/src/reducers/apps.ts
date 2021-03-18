@@ -1,10 +1,17 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchAppRoutine, editAppRoutine, deleteAppRoutine, showEditRoutine } from '../scenes/Apps/routines';
+import {
+  fetchAppRoutine,
+  editAppRoutine,
+  deleteAppRoutine,
+  showEditRoutine,
+  setCurrentlyAppId
+} from '../scenes/Apps/routines';
 import { IApps } from '../common/models/apps/IApps';
 
 export interface IAppsState {
   isLoading: boolean,
   apps: Array<IApps>;
+  currentlyApp: string;
   editedApp?: {
     app?: IApps,
     name?: string,
@@ -20,6 +27,7 @@ export interface IAppsState {
 
 const initialState = {
   isLoading: true,
+  currentlyApp: '',
   apps: []
 };
 
@@ -94,6 +102,11 @@ export const application = (state: IAppsState = initialState, { type, payload }:
           isFailed: true,
           app: payload.app
         }
+      };
+    case setCurrentlyAppId.TRIGGER:
+      return {
+        ...state,
+        currentlyApp: payload
       };
     default:
       return state;
