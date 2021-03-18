@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { Form, FormControl, InputGroup, Card } from 'react-bootstrap';
-import { Search } from 'react-bootstrap-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import AddApp from './components/AddApp';
 import { addAppRoutine, deleteAppRoutine, fetchAppRoutine, showEditRoutine } from './routines';
 import { connect } from 'react-redux';
@@ -39,7 +40,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
               <InputGroup>
                 <InputGroup.Prepend>
                   <InputGroup.Text className={styles['input-group-search']}>
-                    <Search />
+                    <FontAwesomeIcon icon={faSearch} />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
@@ -52,11 +53,10 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
                   className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
                 />
               </InputGroup>
-
               <AddApp onAddApp={name => addApp(name)} />
             </Form>
           </div>
-          {!apps.length && (
+          {!apps.length ? (
             <Card className={`text-center ${styles['card-element-nothing']}`}>
               <Card.Body className={styles['card-body-nothing']}>
                 <Card.Text className={styles['card-body-text-nothing']}>
@@ -64,13 +64,14 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
                 </Card.Text>
               </Card.Body>
             </Card>
+          ) : (
+            <AppsList
+              search={searchValue}
+              appsList={apps}
+              deleteApp={deleteApp}
+              showEdit={showEdit}
+            />
           )}
-          <AppsList
-            search={searchValue}
-            appsList={apps}
-            deleteApp={deleteApp}
-            showEdit={showEdit}
-          />
         </div>
       </Loader>
     </div>
