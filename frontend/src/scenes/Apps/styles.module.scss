@@ -36,3 +36,36 @@
   justify-content: space-between;
   margin-bottom: 40px;
 }
+
+.input-group-search {
+  background-color: white !important;
+}
+
+.form-control-search {
+  padding-left: 0 !important;
+}
+
+.card-element-nothing {
+  border-style: dashed !important;
+  border-width: 3px !important;
+}
+
+.card-body-nothing {
+  padding: 2rem !important
+}
+
+.card-body-text-nothing {
+  color: grey;
+}
+
+
+::-webkit-input-placeholder {
+  font-size: 16px!important;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  font-size: 16px!important;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+  font-size: 16px!important;
+}
