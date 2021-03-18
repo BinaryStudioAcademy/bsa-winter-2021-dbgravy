@@ -101,8 +101,8 @@ const Preview: React.FC<IProps> = ({
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  isLoading: rootState.query.isLoading,
-  resultData: rootState.query.resultData
+  isLoading: rootState.app.qur.isLoading,
+  resultData: rootState.app.qur.resultData
 });
 
 const mapDispatchToProps = {

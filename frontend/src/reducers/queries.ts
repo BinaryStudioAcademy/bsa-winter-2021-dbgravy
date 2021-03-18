@@ -1,36 +1,5 @@
 import { Routine } from 'redux-saga-routines';
-<<<<<<< HEAD
 import { runQueryRoutine, previewQueryRoutine } from '../components/Preview/routine';
-import { IQuery } from '../common/models/queries/IQuery';
-
-export interface IQueryState {
-  isLoading: boolean,
-  queries: Array<IQuery>;
-  resultData: any;
-}
-
-const initialState = {
-  isLoading: true,
-  queries: [],
-  resultData: null
-};
-
-export const query = (state: IQueryState = initialState, { type, payload }: Routine<any>): IQueryState => {
-  switch (type) {
-    case runQueryRoutine.SUCCESS:
-      console.log(payload);
-      return {
-        ...state,
-        resultData: payload,
-        isLoading: false
-      };
-    case previewQueryRoutine.SUCCESS:
-      console.log(payload);
-      return {
-        ...state,
-        resultData: payload,
-        isLoading: false
-=======
 import {
   duplicateSelectQueryRoutine,
   fetchQueryRoutine,
@@ -46,7 +15,7 @@ import {
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
 
-const initialState:IQueryState = {
+const initialState: IQueryState = {
   queriesApp: [],
   selectQuery: {
     selectQueryId: '',
@@ -74,12 +43,13 @@ const initialState:IQueryState = {
     runAutomatically: false,
     showConfirm: false
   },
-  isLoading: true
+  isLoading: true,
+  resultData: null
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
-  let successTriggers:Array<ITrigger> = [];
-  let UnSuccessTriggers:Array<ITrigger> = [];
+  let successTriggers: Array<ITrigger> = [];
+  let UnSuccessTriggers: Array<ITrigger> = [];
   switch (action.type) {
     case fetchQueryRoutine.SUCCESS:
       return {
@@ -91,12 +61,12 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
     case openQueryRoutine.SUCCESS:
       const runTitle = action.payload[0].runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
-      action.payload[0].triggers.forEach((element:ITrigger) => {
+      action.payload[0].triggers.forEach((element: ITrigger) => {
         if (element.success) {
           successTriggers = [...successTriggers, element];
         }
       });
-      action.payload[0].triggers.forEach((element:ITrigger) => {
+      action.payload[0].triggers.forEach((element: ITrigger) => {
         if (!element.success) {
           UnSuccessTriggers = [...UnSuccessTriggers, element];
         }
@@ -120,12 +90,12 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         runAutomaticallyTitle: runTitle
       };
     case setSelectQueryRoutine.SUCCESS:
-      action.payload.triggers.forEach((element:ITrigger) => {
+      action.payload.triggers.forEach((element: ITrigger) => {
         if (element.success) {
           successTriggers = [...successTriggers, element];
         }
       });
-      action.payload.triggers.forEach((element:ITrigger) => {
+      action.payload.triggers.forEach((element: ITrigger) => {
         if (!element.success) {
           UnSuccessTriggers = [...UnSuccessTriggers, element];
         }
@@ -211,7 +181,20 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         },
         isOpen: action.payload.isOpen,
         isDuplicate: action.payload.isDuplicate
->>>>>>> 3f9df4ef0dd29b451d2118339d66774fc876e80b
+      };
+    case runQueryRoutine.SUCCESS:
+      console.log(action.payload);
+      return {
+        ...state,
+        resultData: action.payload,
+        isLoading: false
+      };
+    case previewQueryRoutine.SUCCESS:
+      console.log(action.payload);
+      return {
+        ...state,
+        resultData: action.payload,
+        isLoading: false
       };
     default:
       return state;

@@ -6,19 +6,13 @@ import { Status } from '../../enums/UserStatus';
 import { IUser } from '../user/IUser';
 import { IQueryState } from '../query/IQueryState';
 import { IInviteToOrganization } from '../userOrganization/IInviteToOrganization';
-import { IQueryState } from '../../../reducers/queries';
 
 export interface IAppState {
   user: IUserState;
-<<<<<<< HEAD
-  query: IQueryState;
-  application: IAppsState;
-=======
   app: {
     qur: IQueryState,
     application: IAppsState
   }
->>>>>>> 3f9df4ef0dd29b451d2118339d66774fc876e80b
   resource: IResourcesState;
   settings: {
     users: IUser[],

@@ -13,6 +13,7 @@ import {
   fetchQueryRoutine,
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
+  runSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
   setNewConfirmRoutine
@@ -23,25 +24,51 @@ import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 
 interface IProps {
-  id:string
-  resourceId:string
+  id: string
+  resourceId: string
 }
 
-const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
+const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
-  const isDataChange:boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
-      || query.selectQuery.runAutomatically !== query.setNewRun
-      || query.selectQuery.showConfirm !== query.setNewConfirm
+  const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
+    || query.selectQuery.runAutomatically !== query.setNewRun
+    || query.selectQuery.showConfirm !== query.setNewConfirm
   );
-  const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
+  const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
-  const saveCode = ():void => {
+
+  const runQuery = (): void => {
+    dispatch(runSelectQueryRoutine.trigger({
+      data: {
+        code: query.selectQuery.selectQueryCode,
+        runAutomatically: query.selectQuery.runAutomatically,
+        showConfirm: query.selectQuery.showConfirm,
+        triggers: [...query.selectQuery.selectQueryTriggers, ...query.setNewUnSuccessTriggers]
+      },
+      id: query.selectQuery.selectQueryId,
+      appId: id,
+      resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+    }));
+    // const runTitle = query.setNewRun ? 'Run query only when manually triggered'
+    //   : 'Run query automatically when inputs change';
+    // dispatch(setSelectQueryRoutine.success({
+    //   id: query.selectQuery.selectQueryId,
+    //   name: query.setNewName,
+    //   code: query.setNewCode,
+    //   runAutomatically: query.setNewRun,
+    //   triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
+    //   showConfirm: query.setNewConfirm,
+    //   runTitle
+    // }));
+  };
+  const saveCode = (): void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
-        data: { code: query.setNewCode,
+        data: {
+          code: query.setNewCode,
           runAutomatically: query.setNewRun,
           showConfirm: query.setNewConfirm,
           triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
@@ -62,7 +89,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       }));
     }
   };
-  const closeNameEditor = (e:React.FormEvent) => {
+  const closeNameEditor = (e: React.FormEvent) => {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     if (target.id === 'queryName') {
       setEditNameField(false);
@@ -87,7 +114,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       setEditNameField(true);
     }
   };
-  const duplicateQuery = ():void => {
+  const duplicateQuery = (): void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
     } else {
@@ -136,11 +163,11 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       dispatch(setNewConfirmRoutine.trigger(true));
     }
   };
-  function changeName(e:React.FormEvent) {
+  function changeName(e: React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
   }
-  function changeCode(e:React.FormEvent) {
+  function changeCode(e: React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
@@ -163,8 +190,8 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               placeholder="Search"
               className={style.searchInput}
               onChange={
-                    ev => setSearchValue(ev.target.value)
-                  }
+                ev => setSearchValue(ev.target.value)
+              }
               value={searchValue}
             />
             <DropdownButton id="dropdown-change" title="+ New" className={style.newBtn}>
@@ -182,28 +209,33 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         <Form.Group controlId="queryRightSide" className={style.RightSide}>
           <Form.Group controlId="queryName" className={style.RightSideHeader}>
             {
-                editNameField ? (
+              editNameField ? (
+                <Form.Control
+                  type="button"
+                  defaultValue={query.setNewName}
+                  className={style.queryHeader}
+                />
+              )
+                : (
                   <Form.Control
-                    type="button"
+                    type="text"
                     defaultValue={query.setNewName}
+                    onChange={changeName}
                     className={style.queryHeader}
                   />
                 )
-                  : (
-                    <Form.Control
-                      type="text"
-                      defaultValue={query.setNewName}
-                      onChange={changeName}
-                      className={style.queryHeader}
-                    />
-                  )
-              }
+            }
             <Form.Group controlId="queryRightSide" className={style.RightBar}>
               <DropdownButton id="dropdown-basic-button" title="..." className={style.dropMenu}>
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Run" onClick={saveCode} />
+              {
+                query.setNewRun ? (
+                  <Form.Control type="button" value="Run" onClick={runQuery} />
+                )
+                  : (<Form.Control type="button" value="save and Run" onClick={saveCode} />)
+              }
             </Form.Group>
           </Form.Group>
           <Form.Group controlId="ControlTextarea">
@@ -223,26 +255,26 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
             />
             <Form.Label className={style.row} />
             {
-                query.setNewConfirm ? (
+              query.setNewConfirm ? (
+                <Form.Check
+                  type="checkbox"
+                  id="checkbox"
+                  label="Show a confirmation modal before running"
+                  className={style.checkBox}
+                  onClick={changeConfirm}
+                  defaultChecked
+                />
+              )
+                : (
                   <Form.Check
                     type="checkbox"
                     id="checkbox"
                     label="Show a confirmation modal before running"
                     className={style.checkBox}
                     onClick={changeConfirm}
-                    defaultChecked
                   />
                 )
-                  : (
-                    <Form.Check
-                      type="checkbox"
-                      id="checkbox"
-                      label="Show a confirmation modal before running"
-                      className={style.checkBox}
-                      onClick={changeConfirm}
-                    />
-                  )
-              }
+            }
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
             <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />

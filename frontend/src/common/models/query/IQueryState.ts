@@ -23,5 +23,6 @@ export interface IQueryState {
     isLoading: boolean,
     isOpen:boolean,
     isDuplicate:boolean,
-    waitingQuery: IWaitingQuery
+    waitingQuery: IWaitingQuery,
+    resultData: any
 }

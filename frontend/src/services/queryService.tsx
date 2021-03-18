@@ -41,6 +41,6 @@ export const deleteQuery = async ({ id, appId }: IDeleteQuery) => {
   return response;
 };
 
-export const runQuery = (query: ICreateQuery) => api.post<IQuery>('/api/queries', { query });
+export const runQuery = (query: ICreateQuery) => api.post<IQuery>('/api/queries/run', { query });
 
 export const previewQuery = (query: ICreateQuery) => api.post<IQuery>('/api/queries', { query });
