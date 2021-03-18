@@ -25,7 +25,7 @@ const email = Yup.string()
 
 const confirmPassword = Yup.string()
   .oneOf([Yup.ref('password'), ''], 'Passwords must match')
-  .required('Confirm Password is required');
+  .required('Password is required');
 
 const firstName = Yup.string()
   .required('First Name is required')
