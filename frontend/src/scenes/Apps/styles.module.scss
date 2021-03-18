@@ -39,10 +39,21 @@
 
 .input-group-search {
   background-color: white !important;
+  border: 1px solid #ced4da!important;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .form-control-search {
   padding-left: 0 !important;
+}
+
+.form-control-search:focus {
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.focused {
+  border-color: #000!important;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .card-element-nothing {
@@ -67,4 +78,14 @@
 }
 ::-moz-placeholder {  /* Firefox 19+ */
   font-size: 16px!important;
+}
+
+input:focus {
+  outline: none;
+  border-color: black!important;
+  box-shadow: none!important;
+
+  +div {
+    border-color: black!important;
+  }
 }

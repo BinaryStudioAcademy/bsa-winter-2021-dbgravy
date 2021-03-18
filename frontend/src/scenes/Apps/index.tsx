@@ -28,6 +28,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
   }, []);
 
   const [searchValue, setSearchValue] = useState<string>('');
+  const [focused, setFocused] = useState(false);
 
   return (
     <div className={styles['apps-wrp']}>
@@ -39,18 +40,22 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
             <Form inline>
               <InputGroup>
                 <InputGroup.Prepend>
-                  <InputGroup.Text className={styles['input-group-search']}>
+                  <InputGroup.Text className={[styles['input-group-search'], `${focused
+                    ? styles.focused : ''}`].join(' ')}
+                  >
                     <FontAwesomeIcon icon={faSearch} />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
                   onChange={
-                  ev => setSearchValue(ev.target.value)
-                }
+                    ev => setSearchValue(ev.target.value)
+                  }
                   value={searchValue}
                   type="text"
                   placeholder="Search"
                   className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
                 />
               </InputGroup>
               <AddApp onAddApp={name => addApp(name)} />

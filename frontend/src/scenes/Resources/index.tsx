@@ -31,6 +31,7 @@ const Resources: React.FC<IProps> = ({
   }, []);
 
   const [searchValue, setSearchValue] = useState<string>('');
+  const [focused, setFocused] = useState(false);
 
   const handleSearch = (search: string): void => {
     setSearchValue(search);
@@ -46,7 +47,9 @@ const Resources: React.FC<IProps> = ({
             <Form inline>
               <InputGroup>
                 <InputGroup.Prepend>
-                  <InputGroup.Text className={styles['input-group-search']}>
+                  <InputGroup.Text className={[styles['input-group-search'], `${focused
+                    ? styles.focused : ''}`].join(' ')}
+                  >
                     <FontAwesomeIcon icon={faSearch} />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
@@ -56,6 +59,8 @@ const Resources: React.FC<IProps> = ({
                   placeholder="Search"
                   className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
                   onChange={ev => handleSearch(ev.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
                 />
               </InputGroup>
               <Link to={Routes.ResourcesAddEdit} className="btn btn-primary">Create new</Link>
