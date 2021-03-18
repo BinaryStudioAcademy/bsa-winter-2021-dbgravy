@@ -18,7 +18,6 @@ function* fetchUserOrganization() {
   const user: IUser = yield select(selectUser);
   try {
     const response: IUserOrganization = yield call(
-      // Will be implemented
       fetchOrganization, user.id || '', user.organizationId || ''
     );
     yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
@@ -28,7 +27,7 @@ function* fetchUserOrganization() {
 }
 
 function* watchCreateOrganization() {
-  yield takeEvery(createOrganizationRoutine.TRIGGER, createOrganization);
+  yield takeEvery(createOrganizationRoutine.REQUEST, createOrganization);
 }
 
 function* createOrganization() {

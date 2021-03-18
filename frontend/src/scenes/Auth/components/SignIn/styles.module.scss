@@ -34,7 +34,7 @@
   line-height: 16px;
 }
 .authLink {
-  color: var(--auth-scene-link-color);
+  color: #0056b3;
 }
 .primaryBtn {
   max-width: 146px;
@@ -53,6 +53,11 @@
     width: 145px;
     height: 50px;
   }
+
+.organization {
+  font-size: 18px;
+  font-weight: bolder;
+}
 span {
     font-size: 13px;
     color: var(--auth-scene-text-secondary-color);

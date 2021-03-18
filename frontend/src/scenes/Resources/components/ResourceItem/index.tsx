@@ -10,10 +10,12 @@ import styles from './styles.module.scss';
 interface IProps {
   resource: IResource;
   remove: (obj: { resource: IResource }) => void;
-  edit: (obj: { resource: IResource, updated?: Partial<IResource> }) => void;
 }
 
-const ResourceItem: React.FC<IProps> = ({ resource, remove, edit }) => {
+const ResourceItem: React.FC<IProps> = ({
+  resource,
+  remove
+}) => {
   const [display, setDisplay] = useState(false);
 
   return (
@@ -26,12 +28,10 @@ const ResourceItem: React.FC<IProps> = ({ resource, remove, edit }) => {
         <Button variant="dark" onClick={() => setDisplay(!display)}>...</Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
-            onClick={() => edit({ resource })}
             role="button"
-            onKeyPress={() => edit({ resource })}
             tabIndex={0}
           >
-            <Link to={Routes.ResourcesEdit} className={styles.linklike}>Edit</Link>
+            <Link to={`${Routes.ResourcesAddEdit}/${resource.id}`} className={styles.linklike}>Edit</Link>
           </span>
           <span
             onClick={() => remove({ resource })}

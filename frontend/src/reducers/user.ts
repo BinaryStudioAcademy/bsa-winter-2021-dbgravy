@@ -1,15 +1,8 @@
 import { Routine } from 'redux-saga-routines';
-import {
-  fetchOrgInfoRoutine,
-  createOrganizationRoutine
-} from '../containers/ProfilePopup/routines';
-import {
-  fetchUserRoutine,
-  loginUserRoutine,
-  addNewUserRoutine,
-  logotUserRoutine
-} from '../scenes/Auth/routines';
+import { createOrganizationRoutine, fetchOrgInfoRoutine } from '../containers/ProfilePopup/routines';
+import { addNewUserRoutine, fetchUserRoutine, loginUserRoutine, logotUserRoutine } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
+import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
 import { IUserOrganization } from '../common/models/user/IUserOrganization';
 
 export interface IUserState {
@@ -118,6 +111,18 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
+            isLoading: false,
+            isFailed: false,
+            isSuccess: false
+          }
+        }
+      };
+    case createOrganizationRoutine.REQUEST:
+      return {
+        ...state,
+        user: {
+          ...payload.user,
+          newOrganization: {
             ...payload.newOrganization,
             isLoading: true,
             isFailed: false
@@ -130,7 +135,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: false
+            isFailed: false,
+            isSuccess: true
           }
         }
       };
@@ -140,7 +146,8 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: true
+            isFailed: true,
+            isSuccess: false
           }
         }
       };
@@ -157,6 +164,11 @@ export const user = (
         isLoading: false,
         isAuthorized: false,
         user: {}
+      };
+    case switchUserToOrganizationRoutine.SUCCESS:
+      return {
+        ...state,
+        user: payload
       };
     default:
       return state;

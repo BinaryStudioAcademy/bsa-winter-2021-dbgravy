@@ -5,11 +5,21 @@ import {
   inviteNewUserRoutine,
   reinviteUserRoutine,
   userActivationRoutine,
-  modalShowRoutine
+  modalShowRoutine,
+  inviteUserToOrganizationRoutine,
+  switchUserToOrganizationRoutine
 } from '../routines/index';
-import { fetchUsers, sendInvite, putUserChanges, resendInvite } from '../../../services/settingsService';
+import {
+  fetchUsers,
+  sendInvite,
+  putUserChanges,
+  resendInvite,
+  checkInvite,
+  switchUser
+} from '../../../services/settingsService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { Status } from '../../../common/enums/UserStatus';
+import { Routine } from 'redux-saga-routines';
 
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
@@ -71,10 +81,39 @@ function* toggleUserActivation() {
   }
 }
 
+function* checkInviteUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(checkInvite, payload);
+    yield put(inviteUserToOrganizationRoutine.success(response));
+  } catch {
+    yield put(inviteUserToOrganizationRoutine.failure());
+  }
+}
+
+function* switchUserToOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response = yield call(switchUser, payload);
+    yield put(switchUserToOrganizationRoutine.success(response));
+    yield put(inviteUserToOrganizationRoutine.failure());
+  } catch {
+    yield put(switchUserToOrganizationRoutine.failure());
+  }
+}
+
+function* watchInviteUserToOrganization() {
+  yield takeEvery(inviteUserToOrganizationRoutine.TRIGGER, checkInviteUserToOrganization);
+}
+
+function* watchSwitchUserToOrganization() {
+  yield takeEvery(switchUserToOrganizationRoutine.TRIGGER, switchUserToOrganization);
+}
+
 export default function* settingsSaga() {
   yield all([
     watchFetchUsers(),
     watchInviteUser(),
-    watchUserActivation()
+    watchUserActivation(),
+    watchInviteUserToOrganization(),
+    watchSwitchUserToOrganization()
   ]);
 }
