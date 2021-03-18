@@ -17,11 +17,12 @@ interface IProps {
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
   logout: () => void,
+  setup: (payload: { user?: IUser }) => void,
   isShow: boolean
 }
 
 const ProfilePopupInfo: React.FC<IProps> = (
-  { user, createOrganization, fetchOrganization, fullfill, logout, organization, isShow }
+  { user, createOrganization, fetchOrganization, fullfill, logout, organization, isShow, setup }
 ) => {
   useEffect(() => {
     fetchOrganization(user);
@@ -73,13 +74,16 @@ const ProfilePopupInfo: React.FC<IProps> = (
           create={createOrganization}
           user={user}
           fullfill={fullfill}
+          setup={setup}
         />
       );
     }
 
     return (
       <div className={styles.container}>
-        {isLoadFail()}
+        <div className={styles.hide}>
+          {isLoadFail()}
+        </div>
         <div className={styles.block}>
           <span
             onClick={() => setShowCreator(true)}

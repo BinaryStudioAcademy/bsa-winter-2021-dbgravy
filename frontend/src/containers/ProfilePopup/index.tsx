@@ -14,11 +14,12 @@ interface IProps {
   fetchOrganization: (user?: IUser) => void,
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
-  logout: () => void
+  logout: () => void,
+  setup: (payload: { user?: IUser }) => void,
 }
 
 const ProfilePopup: React.FC<IProps> = (
-  { user, fetchOrganization, createOrganization, fullfill, logout, organization }
+  { user, fetchOrganization, createOrganization, fullfill, logout, organization, setup }
 ) => {
   const [showDetails, setShowDetails] = useState(true);
 
@@ -37,6 +38,7 @@ const ProfilePopup: React.FC<IProps> = (
         createOrganization={createOrganization}
         fullfill={fullfill}
         logout={logout}
+        setup={setup}
         organization={organization}
       />
     </div>
@@ -50,7 +52,8 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
   fetchOrganization: fetchOrgInfoRoutine,
-  createOrganization: createOrganizationRoutine,
+  createOrganization: createOrganizationRoutine.request,
+  setup: createOrganizationRoutine.trigger,
   fullfill: createOrganizationRoutine.fulfill,
   logout: logotUserRoutine
 };

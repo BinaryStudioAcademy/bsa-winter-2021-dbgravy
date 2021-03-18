@@ -5,6 +5,7 @@ import applicationRoute from './applicationRoute';
 import resourceRoutes from './resourcesRoute';
 import userOrganizationRoute from './userOrganizationRoute';
 import organizationRoute from './organizationRoute';
+import queriesRouter from './queriesRoute';
 
 const routes = (app: Express) => {
   app.use('/api/users', userRoute);
@@ -13,6 +14,7 @@ const routes = (app: Express) => {
   app.use('/api/resources', resourceRoutes);
   app.use('/api/auth', authRoute);
   app.use('/api/organization', organizationRoute);
+  app.use('/api/queries', queriesRouter);
 };
 
 export default routes;

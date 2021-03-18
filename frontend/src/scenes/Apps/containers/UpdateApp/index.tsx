@@ -62,8 +62,8 @@ const UpdateApp: React.FC<IProps> = ({ app, edit, isShow, showEdit, isFailed }) 
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  app: state.application.modal?.app,
-  isShow: state.application.modal?.show
+  app: state.app.application.modal?.app,
+  isShow: state.app.application.modal?.show
 });
 
 const mapDispatchToProps = {

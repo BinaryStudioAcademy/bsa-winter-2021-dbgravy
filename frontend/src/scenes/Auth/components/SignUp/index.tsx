@@ -46,7 +46,7 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser, inviteToOrganiza
 
   return (
     <div className={styles.signUp}>
-      <Image src={logo} alt="db-gravy-logo" />
+      <Image src={logo} alt="db-gravy-logo" className={styles.logo} />
       <h1 className={styles.header}>
         Sign up
       </h1>
@@ -68,13 +68,13 @@ export const SignUp: FunctionComponent<IProps> = ({ addNewUser, inviteToOrganiza
       >
         <Form className="signUp-form d-flex flex-column justify-content-center align-items-center">
           <InputField
-            label="firstName"
+            label="First Name"
             name="firstName"
             type="text"
             placeholder="Ilon"
           />
           <InputField
-            label="lastName"
+            label="Last Name"
             name="lastName"
             type="text"
             placeholder="Musk"
