@@ -4,6 +4,8 @@ import styles from './style.module.scss';
 import { connect } from 'react-redux';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
+import { IAppState } from '../../../common/models/store/IAppState';
+import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
 import { Routes } from '../../../common/enums/Routes';
 import { ILoginUser } from '../../../common/models/auth/ILoginUser';
 import { IRegisterUser } from '../../../common/models/auth/IRegisterUser';
@@ -25,15 +27,14 @@ interface IProps {
   forgotPassword: IBindingCallback1<IForgotPasswordInput>;
   resetPassword: IBindingCallback1<IResetPasswordInput>;
 }
-
-import { IAppState } from '../../../common/models/store/IAppState';
-import { IInviteToOrganization } from '../../../common/models/userOrganization/IInviteToOrganization';
-
 interface IProps {
   loginUser: IBindingCallback1<ILoginUser>;
   addNewUser: IBindingCallback1<IRegisterUser>;
   inviteToOrganization: IInviteToOrganization;
+  forgotPassword: IBindingCallback1<IForgotPasswordInput>;
+  resetPassword: IBindingCallback1<IResetPasswordInput>;
 }
+
 const Auth: FunctionComponent<IProps> = ({
   loginUser,
   addNewUser,
@@ -72,13 +73,13 @@ const Auth: FunctionComponent<IProps> = ({
           <Route
             exact
             path={Routes.ForgotPassword}
-            render={props => <ForgotPassword {...props} forgotPassword={forgotPassword} />}
+            render={() => <ForgotPassword forgotPassword={forgotPassword} />}
             key={Routes.ForgotPassword}
           />
           <Route
             exact
             path={Routes.ResetPassword}
-            render={props => <ResetPassword {...props} resetPassword={resetPassword} />}
+            render={({ match: { params: { token } } }) => <ResetPassword token={token} resetPassword={resetPassword} />}
             key={Routes.ResetPassword}
           />
         </Switch>

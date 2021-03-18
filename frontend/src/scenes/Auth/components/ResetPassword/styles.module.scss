@@ -1,9 +1,10 @@
 .form{
-  max-width:70rem;
+
+  min-width:30rem !important;
   background-color: white;
   padding-left: 2.2rem;
   padding-right: 2.2rem;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
   padding-top: 7.2rem;
   border-radius: .5rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -57,11 +58,16 @@
 }
 
 .btnSave {
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding: 1rem 4.5rem !important;
 }
 
 .secret {
   cursor:pointer;
+}
+
+.error{
+  height: 1rem;
+  color: #dc3545
 }
 

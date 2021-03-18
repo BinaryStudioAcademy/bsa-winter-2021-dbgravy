@@ -18,11 +18,13 @@ export const registration = async (
   { email, password, firstName, lastName, organizationName, currentOrganizationId }: IRegisterUser
 ) => {
   const body = currentOrganizationId
-    ? { email,
+    ? {
+      email,
       password,
       firstName,
       lastName,
-      currentOrganizationId }
+      currentOrganizationId
+    }
     : { email, password, firstName, lastName, organizationName };
   const response = await api.post('/api/auth/sign-up', body);
   return response;
@@ -38,10 +40,14 @@ export const removeToken = async (token: string | null) => {
   return response;
 };
 
-export const forgotPassword = async (forgotpassword: IForgotPasswordInput) => {
-  await api.put('/api/auth/forgotpass', forgotpassword);
-};
+export const forgotPassword = (forgotpassword: IForgotPasswordInput) => api.post(
+  '/api/auth/forgotpass',
+  forgotpassword
+);
 
-export const resetPassword = async (password: string, token: string) => {
-  await api.put('/api/auth/resetpass', { password, token });
-};
+interface IResetPassword {
+  password: string;
+  token: string;
+}
+
+export const resetPassword = (payload: IResetPassword) => api.post('/api/auth/resetpass', payload);

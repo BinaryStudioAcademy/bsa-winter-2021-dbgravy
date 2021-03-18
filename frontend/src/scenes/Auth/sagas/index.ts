@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import { all, put, call, takeEvery } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
 import {
@@ -12,8 +11,8 @@ import {
   registration,
   login,
   fetchUser,
-  forgotPassword,
-  resetPassword
+  forgotPassword
+  // resetPassword
 } from '../../../services/authService';
 import { inviteUserToOrganizationRoutine } from '../../Settings/routines';
 import { IAuthServerResponse } from '../../../common/models/auth/AuthServerResponse';
@@ -73,6 +72,7 @@ function* forgotPasswordRequest({ payload }: Routine<any>) {
   } catch (error) {
     const message = errorHelper(error.code);
     yield put(forgotPasswordRoutine.failure(message));
+    Error(message);
   }
 }
 
@@ -80,11 +80,9 @@ function* watchForgotPasswordRequest() {
   yield takeEvery(forgotPasswordRoutine.TRIGGER, forgotPasswordRequest);
 }
 
-function* resetPasswordRequest({ payload }: Routine<any>) {
+function* resetPasswordRequest({ history, ...payload }: Routine<any>) {
   try {
-    const { token, password } = payload;
-    yield call(resetPassword, password, token);
-    yield put(push(Routes.SignIn));
+    // yield call(resetPassword, payload);
     yield put(resetPasswordRoutine.success());
   } catch (error) {
     const message = errorHelper(error.code);
