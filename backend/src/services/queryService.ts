@@ -32,12 +32,13 @@ export const addQuery = async (query: ICreateQuery): Promise<ITransportedQuery> 
 };
 
 export const updateQueries = async (id: string, data: IUpdateQuery, appId: string): Promise<ITransportedQuery[]> => {
-  if (data.name) {
-    await getCustomRepository(QueryRepository).updateQuery(id, { name: data.name });
+  const { name, code, showConfirm, runAutomatically, triggers } = data;
+  if (name) {
+    await getCustomRepository(QueryRepository).updateQuery(id, { name });
   } else {
     await getCustomRepository(QueryRepository).updateQuery(id, {
-      code: data.code, runAutomatically: data.runAutomatically, showConfirm: data.showConfirm });
-    await getCustomRepository(TriggerRepository).updateTriggerArray(data.triggers, id);
+      code, runAutomatically, showConfirm });
+    await getCustomRepository(TriggerRepository).updateTriggerArray(triggers, id);
   }
   const queries = await getQueries(appId);
   return queries;
