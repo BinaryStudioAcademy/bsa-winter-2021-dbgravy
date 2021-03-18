@@ -49,7 +49,7 @@
   border-radius: 4px;
   transition: all .3s;
 }
-.newBtn{
+.newBtn button{
   font-family: var(--sans-serif);
   height: 2rem;
   border-radius: 4px;
@@ -64,6 +64,7 @@
   touch-action: manipulation;
   box-shadow: none;
   display: -ms-inline-flexbox;
+  margin-left: 15px;
   display: inline-flex;
   -ms-flex-align: center;
   align-items: center;
@@ -72,13 +73,12 @@
   -ms-flex-pack: center;
   justify-content: center;
   min-width: 0;
-  background: var(--faint-blue);
-  background-color: #fff;
+  background-color: var(--faint-blue)!important;
   text-transform: none;
-  color: var(--blue);
-  padding: 0 12px;
+  color: blue!important;
+  padding: 0!important;
   margin-right: 16px;
-  width: 90px;
+  width: 80px;
 }
 .RightSideHeader{
   display: grid;

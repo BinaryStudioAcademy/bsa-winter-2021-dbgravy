@@ -21,11 +21,10 @@ import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 
 interface IProps {
-    id:string,
-    resourceId:string
+    id:string
 }
 
-const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
+const Constructor:React.FC<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
@@ -76,7 +75,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         name: `query${query.queriesAppLength}`,
         code: query.selectQuery.selectQueryCode,
         appId: id,
-        resourceId,
+        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -84,7 +83,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
     }
   };
   const saveCode = ():void => {
-    if (isDataChange || isTriggersChange) {
+    if (isDataChange || !isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
         data: { code: query.setNewCode,
           runAutomatically: query.setNewRun,
@@ -107,8 +106,9 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       }));
     }
   };
-  const closeNameEditor = (e:any) => {
-    if (e.target.id === 'queryName') {
+  const closeNameEditor = (e:React.FormEvent) => {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
+    if (target.id === 'queryName') {
       setEditNameField(false);
     } else if (query.setNewName !== query.selectQuery.selectQueryName) {
       dispatch(saveSelectQueryRoutine.trigger({
@@ -140,10 +140,26 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
         appId: id,
-        resourceId,
+        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
+      }));
+    }
+  };
+  const createQuery = () => {
+    if (isDataChange || !isTriggersChange) {
+      dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
+    } else {
+      dispatch(setWaiterQueryRoutine.trigger({ isOpen: false, isDuplicate: true }));
+      dispatch(duplicateSelectQueryRoutine.trigger({
+        name: `query${query.queriesAppLength + 1}`,
+        code: '',
+        appId: id,
+        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        triggers: [],
+        runAutomatically: true,
+        showConfirm: true
       }));
     }
   };
@@ -164,18 +180,18 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       dispatch(setNewConfirmRoutine.trigger(true));
     }
   };
-  function changeName(e:any) {
-    const { target } = e;
+  function changeName(e:React.FormEvent) {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
   }
-  function changeCode(e:any) {
-    const { target } = e;
+  function changeCode(e:React.FormEvent) {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
-      appId: id
+      appId: '3a42e461-222a-45ac-902f-440b4471e51a'
     }));
   };
   useEffect(() => {
@@ -195,9 +211,9 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               }
               value={searchValue}
             />
-            <Button variant="primary" type="submit" className={style.newBtn}>
-              +New
-            </Button>
+            <DropdownButton id="dropdown-change" title="+ New" className={style.newBtn}>
+              <Dropdown.Item href="#" onClick={createQuery}>Resource query</Dropdown.Item>
+            </DropdownButton>
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label className={style.ShowingAll}>

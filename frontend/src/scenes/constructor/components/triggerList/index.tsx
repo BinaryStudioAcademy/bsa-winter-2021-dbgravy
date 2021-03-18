@@ -6,6 +6,7 @@ import TriggerBlock from '../triggerBlock';
 import { useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ITrigger } from '../../../../common/models/query/ITrigger';
+import SpanCloseComponent from '../closeSpanComponent';
 
 interface IProps {
     queryList:Array<IQuery>
@@ -63,6 +64,7 @@ const QueriesListForTriggers:FunctionComponent<IProps> = ({
                     ? (
                       <li key={query.id + status}>
                         {query.name}
+                        <SpanCloseComponent id={query.id} status={status} />
                       </li>
                     )
                     : null))

@@ -6,6 +6,7 @@ import TriggerUnSuccessBlock from '../triggerBlockUnSuccess';
 import { useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ITrigger } from '../../../../common/models/query/ITrigger';
+import SpanCloseComponent from '../closeSpanComponent';
 
 interface IProps {
     queryList:Array<IQuery>
@@ -59,8 +60,9 @@ const QueriesListForUnSuccessTriggers:FunctionComponent<IProps> = ({
                 queryList.map(query => (
                   triggerList.find(element => element.triggerQueryId === query.id && !element.success)
                     ? (
-                      <li key={query.id + true}>
+                      <li key={query.id + false}>
                         {query.name}
+                        <SpanCloseComponent id={query.id} status={false} />
                       </li>
                     )
                     : null))
