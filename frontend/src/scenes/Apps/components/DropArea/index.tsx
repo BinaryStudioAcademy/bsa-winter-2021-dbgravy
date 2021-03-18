@@ -59,9 +59,8 @@ export const DropArea: React.FC<any> = ({ elements, selectItem }) => {
   const [, drop] = useDrop(
     () => ({
       accept: ItemTypes.Item,
-      hover(item: DragItem, monitor) {
-        // console.log('hover');
-      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      hover(item: DragItem, monitor) {},
       drop(item: DragItem, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
         const droppedItem: any = monitor.getItem();
