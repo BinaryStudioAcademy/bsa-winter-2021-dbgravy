@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { runQueryRoutine } from './routine';
+import { runQueryRoutine, previewQueryRoutine } from './routine';
 import { ICreateQuery } from '../../common/models/queries/ICreateQuery';
 import Table from '../TableComponent/index';
 import { IAppState } from '../../common/models/store/IAppState';
@@ -9,13 +9,15 @@ import { IAppState } from '../../common/models/store/IAppState';
 interface IProps {
   isLoading: boolean,
   resultData: any,
-  runQuery: Function
+  runQuery: (query: ICreateQuery) => void,
+  previewQuery: (query: ICreateQuery) => void
 }
 
 const Preview: React.FC<IProps> = ({
   isLoading,
   resultData,
-  runQuery
+  runQuery,
+  previewQuery
 }) => {
   const testQuery: ICreateQuery = {
     id: '22ba8f62-c96f-4daa-b6f7-67186707b041',
@@ -58,13 +60,13 @@ const Preview: React.FC<IProps> = ({
 
   const handleSubmit = () => {
     setShow(false);
-    runQuery(testQuery);
+    previewQuery(testQuery);
   };
   const handleShow = () => {
     if (testQuery.showConfirm) {
       setShow(true);
     } else {
-      runQuery(testQuery);
+      previewQuery(testQuery);
     }
   };
 
@@ -104,7 +106,8 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-  runQuery: runQueryRoutine
+  runQuery: runQueryRoutine,
+  previewQuery: previewQueryRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Preview);
