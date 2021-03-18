@@ -2,6 +2,7 @@ import { createConnection } from 'typeorm';
 import { ICreateQuery } from '../common/models/queries/ICreateQuery';
 import { getResourceById } from './resourceService';
 import { CustomError } from '../common/models/error/CustomError';
+import { getTriggerQueriesByQueryId } from './triggerService';
 
 export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
   const resource = await getResourceById(queryData.resourceId);
@@ -17,8 +18,9 @@ export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
       synchronize: true,
       logging: false
     });
+    const triggers = await getTriggerQueriesByQueryId(queryData.id);
+    console.log(triggers);
     const rowData = await connection.manager.query(queryData.code);
-    console.log(rowData);
     connection.close();
     return rowData;
   } catch {

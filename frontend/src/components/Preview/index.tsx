@@ -18,6 +18,7 @@ const Preview: React.FC<IProps> = ({
   runQuery
 }) => {
   const testQuery: ICreateQuery = {
+    id: '22ba8f62-c96f-4daa-b6f7-67186707b041',
     name: 'query1',
     runAutomatically: true,
     // eslint-disable-next-line
@@ -26,6 +27,15 @@ const Preview: React.FC<IProps> = ({
     appId: '22ba8f62-c96f-4daa-b6f7-67186707b045',
     resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
   };
+  // const testQuery2: ICreateQuery = {
+  //   name: 'query2',
+  //   runAutomatically: true,
+  // eslint-disable-next-line
+  //   code: 'INSERT INTO "Users" (id, "firstName", "secondName") VALUES (\'40e6215d-b8c0-4896-987c-f30f3678f618\', \'Joe5\', \'Cool5\');',
+  //   showConfirm: true,
+  //   appId: '22ba8f62-c96f-4daa-b6f7-67186707b045',
+  //   resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+  // };
   const [show, setShow] = useState(false);
   const [showTable, setShowTable] = useState(false);
   const [showSpan, setShowSpan] = useState(false);
