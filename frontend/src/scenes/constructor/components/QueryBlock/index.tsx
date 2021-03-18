@@ -40,7 +40,6 @@ const QueryBlock:FunctionComponent<IProps> = ({ id, name, code, runAutomatically
     }
   };
   return (
-  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <option onClick={selectQuery} className={style.App} role="button" tabIndex={0}>
       {name}
     </option>
