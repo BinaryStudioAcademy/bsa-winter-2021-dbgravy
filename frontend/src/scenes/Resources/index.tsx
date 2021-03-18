@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { Form, FormControl } from 'react-bootstrap';
+import { Form, FormControl, InputGroup, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
 import TableContainer from './components/TableContainer/index';
@@ -37,28 +39,41 @@ const Resources: React.FC<IProps> = ({
   return (
     <div className={styles['resources-wrp']}>
       <Header />
-
       <Loader isLoading={isLoading}>
-
         <div className={styles['main-block-wrp']}>
-
           <div className={styles['before-table']}>
             <h1>Resources</h1>
             <Form inline>
-              <FormControl
-                value={searchValue}
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-                onChange={ev => handleSearch(ev.target.value)}
-              />
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text className={styles['input-group-search']}>
+                    <FontAwesomeIcon icon={faSearch} />
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  value={searchValue}
+                  type="text"
+                  placeholder="Search"
+                  className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
+                  onChange={ev => handleSearch(ev.target.value)}
+                />
+              </InputGroup>
               <Link to={Routes.ResourcesAddEdit} className="btn btn-primary">Create new</Link>
             </Form>
           </div>
-
-          <div className="table-wrp">
-            <TableContainer search={searchValue} resources={resources} remove={remove} />
-          </div>
+          {!resources.length ? (
+            <Card className={`text-center ${styles['card-element-nothing']}`}>
+              <Card.Body className={styles['card-body-nothing']}>
+                <Card.Text className={styles['card-body-text-nothing']}>
+                  Nothing here.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          ) : (
+            <div className="table-wrp">
+              <TableContainer search={searchValue} resources={resources} remove={remove} />
+            </div>
+          )}
         </div>
       </Loader>
     </div>
