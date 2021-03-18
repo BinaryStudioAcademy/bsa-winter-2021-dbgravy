@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { ITables } from '../../common/models/resources/ITables';
 
+import 'codemirror/mode/handlebars/handlebars';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/sql/sql';
+import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/sql-hint';
+import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/hint/show-hint.css';
 
 const QueryEditor: React.FC<ITables> = ({ tables }) => {
@@ -27,7 +30,7 @@ const QueryEditor: React.FC<ITables> = ({ tables }) => {
         options={
             {
               lineNumbers: true,
-              mode: 'text/x-pgsql',
+              mode: { name: 'handlebars', base: 'text/x-pgsql' },
               tabSize: 2,
               readOnly: false,
               extraKeys: {
