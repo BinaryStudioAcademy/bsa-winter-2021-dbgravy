@@ -8,5 +8,5 @@ export enum Routes {
   Resources = '/resources',
   ResourcesAddEdit = '/resources/edit',
   Invite = '/:inviteToken',
-  AppEditor = '/app/editor'
+  AppEditor = '/app/editor/:id'
 }
