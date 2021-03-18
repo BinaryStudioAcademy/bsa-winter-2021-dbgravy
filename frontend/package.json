@@ -24,6 +24,7 @@
     "eslint-plugin-react": "7.22.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "formik": "^2.2.6",
+    "handlebars": "^4.7.7",
     "immutability-helper": "^3.1.1",
     "memoize-one": "^5.1.1",
     "moment": "^2.29.1",
