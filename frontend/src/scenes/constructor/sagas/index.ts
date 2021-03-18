@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
 import {
   deleteSelectQueryRoutine,
-  duplicateSelectQueryRoutine,
+  duplicateSelectQueryRoutine, errorRoutineQuery,
   fetchQueryRoutine, openQueryRoutine,
   saveSelectQueryRoutine
 } from '../routines';
@@ -10,9 +10,13 @@ import { IQuery } from '../../../common/models/apps/querys';
 import { addQuery, deleteQuery, fetchQueries, updateQuery } from '../../../services/queryService';
 
 function* fetchQuery({ payload }: Routine<any>) {
-  const queries:Array<IQuery> = yield call(fetchQueries, payload.id);
-  yield put(fetchQueryRoutine.success(queries));
-  yield put(openQueryRoutine.success(queries));
+  try {
+    const queries:Array<IQuery> = yield call(fetchQueries, payload.id);
+    yield put(fetchQueryRoutine.success(queries));
+    yield put(openQueryRoutine.success(queries));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
 }
 
 function* watchQueryRequest() {
@@ -20,8 +24,12 @@ function* watchQueryRequest() {
 }
 
 function* saveQuery({ payload }: Routine<any>) {
-  const queries:IQuery = yield call(addQuery, payload);
-  yield put(duplicateSelectQueryRoutine.success(queries));
+  try {
+    const queries:IQuery = yield call(addQuery, payload);
+    yield put(duplicateSelectQueryRoutine.success(queries));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
 }
 
 function* watchSaveQueryRequest() {
@@ -29,8 +37,12 @@ function* watchSaveQueryRequest() {
 }
 
 function* updateQueryData({ payload }: Routine<any>) {
-  const queries:Array<IQuery> = yield call(updateQuery, payload);
-  yield put(fetchQueryRoutine.success(queries));
+  try {
+    const queries:Array<IQuery> = yield call(updateQuery, payload);
+    yield put(fetchQueryRoutine.success(queries));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
 }
 
 function* watchUpdateNameQueryRequest() {
@@ -38,9 +50,13 @@ function* watchUpdateNameQueryRequest() {
 }
 
 function* deleteSelectQuery({ payload }: Routine<any>) {
-  const queries:Array<IQuery> = yield call(deleteQuery, payload);
-  yield put(fetchQueryRoutine.success(queries));
-  yield put(openQueryRoutine.success(queries));
+  try {
+    const queries:Array<IQuery> = yield call(deleteQuery, payload);
+    yield put(fetchQueryRoutine.success(queries));
+    yield put(openQueryRoutine.success(queries));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
 }
 
 function* watchDeleteQueryRequest() {

@@ -13,3 +13,4 @@ export const setNewRunRoutine = createRoutine('CHANGE_RUN_QUERY');
 export const setNewConfirmRoutine = createRoutine('CHANGE_CONFIRM_QUERY');
 export const setSuccessTriggersRoutine = createRoutine('SUCCESS_TRIGGER_QUERY');
 export const setUnSuccessTriggersRoutine = createRoutine('UNSUCCESS_TRIGGER_QUERY');
+export const errorRoutineQuery = createRoutine('ERROR_QUERY');

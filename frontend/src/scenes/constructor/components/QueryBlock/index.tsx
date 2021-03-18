@@ -19,8 +19,8 @@ const QueryBlock:FunctionComponent<IProps> = ({ id, name, code, runAutomatically
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const isDataChange = (query.selectQuery.selectQueryCode === query.setNewCode
-      && query.selectQuery.runAutomatically === query.setNewRun
-      && query.selectQuery.showConfirm === query.setNewConfirm);
+        && query.selectQuery.runAutomatically === query.setNewRun
+        && query.selectQuery.showConfirm === query.setNewConfirm);
   const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
   const selectQuery = ():void|any => {

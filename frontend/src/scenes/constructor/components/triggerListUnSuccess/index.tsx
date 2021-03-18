@@ -22,51 +22,51 @@ const QueriesListForUnSuccessTriggers:FunctionComponent<IProps> = ({
     <div className={style.filterWrapper}>
       <DropdownButton id="dropdown-change-success" title="search" className={style.dropMenuChange}>
         {
-              queryList.map(query => {
-                if (query.id !== queries.selectQuery.selectQueryId) {
-                  if (triggerList.find(element => (
-                    element.triggerQueryId === query.id && element.success))) {
-                    return (
-                      <TriggerUnSuccessBlock
-                        status
-                        id={query.id}
-                        name={query.name}
-                        key={query.id + true}
-                        code={query.code}
-                        runAutomatically={query.runAutomatically}
-                        showConfirm={query.showConfirm}
-                        triggers={query.triggers}
-                      />
-                    );
-                  }
-                  return (
-                    <TriggerUnSuccessBlock
-                      status
-                      id={query.id}
-                      name={query.name}
-                      key={query.id + true}
-                      code={query.code}
-                      runAutomatically={query.runAutomatically}
-                      showConfirm={query.showConfirm}
-                      triggers={query.triggers}
-                    />
-                  );
-                } return null;
-              })
-          }
+                    queryList.map(query => {
+                      if (query.id !== queries.selectQuery.selectQueryId) {
+                        if (triggerList.find(element => (
+                          element.triggerQueryId === query.id && element.success))) {
+                          return (
+                            <TriggerUnSuccessBlock
+                              status
+                              id={query.id}
+                              name={query.name}
+                              key={query.id + true}
+                              code={query.code}
+                              runAutomatically={query.runAutomatically}
+                              showConfirm={query.showConfirm}
+                              triggers={query.triggers}
+                            />
+                          );
+                        }
+                        return (
+                          <TriggerUnSuccessBlock
+                            status
+                            id={query.id}
+                            name={query.name}
+                            key={query.id + true}
+                            code={query.code}
+                            runAutomatically={query.runAutomatically}
+                            showConfirm={query.showConfirm}
+                            triggers={query.triggers}
+                          />
+                        );
+                      } return null;
+                    })
+                }
       </DropdownButton>
       <ul className={style.triggerArray}>
         {
-                queryList.map(query => (
-                  triggerList.find(element => element.triggerQueryId === query.id && !element.success)
-                    ? (
-                      <li key={query.id + false}>
-                        {query.name}
-                        <SpanCloseComponent id={query.id} status={false} />
-                      </li>
-                    )
-                    : null))
-        }
+                    queryList.map(query => (
+                      triggerList.find(element => element.triggerQueryId === query.id && !element.success)
+                        ? (
+                          <li key={query.id + false}>
+                            {query.name}
+                            <SpanCloseComponent id={query.id} status={false} />
+                          </li>
+                        )
+                        : null))
+                }
       </ul>
     </div>
   );

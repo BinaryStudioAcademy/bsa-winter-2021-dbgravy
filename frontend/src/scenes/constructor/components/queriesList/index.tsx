@@ -15,21 +15,21 @@ const QueriesList:FunctionComponent<IProps> = ({
 }) => (
   <Form.Control as="select" multiple className={style.queriesList}>
     {
-        queryList.map(query => (
-          query.name.toLowerCase().includes(search.trim().toLowerCase())
-            ? (
-              <QueryBlock
-                id={query.id}
-                name={query.name}
-                key={query.id}
-                code={query.code}
-                runAutomatically={query.runAutomatically}
-                showConfirm={query.showConfirm}
-                triggers={query.triggers}
-              />
-            )
-            : null
-        ))
+            queryList.map(query => (
+              query.name.toLowerCase().includes(search.trim().toLowerCase())
+                ? (
+                  <QueryBlock
+                    id={query.id}
+                    name={query.name}
+                    key={query.id}
+                    code={query.code}
+                    runAutomatically={query.runAutomatically}
+                    showConfirm={query.showConfirm}
+                    triggers={query.triggers}
+                  />
+                )
+                : null
+            ))
         }
   </Form.Control>
 );

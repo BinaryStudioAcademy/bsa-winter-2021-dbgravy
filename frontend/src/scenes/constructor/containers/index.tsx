@@ -23,8 +23,8 @@ import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 
 interface IProps {
-    id:string
-    resourceId:string
+  id:string
+  resourceId:string
 }
 
 const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
@@ -163,8 +163,8 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               placeholder="Search"
               className={style.searchInput}
               onChange={
-                ev => setSearchValue(ev.target.value)
-              }
+                    ev => setSearchValue(ev.target.value)
+                  }
               value={searchValue}
             />
             <DropdownButton id="dropdown-change" title="+ New" className={style.newBtn}>
@@ -182,22 +182,22 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         <Form.Group controlId="queryRightSide" className={style.RightSide}>
           <Form.Group controlId="queryName" className={style.RightSideHeader}>
             {
-              editNameField ? (
-                <Form.Control
-                  type="button"
-                  defaultValue={query.setNewName}
-                  className={style.queryHeader}
-                />
-              )
-                : (
+                editNameField ? (
                   <Form.Control
-                    type="text"
+                    type="button"
                     defaultValue={query.setNewName}
-                    onChange={changeName}
                     className={style.queryHeader}
                   />
                 )
-            }
+                  : (
+                    <Form.Control
+                      type="text"
+                      defaultValue={query.setNewName}
+                      onChange={changeName}
+                      className={style.queryHeader}
+                    />
+                  )
+              }
             <Form.Group controlId="queryRightSide" className={style.RightBar}>
               <DropdownButton id="dropdown-basic-button" title="..." className={style.dropMenu}>
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
@@ -223,26 +223,26 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
             />
             <Form.Label className={style.row} />
             {
-            query.setNewConfirm ? (
-              <Form.Check
-                type="checkbox"
-                id="checkbox"
-                label="Show a confirmation modal before running"
-                className={style.checkBox}
-                onClick={changeConfirm}
-                defaultChecked
-              />
-            )
-              : (
-                <Form.Check
-                  type="checkbox"
-                  id="checkbox"
-                  label="Show a confirmation modal before running"
-                  className={style.checkBox}
-                  onClick={changeConfirm}
-                />
-              )
-          }
+                query.setNewConfirm ? (
+                  <Form.Check
+                    type="checkbox"
+                    id="checkbox"
+                    label="Show a confirmation modal before running"
+                    className={style.checkBox}
+                    onClick={changeConfirm}
+                    defaultChecked
+                  />
+                )
+                  : (
+                    <Form.Check
+                      type="checkbox"
+                      id="checkbox"
+                      label="Show a confirmation modal before running"
+                      className={style.checkBox}
+                      onClick={changeConfirm}
+                    />
+                  )
+              }
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
             <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
