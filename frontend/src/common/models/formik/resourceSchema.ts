@@ -5,8 +5,8 @@ const resourceSchema = Yup.object({
   type: Yup.mixed<ResourceTypeValue>()
     .oneOf(Object.values(ResourceTypeValue)),
   name: Yup.string()
-    .min(5, 'Resource name should be more, than 5 symbols.')
-    .max(30, 'Resource name should be less, than 40 symbols.')
+    .min(5, 'ResourceList name should be more, than 5 symbols.')
+    .max(30, 'ResourceList name should be less, than 40 symbols.')
     .required('This field is required.'),
   host: Yup.string()
     .required('This field is required.'),

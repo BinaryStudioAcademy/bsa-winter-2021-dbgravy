@@ -1,6 +1,7 @@
 import { IQuery } from '../apps/querys';
 import { ITrigger } from './ITrigger';
 import { IWaitingQuery } from './IWaitingQuery';
+import { IResource } from '../resources/IResource';
 
 export interface IQueryState {
     queriesApp: Array<IQuery>;
@@ -10,13 +11,16 @@ export interface IQueryState {
         selectQueryCode: string,
         selectQueryTriggers:Array<ITrigger>,
         runAutomatically: boolean,
-        showConfirm: boolean
+        showConfirm: boolean,
+        resourceId:string
     },
     setNewCode:string,
+    resources: Array<IResource>,
     setNewRun: boolean,
     runAutomaticallyTitle:string,
     setNewName:string,
     setNewConfirm:boolean,
+    setNewResource: IResource|undefined,
     setNewSuccessTriggers:Array<ITrigger>,
     setNewUnSuccessTriggers:Array<ITrigger>,
     queriesAppLength:number,

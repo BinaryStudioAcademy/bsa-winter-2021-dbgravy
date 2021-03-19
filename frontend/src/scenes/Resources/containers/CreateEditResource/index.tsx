@@ -111,7 +111,7 @@ const CreateUpdateResource: React.FC<IProps> = (
       <header className="pt-4">
         <h1>
           {
-            id ? `Edit ${resource.name}` : 'Create Resource'
+            id ? `Edit ${resource.name}` : 'Create ResourceList'
           }
         </h1>
       </header>

@@ -21,13 +21,14 @@ import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
+import { fetchResourceRoutine } from '../../Resources/routines';
+import ResourceList from '../components/ResourceList';
 
 interface IProps {
   id:string
-  resourceId:string
 }
 
-const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
+const Constructor:React.FC<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
@@ -35,6 +36,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
   const isDataChange:boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
       || query.selectQuery.runAutomatically !== query.setNewRun
       || query.selectQuery.showConfirm !== query.setNewConfirm
+      || query.selectQuery.resourceId !== query.setNewResource?.id
   );
   const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
@@ -44,7 +46,8 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         data: { code: query.setNewCode,
           runAutomatically: query.setNewRun,
           showConfirm: query.setNewConfirm,
-          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
+          resourceId: query.setNewResource?.id
         },
         id: query.selectQuery.selectQueryId,
         appId: id
@@ -57,6 +60,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         code: query.setNewCode,
         runAutomatically: query.setNewRun,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
+        resourceId: query.setNewResource?.id,
         showConfirm: query.setNewConfirm,
         runTitle
       }));
@@ -79,6 +83,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         runAutomatically: query.selectQuery.runAutomatically,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         showConfirm: query.selectQuery.showConfirm,
+        resourceId: query.selectQuery.resourceId,
         isOpen: false,
         runTitle: query.runAutomaticallyTitle
       }));
@@ -96,7 +101,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
         appId: id,
-        resourceId,
+        resourceId: query.selectQuery.resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -112,7 +117,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: '',
         appId: id,
-        resourceId,
+        resourceId: query.selectQuery.resourceId,
         triggers: [],
         runAutomatically: true,
         showConfirm: true
@@ -151,6 +156,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
     }));
   };
   useEffect(() => {
+    dispatch(fetchResourceRoutine.trigger());
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
   return (
@@ -214,6 +220,11 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               </Dropdown.Item>
             </DropdownButton>
             <Form.Label className={style.row} />
+            <Form.Group controlId="Resource" className={style.resource}>
+              <Form.Label className={style.resourceText}>Resource:</Form.Label>
+              <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
+            </Form.Group>
+            <Form.Label className={style.row} />
             <Form.Control
               as="textarea"
               value={query.setNewCode}
@@ -254,7 +265,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
           </Form.Group>
         </Form.Group>
       </Form>
-      <ModalWindow />
+      <ModalWindow id={id} />
     </Loader>
   );
 };
