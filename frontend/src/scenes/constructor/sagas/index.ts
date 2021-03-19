@@ -49,29 +49,8 @@ function* watchSaveQueryRequest() {
   yield takeEvery(duplicateSelectQueryRoutine.TRIGGER, saveQuery);
 }
 
-// function* triggerSelectQuery({ payload }: Routine<any>): Routine<any> {
-//   const { triggers } = payload.data;
-//   const arrrayofpromises = triggers.map((value: string) => new Promise((resolve, reject) => {
-//     console.log(value);
-//     console.log(query);
-//   }));
-//   console.log(arrrayofpromises);
-//   // Promise.all(arrrayofpromises).then()
-//   try {
-//     // const resultData = yield put
-//     // yield put(runSelectQueryRoutine.trigger(resultData));
-//   } catch (e) {
-//     yield put(errorRoutineQuery.failure(e.message));
-//   }
-// }
-
-// function* watchTriggerQueryRequest() {
-//   yield takeEvery(triggerSelectQueryRoutine.TRIGGER, triggerSelectQuery);
-// }
-
 function* runSelectQuery({ payload }: any): Routine<any> {
   try {
-    console.log(payload.data);
     const { triggers } = payload.data;
     const queriesApp = yield select(query);
     const resultData = yield call(runQuery, payload);
@@ -121,7 +100,6 @@ function* updateQueryData({ payload }: Routine<any>) {
   try {
     const queries: Array<IQuery> = yield call(updateQuery, payload);
     yield put(fetchQueryRoutine.success(queries));
-    // yield put(runSelectQueryRoutine.trigger(payload));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
   }
@@ -153,6 +131,5 @@ export default function* userSaga() {
     watchDeleteQueryRequest(),
     watchRunQueryRequest(),
     watchPreviewQueryRequest()
-    // watchTriggerQueryRequest()
   ]);
 }

@@ -33,6 +33,9 @@ interface IProps {
 
 const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
+  console.log('-----------------------------------');
+  console.log(query.resultData);
+  console.log('-----------------------------------');
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -43,21 +46,19 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
 
-  const [showTable, setShowTable] = useState(false);
+  // const [showTable, setShowTable] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showSpan, setShowSpan] = useState(false);
+  // const [showSpan, setShowSpan] = useState(false);
 
-  useEffect(() => {
-    if (query.resultData.length !== 0) {
-      setShowTable(true);
-      setShowSpan(false);
-    } else {
-      setShowTable(false);
-      setShowSpan(true);
-    }
-  }, [query.resultData]);
+  const isEmptyData = query.resultData.length === 0;
+  // useEffect(() => {
+  //   const isEmptyData = query.resultData.length === 0;
+  //   setShowTable(!isEmptyData);
+  //   setShowSpan(isEmptyData);
+  // }, [query.resultData]);
+
   const runQuery = (): void => {
-    if (query.setNewConfirm) {
+    if (query.selectQuery.showConfirm) {
       setShowConfirm(true);
     } else {
       setShowConfirm(false);
@@ -182,6 +183,7 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
     }
   };
   const changeConfirm = () => {
+    console.log(query.selectQuery);
     if (query.setNewConfirm) {
       dispatch(setNewConfirmRoutine.trigger(false));
     } else {
@@ -311,10 +313,10 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
             />
           </Form.Group>
           {
-            showTable ? <Table values={query.resultData} /> : null
+            !isEmptyData && <Table key={query.isResultLoading.toString()} values={query.resultData} />
           }
           {
-            showSpan ? <span>No rows to display</span> : null
+            isEmptyData && <span>No rows to display</span>
           }
         </Form.Group>
       </Form>

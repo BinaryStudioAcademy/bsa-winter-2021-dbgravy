@@ -45,6 +45,7 @@ const initialState: IQueryState = {
     showConfirm: false
   },
   isLoading: true,
+  isResultLoading: true,
   resultData: []
 };
 
@@ -183,11 +184,16 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         isOpen: action.payload.isOpen,
         isDuplicate: action.payload.isDuplicate
       };
+    case runSelectQueryRoutine.TRIGGER:
+      return {
+        ...state,
+        isResultLoading: true
+      };
     case runSelectQueryRoutine.SUCCESS:
       return {
         ...state,
         resultData: action.payload,
-        isLoading: false
+        isResultLoading: false
       };
     case previewQueryRoutine.SUCCESS:
       return {
