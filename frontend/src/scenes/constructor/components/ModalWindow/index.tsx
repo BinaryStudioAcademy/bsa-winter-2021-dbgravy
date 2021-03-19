@@ -12,7 +12,7 @@ interface IProps {
   id:string
 }
 
-const ModalWindow:FunctionComponent<IProps> = id => {
+const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(setWaiterQueryRoutine.trigger({

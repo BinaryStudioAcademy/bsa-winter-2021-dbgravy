@@ -5,9 +5,10 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Editor from '../../components/Editor';
 import Constructor from '../../../constructor/containers';
 import { useParams } from 'react-router';
+import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 
 const AppEditor: React.FC<any> = () => {
-  const { id }:any = useParams();
+  const { id }: IFetchParams = useParams();
   return (
     <div className={styles.appEditor}>
       <DndProvider backend={HTML5Backend}>
