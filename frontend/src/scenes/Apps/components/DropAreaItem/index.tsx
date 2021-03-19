@@ -8,32 +8,31 @@ const style: CSSProperties = {
   padding: '0.5rem 1rem',
   cursor: 'move'
 };
-
-const ItemTypes = {
-  Item: 'item'
-};
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface DropAreaItemProps {
-  id: any
+export interface IDropAreaItemProps {
+  id: string
   left: number
   top: number,
   onSelect: Function,
-  selectedItem: any
+  selectedItem: string | null,
+  itemType: string,
+  width: string,
+  height: string
 }
 
-export const DropAreaItem: React.FC<DropAreaItemProps> = ({
+export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
   id,
   left,
   top,
   children,
   onSelect,
-  selectedItem
+  selectedItem,
+  itemType,
+  width,
+  height
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [{ isDragging }, drag] = useDrag(
+  const [, drag] = useDrag(
     () => ({
-      type: ItemTypes.Item,
+      type: itemType,
       item: { id, left, top },
       collect: monitor => ({
         isDragging: monitor.isDragging()
@@ -43,9 +42,13 @@ export const DropAreaItem: React.FC<DropAreaItemProps> = ({
   );
 
   return (
-    // eslint-disable-next-line jsx-a11y/aria-role
-    // eslint-disable-next-line
-    <div ref={drag} style={{ ...style, left, top }} role="Item" onClick={() => onSelect(id)} className={ (selectedItem === id) ? `${styles.active}` : '' }>
+    <div
+      ref={drag}
+      style={{ ...style, left, top, height, width }}
+      role="presentation"
+      onClick={() => onSelect(id)}
+      className={(selectedItem === id) ? `${styles.active}` : ''}
+    >
       {children}
     </div>
   );
