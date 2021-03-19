@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   duplicateSelectQueryRoutine,
@@ -8,7 +8,11 @@ import {
 import { Button, Modal } from 'react-bootstrap';
 import { IAppState } from '../../../../common/models/store/IAppState';
 
-const ModalWindow:React.FC = () => {
+interface IProps {
+  id:string
+}
+
+const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(setWaiterQueryRoutine.trigger({
@@ -28,6 +32,7 @@ const ModalWindow:React.FC = () => {
         runAutomatically: query.waitingQuery.runAutomatically,
         showConfirm: query.waitingQuery.showConfirm,
         triggers: query.waitingQuery.queryTriggers,
+        resourceId: query.waitingQuery.resourceId,
         runTitle,
         isOpen: false
       }));
@@ -40,14 +45,15 @@ const ModalWindow:React.FC = () => {
         code: query.selectQuery.selectQueryCode,
         runAutomatically: query.selectQuery.runAutomatically,
         triggers: query.selectQuery.selectQueryTriggers,
+        resourceId: query.selectQuery.selectQueryTriggers,
         showConfirm: query.selectQuery.showConfirm,
         runTitle
       }));
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength}`,
         code: query.selectQuery.selectQueryCode,
-        appId: '3a42e461-222a-45ac-902f-440b4471e51a',
-        resourceId: '1a5d4975-1a30-4e0c-9777-6ab3accde4b4',
+        appId: id,
+        resourceId: query.selectQuery.resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm

@@ -5,14 +5,15 @@ import {
   openQueryRoutine,
   setNewCodeRoutine,
   setNewConfirmRoutine,
-  setNewNameQueryRoutine,
-  setNewRunRoutine,
+  setNewNameQueryRoutine, setNewResourcesRoutine,
+  setNewRunRoutine, setResourcesRoutine,
   setSelectQueryRoutine, setSuccessTriggersRoutine,
   setUnSuccessTriggersRoutine,
   setWaiterQueryRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
+import { ResourceTypeValue } from '../common/enums/ResourceTypeValue';
 
 const initialState:IQueryState = {
   queriesApp: [],
@@ -22,7 +23,8 @@ const initialState:IQueryState = {
     selectQueryCode: '',
     selectQueryTriggers: [],
     runAutomatically: false,
-    showConfirm: false
+    showConfirm: false,
+    resourceId: ''
   },
   setNewCode: '',
   runAutomaticallyTitle: 'Run query automatically when inputs change',
@@ -31,6 +33,19 @@ const initialState:IQueryState = {
   setNewConfirm: false,
   setNewSuccessTriggers: [],
   setNewUnSuccessTriggers: [],
+  setNewResource: {
+    id: '1',
+    createdAt: undefined,
+    updatedAt: undefined,
+    name: 'name',
+    type: ResourceTypeValue.PostgreSQL,
+    host: '888',
+    port: 12,
+    dbName: 'name',
+    dbUserName: 'name',
+    dbPassword: 'name',
+    organizationId: 'name' },
+  resources: [],
   queriesAppLength: 0,
   isOpen: false,
   isDuplicate: false,
@@ -39,6 +54,7 @@ const initialState:IQueryState = {
     queryName: '',
     queryCode: '',
     queryTriggers: [],
+    resourceId: '',
     runAutomatically: false,
     showConfirm: false
   },
@@ -59,6 +75,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
     case openQueryRoutine.SUCCESS:
       const runTitle = action.payload[0].runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
+      const baseResource = state.resources.find(element => element.id === action.payload[0].resourceId);
       action.payload[0].triggers.forEach((element:ITrigger) => {
         if (element.success) {
           successTriggers = [...successTriggers, element];
@@ -77,11 +94,13 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryCode: action.payload[0].code,
           selectQueryTriggers: action.payload[0].triggers,
           showConfirm: action.payload[0].showConfirm,
-          runAutomatically: action.payload[0].runAutomatically
+          runAutomatically: action.payload[0].runAutomatically,
+          resourceId: action.payload[0].resourceId
         },
         setNewCode: action.payload[0].code,
         setNewName: action.payload[0].name,
         setNewRun: action.payload[0].runAutomatically,
+        setNewResource: baseResource,
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers,
         setNewConfirm: action.payload[0].showConfirm,
@@ -98,7 +117,8 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           UnSuccessTriggers = [...UnSuccessTriggers, element];
         }
       });
-      const { id, name, code, triggers, showConfirm, runAutomatically } = action.payload;
+      const { id, name, code, triggers, showConfirm, runAutomatically, resourceId } = action.payload;
+      const baseSelectResource = state.resources.find(element => element.id === resourceId);
       return {
         ...state,
         selectQuery: {
@@ -106,6 +126,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryName: name,
           selectQueryCode: code,
           selectQueryTriggers: triggers,
+          resourceId,
           showConfirm,
           runAutomatically
         },
@@ -115,6 +136,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         setNewName: name,
         setNewConfirm: showConfirm,
         setNewRun: runAutomatically,
+        setNewResource: baseSelectResource,
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers
       };
@@ -166,6 +188,17 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         ...state,
         setNewUnSuccessTriggers: action.payload
       };
+    case setNewResourcesRoutine.TRIGGER:
+      const newBaseResource = state.resources.find(element => element.id === action.payload);
+      return {
+        ...state,
+        setNewResource: newBaseResource
+      };
+    case setResourcesRoutine.TRIGGER:
+      return {
+        ...state,
+        resources: action.payload
+      };
     case setWaiterQueryRoutine.TRIGGER:
       return {
         ...state,
@@ -175,7 +208,8 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           queryCode: action.payload.code,
           queryTriggers: action.payload.triggers,
           showConfirm: action.payload.showConfirm,
-          runAutomatically: action.payload.runAutomatically
+          runAutomatically: action.payload.runAutomatically,
+          resourceId: action.payload.resourceId
         },
         isOpen: action.payload.isOpen,
         isDuplicate: action.payload.isDuplicate

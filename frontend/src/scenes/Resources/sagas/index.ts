@@ -10,11 +10,13 @@ import {
 } from '../routines/index';
 import * as resourceService from '../../../services/resourceService';
 import { IAppState } from '../../../common/models/store/IAppState';
+import { setResourcesRoutine } from '../../constructor/routines';
 
 function* fetchResources(): Routine<any> {
   try {
     const resources = yield call(resourceService.getResources);
     yield put(fetchResourceRoutine.success(resources));
+    yield put(setResourcesRoutine.trigger(resources));
   } catch (error) {
     yield put(fetchResourceRoutine.failure(error.message));
   }
