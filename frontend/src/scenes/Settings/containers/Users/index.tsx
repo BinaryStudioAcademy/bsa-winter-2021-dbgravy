@@ -159,7 +159,7 @@ const mapStateToProps = (state: IAppState) => ({
   organizationId: state.user.currentOrganization?.id
 });
 
-const mapDispactchToProps = {
+const mapDispatchToProps = {
   fetchUsers: fetchUsersRoutine,
   inviteNew: inviteNewUserRoutine,
   reInvite: reinviteUserRoutine,
@@ -168,4 +168,4 @@ const mapDispactchToProps = {
   fetchUserOrganization: fetchOrgInfoRoutine
 };
 
-export default connect(mapStateToProps, mapDispactchToProps)(Users);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

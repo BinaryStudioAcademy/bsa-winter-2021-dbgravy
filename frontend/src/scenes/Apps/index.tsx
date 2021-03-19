@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { Form, FormControl } from 'react-bootstrap';
+import { Form, FormControl, InputGroup, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import AddApp from './components/AddApp';
 import { addAppRoutine, deleteAppRoutine, fetchAppRoutine, showEditRoutine } from './routines';
 import { connect } from 'react-redux';
@@ -29,33 +31,47 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
 
   return (
     <div className={styles['apps-wrp']}>
-
       <Header />
-
       <Loader isLoading={isLoading}>
         <div className={styles['main-block-wrp']}>
           <div className={styles['before-table']}>
             <h1>All</h1>
             <Form inline>
-              <FormControl
-                onChange={
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text className={styles['input-group-search']}>
+                    <FontAwesomeIcon icon={faSearch} />
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  onChange={
                   ev => setSearchValue(ev.target.value)
                 }
-                value={searchValue}
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-              />
+                  value={searchValue}
+                  type="text"
+                  placeholder="Search"
+                  className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
+                />
+              </InputGroup>
               <AddApp onAddApp={name => addApp(name)} />
             </Form>
           </div>
-
-          <AppsList
-            search={searchValue}
-            appsList={apps}
-            deleteApp={deleteApp}
-            showEdit={showEdit}
-          />
+          {!apps.length ? (
+            <Card className={`text-center ${styles['card-element-nothing']}`}>
+              <Card.Body className={styles['card-body-nothing']}>
+                <Card.Text className={styles['card-body-text-nothing']}>
+                  Nothing here.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          ) : (
+            <AppsList
+              search={searchValue}
+              appsList={apps}
+              deleteApp={deleteApp}
+              showEdit={showEdit}
+            />
+          )}
         </div>
       </Loader>
     </div>
@@ -63,8 +79,8 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  isLoading: rootState.application.isLoading,
-  apps: rootState.application.apps
+  isLoading: rootState.app.application.isLoading,
+  apps: rootState.app.application.apps
 });
 
 const mapDispatchToProps = {

@@ -104,125 +104,128 @@ const CreateUpdateResource: React.FC<IProps> = (
     </Modal>
   );
   return (
-    <Container className="container-md max-vh-100">
-      {
-        showModal(isShow)
-      }
-      <header className="pt-4">
-        <h1>
-          {
-            id ? `Edit ${resource.name}` : 'Create Resource'
-          }
-        </h1>
-      </header>
+    <div className={styles.background}>
+      <Container className="container-md max-vh-100">
+        {
+          showModal(isShow)
+        }
+        <header className="pt-4">
+          <h1>
+            {
+              id ? `Edit ${resource.name}` : 'Create Resource'
+            }
+          </h1>
+        </header>
 
-      <Formik
-        validationSchema={resourceSchema}
-        initialValues={resource}
-        onSubmit={values => {
-          if (btnValue === ButtonEnum.create) handleSubmitFormData(values);
-          else if (btnValue === ButtonEnum.test) testConnection(values);
-        }}
-        key={resource.id}
-      >
-        {({
-          handleSubmit,
-          handleChange,
-          touched,
-          errors
-        }) => (
+        <Formik
+          validationSchema={resourceSchema}
+          initialValues={resource}
+          onSubmit={values => {
+            if (btnValue === ButtonEnum.create) handleSubmitFormData(values);
+            else if (btnValue === ButtonEnum.test) testConnection(values);
+          }}
+          key={resource.id}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            touched,
+            errors
+          }) => (
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group>
-              <Form.Label className={styles.requiredProperty}>Resource&#39;s type</Form.Label>
-              <Form.Control
-                as="select"
-                name="type"
-                onChange={handleChange}
-              >
-                <option>postgres</option>
-              </Form.Control>
-              {touched.type && (
-                <Form.Control.Feedback type="invalid">
-                  {errors.type}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-            <Form.Group>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Label className={styles.requiredProperty}>Resource&#39;s type</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="type"
+                  onChange={handleChange}
+                  className={styles.select}
+                >
+                  <option>postgres</option>
+                </Form.Control>
+                {touched.type && (
+                  <Form.Control.Feedback type="invalid">
+                    {errors.type}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+              <Form.Group>
+                <InputField
+                  label="Name"
+                  name="name"
+                  type="text"
+                  placeholder="i.e. &#34;Production DB (readonly)&#34; or &#34;Internal Admin API&#34;"
+                  labelClassName
+                />
+                {touched.name && (
+                  <Form.Control.Feedback type="invalid">
+                    {errors.name}
+                  </Form.Control.Feedback>
+                )}
+                <Form.Text muted>
+                  The name for this resource when creating queries in the DBGravy editor.
+                </Form.Text>
+              </Form.Group>
               <InputField
-                label="Name"
-                name="name"
+                label="Host"
+                name="host"
                 type="text"
-                placeholder="i.e. &#34;Production DB (readonly)&#34; or &#34;Internal Admin API&#34;"
+                placeholder=""
                 labelClassName
               />
-              {touched.name && (
-                <Form.Control.Feedback type="invalid">
-                  {errors.name}
-                </Form.Control.Feedback>
-              )}
-              <Form.Text muted>
-                The name for this resource when creating queries in the DBGravy editor.
-              </Form.Text>
-            </Form.Group>
-            <InputField
-              label="Host"
-              name="host"
-              type="text"
-              placeholder=""
-              labelClassName
-            />
-            <InputField
-              label="Port"
-              name="port"
-              type="number"
-              placeholder=""
-              labelClassName
-            />
-            <InputField
-              label="Database name"
-              name="dbName"
-              type="text"
-              placeholder="hn_api_production"
-            />
-            <InputField
-              label="Database username"
-              name="dbUserName"
-              type="text"
-              placeholder="postgres"
-            />
-            <InputField
-              label="Database password"
-              name="dbPassword"
-              type="password"
-              placeholder="password"
-            />
-            <Button disabled={isDisabledCancelBtn} onClick={onCancel} variant="light">Back</Button>
-            <ButtonGroup className="float-right">
-              <Button
-                variant="light"
-                className="text-primary"
-                type="submit"
-                name="testConnection"
-                onClick={() => setBtnValue(ButtonEnum.test)}
-              >
-                Test connection
-              </Button>
-              <Button
-                variant="secondary"
-                type="submit"
-                name="createResource"
-                disabled={isDisabledCreateBtn}
-                onClick={() => setBtnValue(ButtonEnum.create)}
-              >
-                createResource&rarr;
-              </Button>
-            </ButtonGroup>
-          </Form>
-        )}
-      </Formik>
+              <InputField
+                label="Port"
+                name="port"
+                type="number"
+                placeholder=""
+                labelClassName
+              />
+              <InputField
+                label="Database name"
+                name="dbName"
+                type="text"
+                placeholder="hn_api_production"
+              />
+              <InputField
+                label="Database username"
+                name="dbUserName"
+                type="text"
+                placeholder="postgres"
+              />
+              <InputField
+                label="Database password"
+                name="dbPassword"
+                type="password"
+                placeholder="password"
+              />
+              <Button disabled={isDisabledCancelBtn} onClick={onCancel} variant="light">Back</Button>
+              <ButtonGroup className="float-right">
+                <Button
+                  variant="light"
+                  className="text-primary"
+                  type="submit"
+                  name="testConnection"
+                  onClick={() => setBtnValue(ButtonEnum.test)}
+                >
+                  Test connection
+                </Button>
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  name="createResource"
+                  disabled={isDisabledCreateBtn}
+                  onClick={() => setBtnValue(ButtonEnum.create)}
+                >
+                  createResource&rarr;
+                </Button>
+              </ButtonGroup>
+            </Form>
+          )}
+        </Formik>
 
-    </Container>
+      </Container>
+    </div>
   );
 };
 

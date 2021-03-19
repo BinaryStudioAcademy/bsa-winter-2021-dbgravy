@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import { user } from './user';
 import { reducer as settings } from '../scenes/Settings/reducers';
-import { application } from './apps';
 import { resource } from './resources';
+import { appsRootReducer } from './appsRoot';
 
 const rootReducer = combineReducers({
   user,
-  application,
+  app: appsRootReducer,
   resource,
   settings
 });

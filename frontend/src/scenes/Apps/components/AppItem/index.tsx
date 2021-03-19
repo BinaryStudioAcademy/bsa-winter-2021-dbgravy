@@ -7,6 +7,7 @@ import { IApps } from '../../../../common/models/apps/IApps';
 import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
 import UpdateApp from '../../containers/UpdateApp';
+import { Link } from 'react-router-dom';
 
 interface IProps {
   app: IApps;
@@ -17,7 +18,6 @@ const AppItem: React.FC<IProps> = ({
   app, showEdit, deleteApp
 }) => {
   const [display, setDisplay] = useState(false);
-
   const onEdit = () => {
     showEdit({ app, show: true });
     setDisplay(!display);
@@ -55,6 +55,11 @@ const AppItem: React.FC<IProps> = ({
             tabIndex={0}
           >
             Delete
+          </span>
+          <span role="button">
+            <Link to={`/app/editor/${app.id}`}>
+              App Editor
+            </Link>
           </span>
         </div>
         <UpdateApp />

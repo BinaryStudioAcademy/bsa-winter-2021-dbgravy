@@ -1,7 +1,9 @@
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { AbstractEntity } from '../abstract/AbstractEntity';
 import { App } from './App';
+import { Button } from './Button';
 import { Resource } from './Resource';
+import { Table } from './Table';
 import { Trigger } from './Trigger';
 
 @Entity()
@@ -25,7 +27,11 @@ export class Query extends AbstractEntity {
   @Column()
   readonly appId: string;
 
-  @ManyToOne(() => App, app => app.queries)
+  @ManyToOne(() => App, app => app.queries,{
+    cascade: true,
+    onDelete: 'CASCADE',
+    primary: true
+  })
   app: App;
 
   @RelationId((query: Query) => query.resource)
@@ -34,4 +40,10 @@ export class Query extends AbstractEntity {
 
   @ManyToOne(() => Resource, resource => resource.queries)
   resource: Resource;
+
+  @OneToMany(() => Table, table => table.query)
+  table: Query[];
+
+  @OneToMany(() => Button, button => button.query)
+  button: Button[];
 }
