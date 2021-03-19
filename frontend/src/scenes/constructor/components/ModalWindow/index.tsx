@@ -45,7 +45,7 @@ const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
         code: query.selectQuery.selectQueryCode,
         runAutomatically: query.selectQuery.runAutomatically,
         triggers: query.selectQuery.selectQueryTriggers,
-        resourceId: query.selectQuery.selectQueryTriggers,
+        resourceId: query.selectQuery.resourceId,
         showConfirm: query.selectQuery.showConfirm,
         runTitle
       }));
