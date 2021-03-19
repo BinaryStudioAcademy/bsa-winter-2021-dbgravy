@@ -1,5 +1,5 @@
 import { Routine } from 'redux-saga-routines';
-import { runQueryRoutine, previewQueryRoutine } from '../components/Preview/routine';
+import { previewQueryRoutine } from '../components/Preview/routine';
 import {
   duplicateSelectQueryRoutine,
   fetchQueryRoutine,
@@ -10,7 +10,8 @@ import {
   setNewRunRoutine,
   setSelectQueryRoutine, setSuccessTriggersRoutine,
   setUnSuccessTriggersRoutine,
-  setWaiterQueryRoutine
+  setWaiterQueryRoutine,
+  runSelectQueryRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
@@ -44,7 +45,7 @@ const initialState: IQueryState = {
     showConfirm: false
   },
   isLoading: true,
-  resultData: null
+  resultData: []
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
@@ -182,15 +183,13 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         isOpen: action.payload.isOpen,
         isDuplicate: action.payload.isDuplicate
       };
-    case runQueryRoutine.SUCCESS:
-      console.log(action.payload);
+    case runSelectQueryRoutine.SUCCESS:
       return {
         ...state,
         resultData: action.payload,
         isLoading: false
       };
     case previewQueryRoutine.SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         resultData: action.payload,

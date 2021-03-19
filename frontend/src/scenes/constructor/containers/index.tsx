@@ -14,6 +14,7 @@ import {
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
+  previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
   setNewConfirmRoutine
@@ -22,6 +23,8 @@ import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
+import Table from '../../../components/TableComponent';
+import ConfirmModal from '../components/ModalWindow/confirm';
 
 interface IProps {
   id: string
@@ -40,30 +43,51 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
 
+  const [showTable, setShowTable] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showSpan, setShowSpan] = useState(false);
+
+  useEffect(() => {
+    if (query.resultData.length !== 0) {
+      setShowTable(true);
+      setShowSpan(false);
+    } else {
+      setShowTable(false);
+      setShowSpan(true);
+    }
+  }, [query.resultData]);
   const runQuery = (): void => {
-    dispatch(runSelectQueryRoutine.trigger({
+    if (query.setNewConfirm) {
+      setShowConfirm(true);
+    } else {
+      setShowConfirm(false);
+      dispatch(runSelectQueryRoutine.trigger({
+        data: {
+          code: query.setNewCode,
+          runAutomatically: query.setNewRun,
+          showConfirm: query.setNewConfirm,
+          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+        },
+        appId: id,
+        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+      }));
+    }
+  };
+
+  const previewQuery = (): void => {
+    dispatch(previewSelectQueryRoutine.trigger({
       data: {
-        code: query.selectQuery.selectQueryCode,
-        runAutomatically: query.selectQuery.runAutomatically,
-        showConfirm: query.selectQuery.showConfirm,
-        triggers: [...query.selectQuery.selectQueryTriggers, ...query.setNewUnSuccessTriggers]
+        code: query.setNewCode,
+        runAutomatically: query.setNewRun,
+        showConfirm: query.setNewConfirm,
+        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
       },
       id: query.selectQuery.selectQueryId,
       appId: id,
       resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
     }));
-    // const runTitle = query.setNewRun ? 'Run query only when manually triggered'
-    //   : 'Run query automatically when inputs change';
-    // dispatch(setSelectQueryRoutine.success({
-    //   id: query.selectQuery.selectQueryId,
-    //   name: query.setNewName,
-    //   code: query.setNewCode,
-    //   runAutomatically: query.setNewRun,
-    //   triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
-    //   showConfirm: query.setNewConfirm,
-    //   runTitle
-    // }));
   };
+
   const saveCode = (): void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
@@ -74,7 +98,8 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
           triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
         },
         id: query.selectQuery.selectQueryId,
-        appId: id
+        appId: id,
+        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
       }));
       const runTitle = query.setNewRun ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
@@ -230,11 +255,12 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
+              <Form.Control type="button" value="Preview" onClick={previewQuery} />
               {
-                query.setNewRun ? (
-                  <Form.Control type="button" value="Run" onClick={runQuery} />
+                isDataChange || !isTriggersChange ? (
+                  <Form.Control type="button" value="Save" onClick={saveCode} />
                 )
-                  : (<Form.Control type="button" value="save and Run" onClick={saveCode} />)
+                  : (<Form.Control type="button" value="Run" onClick={runQuery} />)
               }
             </Form.Group>
           </Form.Group>
@@ -284,9 +310,18 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
               triggerList={query.setNewUnSuccessTriggers}
             />
           </Form.Group>
+          {
+            showTable ? <Table values={query.resultData} /> : null
+          }
+          {
+            showSpan ? <span>No rows to display</span> : null
+          }
         </Form.Group>
       </Form>
       <ModalWindow />
+      {
+        showConfirm ? <ConfirmModal appId={id} /> : null
+      }
     </Loader>
   );
 };

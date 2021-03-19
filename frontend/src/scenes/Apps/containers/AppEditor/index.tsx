@@ -13,7 +13,7 @@ const AppEditor: React.FC<any> = () => {
       <DndProvider backend={HTML5Backend}>
         <Editor />
       </DndProvider>
-      <Constructor id={id} resourceId="1a5d4975-1a30-4e0c-9777-6ab3accde4b4" />
+      <Constructor id={id} resourceId="27544918-2829-4982-8887-0f6375ad6cd3" />
     </div>
   );
 };

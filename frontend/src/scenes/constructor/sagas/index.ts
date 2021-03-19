@@ -1,21 +1,26 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { Routine } from 'redux-saga-routines';
 import {
   deleteSelectQueryRoutine,
   duplicateSelectQueryRoutine, errorRoutineQuery,
   fetchQueryRoutine, openQueryRoutine,
   saveSelectQueryRoutine,
-  runSelectQueryRoutine
+  runSelectQueryRoutine,
+  previewSelectQueryRoutine
 } from '../routines';
 import { IQuery } from '../../../common/models/apps/querys';
+import { IAppState } from '../../../common/models/store/IAppState';
+import { ITrigger } from '../../../../../backend/src/common/models/query/Trigger';
 import {
   addQuery,
   deleteQuery,
   fetchQueries,
   updateQuery,
-  runQuery
+  runQuery,
+  previewQuery
 } from '../../../services/queryService';
-// import { runQueryRoutine } from '../../../components/Preview/routine';
+
+const query = (state: IAppState) => state.app.qur.queriesApp;
 
 function* fetchQuery({ payload }: Routine<any>) {
   try {
@@ -31,7 +36,7 @@ function* watchQueryRequest() {
   yield takeEvery(fetchQueryRoutine.TRIGGER, fetchQuery);
 }
 
-function* saveQuery({ payload }: Routine<any>) {
+function* saveQuery({ payload }: Routine<any>): Routine<any> {
   try {
     const queries: IQuery = yield call(addQuery, payload);
     yield put(duplicateSelectQueryRoutine.success(queries));
@@ -44,12 +49,52 @@ function* watchSaveQueryRequest() {
   yield takeEvery(duplicateSelectQueryRoutine.TRIGGER, saveQuery);
 }
 
-function* runSelectQuery({ payload }: Routine<any>) {
+// function* triggerSelectQuery({ payload }: Routine<any>): Routine<any> {
+//   const { triggers } = payload.data;
+//   const arrrayofpromises = triggers.map((value: string) => new Promise((resolve, reject) => {
+//     console.log(value);
+//     console.log(query);
+//   }));
+//   console.log(arrrayofpromises);
+//   // Promise.all(arrrayofpromises).then()
+//   try {
+//     // const resultData = yield put
+//     // yield put(runSelectQueryRoutine.trigger(resultData));
+//   } catch (e) {
+//     yield put(errorRoutineQuery.failure(e.message));
+//   }
+// }
+
+// function* watchTriggerQueryRequest() {
+//   yield takeEvery(triggerSelectQueryRoutine.TRIGGER, triggerSelectQuery);
+// }
+
+function* runSelectQuery({ payload }: any): Routine<any> {
   try {
-    console.log(payload);
+    console.log(payload.data);
+    const { triggers } = payload.data;
+    const queriesApp = yield select(query);
     const resultData = yield call(runQuery, payload);
-    console.log(resultData);
-    // yield put(duplicateSelectQueryRoutine.success(queries));
+    yield put(runSelectQueryRoutine.success(resultData));
+    if (triggers.length !== 0) {
+      yield all(triggers.map((value: ITrigger) => {
+        if (value.success) {
+          const queryTrigger = queriesApp.find((qur: IQuery) => qur.id === value.triggerQueryId);
+          const convertedQueryTrigger = {
+            payload: {
+              resourceId: queryTrigger.resourceId,
+              data: {
+                code: queryTrigger.code,
+                triggers: queryTrigger.triggers
+              },
+              appId: queryTrigger.appId
+            }
+          };
+          return call(runSelectQuery, convertedQueryTrigger);
+        }
+        return [];
+      }));
+    }
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
   }
@@ -59,10 +104,24 @@ function* watchRunQueryRequest() {
   yield takeEvery(runSelectQueryRoutine.TRIGGER, runSelectQuery);
 }
 
+function* previewSelectedQuery({ payload }: Routine<any>): Routine<any> {
+  try {
+    const resultData = yield call(previewQuery, payload);
+    yield put(runSelectQueryRoutine.success(resultData));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
+}
+
+function* watchPreviewQueryRequest() {
+  yield takeEvery(previewSelectQueryRoutine.TRIGGER, previewSelectedQuery);
+}
+
 function* updateQueryData({ payload }: Routine<any>) {
   try {
     const queries: Array<IQuery> = yield call(updateQuery, payload);
     yield put(fetchQueryRoutine.success(queries));
+    // yield put(runSelectQueryRoutine.trigger(payload));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
   }
@@ -92,6 +151,8 @@ export default function* userSaga() {
     watchSaveQueryRequest(),
     watchUpdateNameQueryRequest(),
     watchDeleteQueryRequest(),
-    watchRunQueryRequest()
+    watchRunQueryRequest(),
+    watchPreviewQueryRequest()
+    // watchTriggerQueryRequest()
   ]);
 }

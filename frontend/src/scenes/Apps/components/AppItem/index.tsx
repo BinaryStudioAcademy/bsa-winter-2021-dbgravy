@@ -63,6 +63,7 @@ const AppItem: React.FC<IProps> = ({
             Delete
           </span>
           <Button
+            variant="light"
             onClick={openAppEditor}
           >
             <Link to={`/app/editor/${app.id}`}>

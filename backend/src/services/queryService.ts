@@ -39,14 +39,15 @@ export const updateQueries = async (id: string, data: IUpdateQuery, appId: strin
     await getCustomRepository(QueryRepository).updateQuery(id, { name });
   } else {
     await getCustomRepository(QueryRepository).updateQuery(id, {
-      code, runAutomatically, showConfirm });
+      code, runAutomatically, showConfirm
+    });
     await getCustomRepository(TriggerRepository).updateTriggerArray(triggers, id);
   }
   const queries = await getQueries(appId);
   return queries;
 };
 
-export const deleteQuery = async (id: string, appId:string): Promise<ITransportedQuery[]> => {
+export const deleteQuery = async (id: string, appId: string): Promise<ITransportedQuery[]> => {
   await getCustomRepository(TriggerRepository).deleteTriggers(id);
   await getCustomRepository(QueryRepository).deleteQuery(id);
   const queries = await getCustomRepository(QueryRepository).getAllQueryByAppId(appId);
@@ -54,7 +55,8 @@ export const deleteQuery = async (id: string, appId:string): Promise<ITransporte
 };
 
 export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
-  const { name, type, host, port, dbUserName, dbPassword, dbName } = await getResourceById(queryData.resourceId);
+  const { code, resourceId } = queryData;
+  const { name, type, host, port, dbUserName, dbPassword, dbName } = await getResourceById(resourceId);
   try {
     const connection = await createConnection({
       name,
@@ -67,11 +69,11 @@ export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
       synchronize: true,
       logging: false
     });
-    const rowData = await connection.manager.query(queryData.code);
-    console.log(rowData);
+    const rowData = await connection.manager.query(code);
     connection.close();
     return rowData;
   } catch {
     throw new CustomError('Connection failed', 400);
   }
 };
+
