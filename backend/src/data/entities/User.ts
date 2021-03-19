@@ -6,16 +6,16 @@ import { UserOrganization } from './UserOrganization';
 
 @Entity()
 export class User extends AbstractEntity {
-  @Column()
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @OneToMany(() => RefreshToken, refreshToken => refreshToken.user)
