@@ -6,8 +6,7 @@ const router = Router();
 
 router
   .get('/:appId', run(req => getComponents(req.params.appId)))
-  .post('/', run(req => addComponent(req.body)))
-  .put('/', run(req => updateComponent(req.body)));
-// .delete('/:id', run(req => deleteQuery(req.params.id, req.body.appId)));
+  .post('/', run(req => addComponent(req.body.appId, req.body.component)))
+  .put('/', run(req => updateComponent(req.body.component)));
 
 export default router;

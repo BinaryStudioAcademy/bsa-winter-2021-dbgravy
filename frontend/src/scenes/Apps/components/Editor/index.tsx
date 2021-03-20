@@ -8,26 +8,28 @@ import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { connect } from 'react-redux';
 import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
+import { IUpdateComponent } from '../../../../common/models/editor/IUpdateComponent';
 
 interface IEditorProps {
   appId: string,
-  components: any,
+  components: {[key: string]: IDropItem },
   fetchComponents: (payload: { appId: string }) => void,
   addComponent: (payload: { appId: string, component: IDropItem }) => void,
-  updateComponent: (payload: { appId: string, component: any }) => void
+  updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void
 }
 
 const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponents, addComponent, updateComponent }) => {
   useEffect(() => {
     fetchComponents({ appId });
   }, []);
+
   const [active, setActive] = useState('insert');
   const [selected, setSelected] = useState<IDropItem | null>(null);
   const addElement = (component: IDropItem) => {
     addComponent({ appId, component });
   };
 
-  const updateElement = (component: any) => {
+  const updateElement = (component: IUpdateComponent) => {
     updateComponent({ appId, component });
   };
   const selectItem = (item: IDropItem) => {
