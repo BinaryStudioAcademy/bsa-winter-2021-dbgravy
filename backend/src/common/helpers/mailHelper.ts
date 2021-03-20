@@ -1,5 +1,6 @@
 import sgMail from '@sendgrid/mail';
 import { apiKey, emailFrom } from '../../config/sendGridConfig';
+import { HTTP_STATUS_ERROR_BAD_REQUEST } from '../constants/http';
 import { IEmailMsg } from '../models/email/IEmailMsg';
 import { CustomError } from '../models/error/CustomError';
 
@@ -20,7 +21,7 @@ export const sendEmail = async (msg: IEmailMsg) => {
       console.log('Email sent');
     })
     .catch((error: any) => {
-      throw new CustomError(error, 400);
+      throw new CustomError(error, HTTP_STATUS_ERROR_BAD_REQUEST);
     });
 
   return message;

@@ -1,0 +1,2 @@
+export const HTTP_STATUS_ERROR_BAD_REQUEST = 400;
+export const HTTP_STATUS_ERROR_NOT_FOUND = 404;

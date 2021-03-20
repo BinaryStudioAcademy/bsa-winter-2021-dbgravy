@@ -6,6 +6,7 @@ import { IUserOrganization } from '../../common/models/userOrganization/IUserOrg
 import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
 import { Role } from '../../common/enums/Role';
+import { HTTP_STATUS_ERROR_BAD_REQUEST, HTTP_STATUS_ERROR_NOT_FOUND } from '../../common/constants/http';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
@@ -22,7 +23,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
   async addUserOrganization(userId: string, data: ICreateUserOrganization): Promise<IUserOrganization> {
     const userOrganization = await this.findOne({ where: { userId, organizationId: data.organizationId } });
     if (userOrganization) {
-      throw new CustomError('User already invited.', 400);
+      throw new CustomError('User already invited.', HTTP_STATUS_ERROR_BAD_REQUEST);
     }
     const { role, status } = data;
     const userOrganizationData = this.create(
@@ -70,7 +71,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     const { userId, organizationId } = data;
     const userOrganization = await this.findOne({ where: { userId, organizationId } });
     if (!userOrganization) {
-      throw new CustomError('User organization not found.', 404);
+      throw new CustomError('User organization not found.', HTTP_STATUS_ERROR_NOT_FOUND);
     }
     const { id } = userOrganization;
     await this.update(id, data);

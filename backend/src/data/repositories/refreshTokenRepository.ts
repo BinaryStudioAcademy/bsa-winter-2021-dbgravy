@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { HTTP_STATUS_ERROR_NOT_FOUND } from '../../common/constants/http';
 import { CustomError } from '../../common/models/error/CustomError';
 import { IRefreshToken } from '../../common/models/tokens/IRefreshToken';
 import { RefreshToken } from '../entities/RefreshToken';
@@ -23,7 +24,7 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
       const deletedToken = this.delete(token.id);
       return deletedToken;
     } catch (e) {
-      throw new CustomError(e, 404);
+      throw new CustomError(e, HTTP_STATUS_ERROR_NOT_FOUND);
     }
   }
 

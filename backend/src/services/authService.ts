@@ -18,6 +18,7 @@ import { sendResetPasswordMail } from './mailService';
 import { Role } from '../common/enums/Role';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 import { IForgotPasswordUser } from '../common/models/user/IForgotPasswordUser';
+import { HTTP_STATUS_ERROR_BAD_REQUEST, HTTP_STATUS_ERROR_NOT_FOUND } from '../common/constants/http';
 
 const getExpiration = (): Date => {
   const date = new Date();
@@ -79,7 +80,7 @@ export const login = async (
 export const register = async (organizationName: string, user: IRegisterUser): Promise<IAuthUser> => {
   const organization = await getCustomRepository(OrganizationRepository).getByName(organizationName);
   if (organization) {
-    throw new CustomError('Organization already exists.', 400);
+    throw new CustomError('Organization already exists.', HTTP_STATUS_ERROR_BAD_REQUEST);
   }
   const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
@@ -128,7 +129,7 @@ export const refreshToken = (user: ITransportedUser, rt?: string): Promise<IAuth
 export const forgotPassword = async ({ email }: IForgotPasswordUser) => {
   const { id, ...user } = await getCustomRepository(UserRepository).getByEmail(email);
   if (!id) {
-    throw new CustomError('Wrong email', 404);
+    throw new CustomError('Wrong email', HTTP_STATUS_ERROR_NOT_FOUND);
   }
   await sendResetPasswordMail({
     to: email, token: createAccessToken(id)

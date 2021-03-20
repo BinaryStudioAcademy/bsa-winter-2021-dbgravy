@@ -15,6 +15,7 @@ import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { IInviteUserToOrganization } from '../common/models/userOrganization/IInviteUserToOrganization';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 import { env } from '../env';
+import { HTTP_STATUS_ERROR_BAD_REQUEST, HTTP_STATUS_ERROR_NOT_FOUND } from '../common/constants/http';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -73,7 +74,7 @@ export const getUserCurOrganization = async (user: ITransportedUser): Promise<IU
   ).getById(currentOrganizationId);
 
   if (!organization) {
-    throw new CustomError('Organization not found', 404);
+    throw new CustomError('Organization not found', HTTP_STATUS_ERROR_NOT_FOUND);
   }
 
   const userOrganization = await getCustomRepository(
@@ -81,7 +82,7 @@ export const getUserCurOrganization = async (user: ITransportedUser): Promise<IU
   ).getOrganizationUser(userId, organization.id);
 
   if (!userOrganization) {
-    throw new CustomError('There is no user in organization', 404);
+    throw new CustomError('There is no user in organization', HTTP_STATUS_ERROR_NOT_FOUND);
   }
 
   const { role } = userOrganization;
@@ -97,12 +98,12 @@ export const switchUserToOrganization = async (
 ): Promise<ITransportedUser> => {
   const organization = await getCustomRepository(OrganizationRepository).getById(organizationId);
   if (!organization) {
-    throw new CustomError('Organization not found', 404);
+    throw new CustomError('Organization not found', HTTP_STATUS_ERROR_NOT_FOUND);
   }
   const userOrganizationExist = await getCustomRepository(UserOrganizationRepository)
     .getOrganizationUserByUserIdByStatus(user.id, organizationId, OrganizationStatus.ACTIVE);
   if (userOrganizationExist) {
-    throw new CustomError('User already switch to this organization', 400);
+    throw new CustomError('User already switch to this organization', HTTP_STATUS_ERROR_BAD_REQUEST);
   }
   await getCustomRepository(UserOrganizationRepository)
     .updateUserOrganization({
