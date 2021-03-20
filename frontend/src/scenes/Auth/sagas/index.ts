@@ -11,8 +11,8 @@ import {
   registration,
   login,
   fetchUser,
-  forgotPassword
-  // resetPassword
+  forgotPassword,
+  resetPassword
 } from '../../../services/authService';
 import { inviteUserToOrganizationRoutine } from '../../Settings/routines';
 import { IAuthServerResponse } from '../../../common/models/auth/AuthServerResponse';
@@ -80,9 +80,9 @@ function* watchForgotPasswordRequest() {
   yield takeEvery(forgotPasswordRoutine.TRIGGER, forgotPasswordRequest);
 }
 
-function* resetPasswordRequest({ history, ...payload }: Routine<any>) {
+function* resetPasswordRequest({ payload }: Routine<any>) {
   try {
-    // yield call(resetPassword, payload);
+    yield call(resetPassword, payload);
     yield put(resetPasswordRoutine.success());
   } catch (error) {
     const message = errorHelper(error.code);
