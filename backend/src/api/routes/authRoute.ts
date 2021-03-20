@@ -12,6 +12,7 @@ import {
 } from '../../services/authService';
 import authenticationMiddleware from '../middlewares/authenticationMiddleware';
 import registrationMiddleware from '../middlewares/registrationMiddleware';
+import userMiddleware from '../middlewares/userMiddleware';
 import {
   jwtNewPassMiddleware
 } from '../middlewares/jwtMiddleware';
@@ -27,7 +28,7 @@ router
   .post('/sign-in', authenticationMiddleware, run(req => (
     login(req.user as ITransportedUser, req.body.currentOrganizationId))))
   .post('/sign-up', registrationMiddleware, run(req => register(req.body.organizationName, req.user as IRegisterUser)))
-  .post('/forgotpass', run(req => forgotPassword(req.body)))
+  .post('/forgotpass', userMiddleware, run(req => forgotPassword(req.body)))
   .post('/resetpass', jwtNewPassMiddleware, run(req => resetPassword(req.user as ITransportedUser, req.body.password)))
   .delete('/tokens', run(req => removeToken(req.body.token)));
 
