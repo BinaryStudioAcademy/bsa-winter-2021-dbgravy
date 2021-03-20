@@ -11,13 +11,15 @@ import { IInputText } from '../../../../common/models/editor/IInputText';
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
   selectItem: Function;
-  updateElement: Function
+  updateElement: Function,
+  appId: string
 }
 
-export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updateElement }) => {
+export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updateElement, appId }) => {
   const [items, setItems] = useState<{
     [key: string]: IDropItem
   }>(elements);
+
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
   const [inputTextValue, setInputTextValue] = useState('');
@@ -31,6 +33,10 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
   useEffect(() => {
     setItems({ ...items, ...elements });
   }, [elements]);
+
+  useEffect(() => {
+    setItems({});
+  }, [appId]);
 
   const moveItem = useCallback(
     (id: string, left: number, top: number) => {

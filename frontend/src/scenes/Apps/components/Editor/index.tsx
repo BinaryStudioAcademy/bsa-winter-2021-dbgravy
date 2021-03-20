@@ -41,7 +41,12 @@ const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponent
     <div className="mt-5 h-100" style={{ maxHeight: '50vh' }}>
       <div className="d-flex h-100 flex-wrap">
         <div className={`${styles.dropArea} dropArea`}>
-          <DropArea elements={components} selectItem={selectItem} updateElement={updateElement} />
+          <DropArea
+            elements={components}
+            selectItem={selectItem}
+            updateElement={updateElement}
+            appId={appId}
+          />
         </div>
         <div className={styles.sidebarWrp}>
           <div className={styles.navbarTop}>
