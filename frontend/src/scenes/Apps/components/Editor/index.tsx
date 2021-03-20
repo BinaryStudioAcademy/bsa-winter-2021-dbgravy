@@ -1,29 +1,45 @@
-import React, { useState, memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import Item from '../Item';
 import DropArea from '../DropArea';
 import Inspect from '../Inspect';
 import { faGripLines, faTable, faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
+import { connect } from 'react-redux';
+import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
+import { IAppState } from '../../../../common/models/store/IAppState';
 
-const Editor: React.FC = memo(() => {
+interface IEditorProps {
+  appId: string,
+  components: any,
+  fetchComponents: (payload: { appId: string }) => void,
+  addComponent: (payload: { appId: string, component: IDropItem }) => void,
+  updateComponent: (payload: { appId: string, component: any }) => void
+}
+
+const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponents, addComponent, updateComponent }) => {
+  useEffect(() => {
+    fetchComponents({ appId });
+  }, []);
   const [active, setActive] = useState('insert');
-  const [elements, setElements] = useState({});
   const [selected, setSelected] = useState<IDropItem | null>(null);
-  const addElement = async (element: IDropItem) => {
-    setElements({ ...elements, ...element });
-    setActive('inspect');
+  const addElement = (component: IDropItem) => {
+    addComponent({ appId, component });
   };
 
+  const updateElement = (component: any) => {
+    updateComponent({ appId, component });
+  };
   const selectItem = (item: IDropItem) => {
     setSelected(item);
+    setActive('inspect');
   };
 
   return (
     <div className="mt-5 h-100" style={{ maxHeight: '50vh' }}>
       <div className="d-flex h-100 flex-wrap">
         <div className={`${styles.dropArea} dropArea`}>
-          <DropArea elements={elements} selectItem={selectItem} />
+          <DropArea elements={components} selectItem={selectItem} updateElement={updateElement} />
         </div>
         <div className={styles.sidebarWrp}>
           <div className={styles.navbarTop}>
@@ -82,4 +98,18 @@ const Editor: React.FC = memo(() => {
   );
 });
 
-export default Editor;
+Editor.defaultProps = {
+  components: {}
+};
+
+const mapStateToProps = (rootState: IAppState) => ({
+  components: rootState.app.editor.components
+});
+
+const mapDispatchToProps = {
+  fetchComponents: fetchEditorComponentsRoutine,
+  addComponent: addComponentRoutine,
+  updateComponent: updateComponentRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);

@@ -11,27 +11,25 @@ import { IInputText } from '../../../../common/models/editor/IInputText';
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
   selectItem: Function;
+  updateElement: Function
 }
 
-export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => {
+export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updateElement }) => {
   const [items, setItems] = useState<{
     [key: string]: IDropItem
   }>(elements);
-
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
-  const [itemType, setItemType] = useState('');
+  const [itemType, setItemType] = useState('input');
   const [inputTextValue, setInputTextValue] = useState('');
 
   const onSelect = (id: string) => {
     setSelectedItem(id);
     selectItem(elements[id]);
+    setItemType(elements[id].componentType);
   };
 
   useEffect(() => {
     setItems({ ...items, ...elements });
-    const itemKeys = Object.keys(elements);
-    onSelect(itemKeys[itemKeys.length - 1]);
-    selectItem(elements[itemKeys[itemKeys.length - 1]]);
   }, [elements]);
 
   const moveItem = useCallback(
@@ -61,16 +59,19 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
         const left = Math.round(item.left + delta.x);
         const top = Math.round(item.top + delta.y);
         moveItem(item.id, left, top);
+        if (item.id) {
+          updateElement({ id: item.id, left, top });
+        }
         switch (item.type) {
           case 'input':
             setItemType('input');
-            return { key: `textinput${Object.keys(items).length + 1}`, left: l, top: t };
+            return { key: 'input', left: l, top: t };
           case 'table':
             setItemType('table');
-            return { key: `table${Object.keys(items).length + 1}`, left: l, top: t };
+            return { key: 'table', left: l, top: t };
           case 'button':
             setItemType('button');
-            return { key: `button${Object.keys(items).length + 1}`, left: l, top: t };
+            return { key: 'button', left: l, top: t };
           default:
             return undefined;
         }
@@ -100,10 +101,10 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
                 (key === selectedItem) ? `${styles.label} ${styles.activeLabel}` : `${styles.label}`
               }
             >
-              {key}
+              {componentType}
             </span>
             {
-              (componentType === 'textInput') && (
+              (componentType === 'input') && (
                 <Form style={{ display: 'flex', position: 'relative' }}>
                   <Form.Label
                     style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}

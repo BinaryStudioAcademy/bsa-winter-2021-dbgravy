@@ -26,17 +26,17 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<IDropResult>();
       if (dropResult) {
-        const { key, left, top } = dropResult;
+        const { left, top } = dropResult;
         switch (itemType) {
           case 'input':
-            addElement({
-              [key]: {
+            addElement(
+              {
                 top,
                 left,
-                title: 'Name',
+                title: 'Input',
                 width: '300px',
                 height: '60px',
-                componentType: 'textInput',
+                componentType: 'input',
                 component: {
                   type: 'text',
                   label: 'Name',
@@ -44,11 +44,11 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
                   placeholder: ''
                 }
               }
-            });
+            );
             break;
           case 'table':
-            addElement({
-              [key]: {
+            addElement(
+              {
                 top,
                 left,
                 title: 'Table',
@@ -84,11 +84,11 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
                   }]
                 }
               }
-            });
+            );
             break;
           case 'button':
-            addElement({
-              [key]: {
+            addElement(
+              {
                 top,
                 left,
                 title: 'Button',
@@ -100,7 +100,7 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
                   color: ''
                 }
               }
-            });
+            );
             break;
           default:
             break;
