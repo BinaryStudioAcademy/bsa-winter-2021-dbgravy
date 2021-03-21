@@ -15,4 +15,7 @@ export const testResource = (resource: ICreateResource) => api
 export const updateResource = (resource: IEditResource) => api
   .put<ICreateResource>(`/api/resources/${resource.id}`, { resource });
 
+export const takeResourceTables = (resource: ICreateResource) => api
+  .post<any>('/api/resources/take', { resource });
+
 export const delResource = (id: string) => api.delete<IResource>(`/api/resources/${id}`);

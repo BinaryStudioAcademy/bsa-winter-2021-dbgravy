@@ -4,10 +4,11 @@ import {
   deleteSelectQueryRoutine,
   duplicateSelectQueryRoutine, errorRoutineQuery,
   fetchQueryRoutine, openQueryRoutine,
-  saveSelectQueryRoutine
+  saveSelectQueryRoutine, takeResourcesTableAndColumns
 } from '../routines';
 import { IQuery } from '../../../common/models/apps/querys';
 import { addQuery, deleteQuery, fetchQueries, updateQuery } from '../../../services/queryService';
+import { takeResourceTables } from '../../../services/resourceService';
 
 function* fetchQuery({ payload }: Routine<any>) {
   try {
@@ -63,11 +64,25 @@ function* watchDeleteQueryRequest() {
   yield takeEvery(deleteSelectQueryRoutine.TRIGGER, deleteSelectQuery);
 }
 
+function* takeRecourseData({ payload }: Routine<any>) {
+  try {
+    const tables:Array<any> = yield call(takeResourceTables, payload);
+    yield put(takeResourcesTableAndColumns.success(tables));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
+}
+
+function* watchTakeRecourseRequest() {
+  yield takeEvery(takeResourcesTableAndColumns.TRIGGER, takeRecourseData);
+}
+
 export default function* userSaga() {
   yield all([
     watchQueryRequest(),
     watchSaveQueryRequest(),
     watchUpdateNameQueryRequest(),
-    watchDeleteQueryRequest()
+    watchDeleteQueryRequest(),
+    watchTakeRecourseRequest()
   ]);
 }

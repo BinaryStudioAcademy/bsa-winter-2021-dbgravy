@@ -1,14 +1,12 @@
-import { getCustomRepository, createConnection } from 'typeorm';
+import { createConnection, getCustomRepository } from 'typeorm';
 import { ResourceRepository } from '../data/repositories/resourceRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
-import {
-  extractTransportedResources,
-  extractTransportedResource
-} from '../common/mappers/resourceExtrator';
+import { extractTransportedResource, extractTransportedResources } from '../common/mappers/resourceExtrator';
 import { ITransportedResource } from '../common/models/resource/ITransportedResource';
 import { ICreateResource } from '../common/models/resource/ICreateResource';
 import { IEditResource } from '../common/models/resource/IEditResource';
+import { ITables } from '../common/models/query/ITables';
 
 export const getResources = async (user: ITransportedUser): Promise<ITransportedResource[]> => {
   const { currentOrganizationId } = user;
@@ -75,6 +73,36 @@ export const testResource = async (resourceData: ICreateResource): Promise<boole
   } catch (error) {
     throw new CustomError('Testing failed', 400);
   }
+};
+
+export const takeResourceTable = async (resourceData: ICreateResource): Promise<ITables> => {
+  const config = {
+    name: resourceData.name,
+    type: resourceData.type,
+    host: resourceData.host,
+    port: resourceData.port,
+    username: resourceData.dbUserName,
+    password: resourceData.dbPassword,
+    database: resourceData.dbName,
+    synchronize: true,
+    logging: false
+  };
+  const connection = await createConnection(config);
+  const Request = await connection.query(
+    'SELECT ALL table_name FROM information_schema.tables  WHERE table_schema=\'public\''
+  );
+    // eslint-disable-next-line camelcase
+  const nameTables = Request.map((element: { table_name: string; }) => element.table_name);
+  const tablesAndColumns:any = {};
+  await Promise.all(nameTables.map(async (element: string) => {
+    const tableColumn = await connection.query(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='${element}'`
+    );
+      // eslint-disable-next-line camelcase
+    tablesAndColumns[element] = tableColumn.map((elem: { column_name: string; }) => elem.column_name);
+  }));
+  connection.close();
+  return tablesAndColumns;
 };
 
 export const updateResource = async (id: string, resourceData: IEditResource): Promise<ITransportedResource> => {

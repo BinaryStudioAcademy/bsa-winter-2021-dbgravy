@@ -15,6 +15,7 @@ export interface IQueryState {
         resourceId:string
     },
     setNewCode:string,
+    setSelectResourceTable:any,
     resources: Array<IResource>,
     setNewRun: boolean,
     runAutomaticallyTitle:string,

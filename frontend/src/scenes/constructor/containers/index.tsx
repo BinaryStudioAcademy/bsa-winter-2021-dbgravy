@@ -7,7 +7,6 @@ import Loader from '../../../components/Loader';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
-  setNewCodeRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
   fetchQueryRoutine,
@@ -15,7 +14,7 @@ import {
   saveSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
-  setNewConfirmRoutine
+  setNewConfirmRoutine, takeResourcesTableAndColumns
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
@@ -23,6 +22,7 @@ import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
+import QueryEditor from '../../../components/QueryCodeEditor';
 
 interface IProps {
   id:string
@@ -145,10 +145,6 @@ const Constructor:React.FC<IProps> = ({ id }) => {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
   }
-  function changeCode(e:React.FormEvent) {
-    const target: HTMLInputElement = e.target as HTMLInputElement;
-    dispatch(setNewCodeRoutine.trigger({ code: target.value }));
-  }
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
       id: query.selectQuery.selectQueryId,
@@ -159,6 +155,13 @@ const Constructor:React.FC<IProps> = ({ id }) => {
     dispatch(fetchResourceRoutine.trigger());
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
+
+  useEffect(() => {
+    if (!query.isLoading) {
+      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    }
+  }, [query.isLoading]);
+
   return (
     <Loader isLoading={query.isLoading}>
       <Form className={style.wrapper} onClick={closeNameEditor}>
@@ -225,13 +228,8 @@ const Constructor:React.FC<IProps> = ({ id }) => {
               <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
             </Form.Group>
             <Form.Label className={style.row} />
-            <Form.Control
-              as="textarea"
-              value={query.setNewCode}
-              rows={5}
-              onChange={changeCode}
-              className={style.codeEditor}
-            />
+            <QueryEditor tables={query.setSelectResourceTable} />
+            <Form.Label className={style.row} />
             <Form.Label className={style.row} />
             {
                 query.setNewConfirm ? (

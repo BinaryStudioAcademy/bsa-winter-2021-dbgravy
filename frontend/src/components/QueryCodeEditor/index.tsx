@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { ITables } from '../../common/models/resources/ITables';
 
@@ -10,10 +10,16 @@ import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/sql-hint';
 import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/hint/show-hint.css';
+import { setNewCodeRoutine } from '../../scenes/constructor/routines';
+import { useDispatch, useSelector } from 'react-redux';
+import { IAppState } from '../../common/models/store/IAppState';
 
 const QueryEditor: React.FC<ITables> = ({ tables }) => {
-  const [query, setQuery] = useState('');
-
+  const query = useSelector((state: IAppState) => state.app.qur);
+  const dispatch = useDispatch();
+  function changeCode(e: string) {
+    dispatch(setNewCodeRoutine.trigger({ code: e }));
+  }
   const autoComplete = (cm:any) => {
     const autocomlete = 'autocomlete';
     const hintOptions = {
@@ -26,12 +32,12 @@ const QueryEditor: React.FC<ITables> = ({ tables }) => {
   return (
     <div>
       <CodeMirror
-        value={query}
+        value={query.setNewCode}
         options={
             {
               lineNumbers: true,
               mode: { name: 'handlebars', base: 'text/x-pgsql' },
-              tabSize: 2,
+              tabSize: 1,
               readOnly: false,
               extraKeys: {
                 'Ctrl-Space': autoComplete
@@ -39,7 +45,7 @@ const QueryEditor: React.FC<ITables> = ({ tables }) => {
             }
         }
         onBeforeChange={(editor, data, value) => {
-          setQuery(value);
+          changeCode(value);
         }}
       />
     </div>

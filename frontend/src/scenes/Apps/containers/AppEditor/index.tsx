@@ -11,6 +11,9 @@ const AppEditor: React.FC<any> = () => {
   const { id }: IFetchParams = useParams();
   return (
     <div className={styles.appEditor}>
+      <header className={styles.header}>
+        <div />
+      </header>
       <DndProvider backend={HTML5Backend}>
         <Editor />
       </DndProvider>
