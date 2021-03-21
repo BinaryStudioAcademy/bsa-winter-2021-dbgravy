@@ -6,6 +6,7 @@ import { ITransportedUser } from '../../common/models/user/ITransportedUser';
 const router = Router();
 
 router
+  .get('/', run(req => UOService.getUserOrganizations(req.user as ITransportedUser)))
   .get('/:organizationId', run(req => UOService.getUsers(req.params.organizationId)))
   .get('/invite/:inviteToken', run(req => UOService.checkInviteUser(req.params.inviteToken)))
   .post('/', run(req => UOService.createUserOrganization(req.body)))
