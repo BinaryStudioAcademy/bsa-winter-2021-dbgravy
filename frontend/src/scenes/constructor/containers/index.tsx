@@ -27,6 +27,7 @@ import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
 import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
+import QueryResult from '../components/ModalWindow/queryResult';
 
 interface IProps {
   id: string
@@ -39,6 +40,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showQuery, setShowQuery] = useState(false);
 
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
     || query.selectQuery.runAutomatically !== query.setNewRun
@@ -217,6 +219,12 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     dispatch(fetchResourceRoutine.trigger());
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
+  useEffect(() => {
+    if (query.queryMessage.length !== 0) {
+      setShowQuery(true);
+      setTimeout(() => setShowQuery(false), 1000);
+    }
+  }, [query.queryMessage]);
   return (
     <Loader isLoading={query.isLoading}>
       <Form className={style.wrapper} onClick={closeNameEditor}>
@@ -350,6 +358,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isCancel={handleCancelConfirmModal}
         isSubmit={handleSubmitConfirmModal}
       />
+      <QueryResult show={showQuery} message={query.queryMessage} />
     </Loader>
   );
 };

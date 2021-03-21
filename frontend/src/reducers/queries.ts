@@ -68,7 +68,8 @@ const initialState: IQueryState = {
   isLoading: true,
   isResultLoading: true,
   resultData: [],
-  triggerMessage: ''
+  triggerMessage: '',
+  queryMessage: ''
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
@@ -228,18 +229,21 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
     case runSelectQueryRoutine.TRIGGER:
       return {
         ...state,
-        isResultLoading: true
+        isResultLoading: true,
+        queryMessage: ''
       };
     case runSelectQueryRoutine.SUCCESS:
       return {
         ...state,
-        resultData: action.payload,
-        isResultLoading: false
+        resultData: action.payload.resultData,
+        isResultLoading: false,
+        queryMessage: `${action.payload.name} successfully run`
       };
     case runTriggerRoutine.FAILURE:
       return {
         ...state,
-        triggerMessage: action.payload
+        triggerMessage: action.payload,
+        queryMessage: `${action.payload} run failed`
       };
     case runTriggerRoutine.SUCCESS:
       return {

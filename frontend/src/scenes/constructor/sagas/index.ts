@@ -58,7 +58,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
     if (!fulfilledQueries.includes(id)) {
       const resultData = yield call(runQuery, payload);
       if (fulfilledQueries.length === 0) {
-        yield put(runSelectQueryRoutine.success(resultData));
+        yield put(runSelectQueryRoutine.success({ resultData, name }));
       } else {
         yield put(runTriggerRoutine.success(`${name} run successfully`));
       }
@@ -87,7 +87,9 @@ function* runSelectQuery({ payload }: any): Routine<any> {
       }
     }
   } catch (e) {
-    yield put(runTriggerRoutine.failure(`${name}: query error!`));
+    if (fulfilledQueries.length === 0) {
+      yield put(runTriggerRoutine.failure(name));
+    }
     if (triggers.length !== 0) {
       fulfilledQueries.push(id);
       yield all(triggers.map((value: ITrigger) => {
