@@ -14,3 +14,13 @@ export const postCreateOrganization = async (newOrganization: {name: string, cre
   const response = await api.post<IResult>('/api/organization', newOrganization);
   return response;
 };
+
+export const fetchOrganizations = async () => {
+  const response = await api.get<IUserOrganization[]>('/api/user/organization');
+  return response;
+};
+
+export const changeCurrentUserOrganization = async (organizationId: string) => {
+  const response = await api.put<IUserOrganization>('/api/users/switch-organization', { organizationId });
+  return response;
+};
