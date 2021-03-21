@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDispatch } from 'react-redux';
 import { faBriefcase, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { IApps } from '../../../../common/models/apps/IApps';
 import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
 import UpdateApp from '../../containers/UpdateApp';
 import { Link } from 'react-router-dom';
-import { setCurrentlyAppId } from '../../routines';
 
 interface IProps {
   app: IApps;
@@ -19,11 +17,7 @@ interface IProps {
 const AppItem: React.FC<IProps> = ({
   app, showEdit, deleteApp
 }) => {
-  const dispatch = useDispatch();
   const [display, setDisplay] = useState(false);
-  const openAppEditor = () => {
-    dispatch(setCurrentlyAppId.trigger(app.id));
-  };
   const onEdit = () => {
     showEdit({ app, show: true });
     setDisplay(!display);
@@ -62,14 +56,11 @@ const AppItem: React.FC<IProps> = ({
           >
             Delete
           </span>
-          <Button
-            variant="light"
-            onClick={openAppEditor}
-          >
+          <span role="button">
             <Link to={`/app/editor/${app.id}`}>
               App Editor
             </Link>
-          </Button>
+          </span>
         </div>
         <UpdateApp />
       </div>

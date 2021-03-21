@@ -6,5 +6,6 @@ export interface IWaitingQuery {
     queryCode?:string,
     queryTriggers:Array<ITrigger>,
     runAutomatically: boolean,
-    showConfirm: boolean
+    showConfirm: boolean,
+    resourceId: string
 }
