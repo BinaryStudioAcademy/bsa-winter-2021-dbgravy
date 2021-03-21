@@ -71,3 +71,16 @@
 .link {
   color: rgb(98, 176, 212)
 }
+
+.infoContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.organizationName {
+  padding: 10px;
+  margin-right: 10px;
+  border: #6c747e solid 1px;
+  border-radius: 5px;
+}
