@@ -43,7 +43,6 @@ export const deleteQuery = async ({ id, appId }: IDeleteQuery) => {
 };
 
 export const runQuery = async ({ data, appId, resourceId }: IRunQuery) => {
-  console.log(data.code);
   const body = {
     code: data.code,
     appId,

@@ -56,10 +56,10 @@ export const deleteQuery = async (id: string, appId: string): Promise<ITransport
 
 export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
   const { code, resourceId } = queryData;
-  const { name, type, host, port, dbUserName, dbPassword, dbName } = await getResourceById(resourceId);
+  const { type, host, port, dbUserName, dbPassword, dbName } = await getResourceById(resourceId);
   try {
     const connection = await createConnection({
-      name,
+      name: code,
       type,
       host,
       port,
@@ -72,7 +72,7 @@ export const runQuery = async (queryData: ICreateQuery): Promise<any> => {
     const rowData = await connection.manager.query(code);
     connection.close();
     return rowData;
-  } catch {
+  } catch (err) {
     throw new CustomError('Connection failed', 400);
   }
 };

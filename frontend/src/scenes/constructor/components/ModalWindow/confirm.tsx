@@ -27,7 +27,8 @@ const ConfirmModal: React.FC<IProps> = ({ appId }) => {
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
       },
       appId,
-      resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+      resourceId: '27544918-2829-4982-8887-0f6375ad6cd3',
+      triggered: []
     }));
   };
   return (

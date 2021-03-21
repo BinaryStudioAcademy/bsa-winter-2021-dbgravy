@@ -50,23 +50,55 @@ function* watchSaveQueryRequest() {
 }
 
 function* runSelectQuery({ payload }: any): Routine<any> {
+  const fulfilledQueries = payload.triggered;
+  const { triggers, id } = payload.data;
+  const queriesApp = yield select(query);
   try {
-    const { triggers } = payload.data;
-    const queriesApp = yield select(query);
-    const resultData = yield call(runQuery, payload);
-    yield put(runSelectQueryRoutine.success(resultData));
+    if (!fulfilledQueries.includes(id)) {
+      const resultData = yield call(runQuery, payload);
+      if (fulfilledQueries.length === 0) {
+        yield put(runSelectQueryRoutine.success(resultData));
+      }
+      if (triggers.length !== 0) {
+        fulfilledQueries.push(id);
+        yield all(triggers.map((value: ITrigger) => {
+          if (value.success) {
+            const queryTrigger = queriesApp.find((qur: IQuery) => qur.id === value.triggerQueryId);
+            const convertedQueryTrigger = {
+              payload: {
+                resourceId: queryTrigger.resourceId,
+                data: {
+                  id: queryTrigger.id,
+                  code: queryTrigger.code,
+                  triggers: queryTrigger.triggers
+                },
+                appId: queryTrigger.appId,
+                triggered: fulfilledQueries
+              }
+            };
+            return call(runSelectQuery, convertedQueryTrigger);
+          }
+          return [];
+        }));
+      }
+    }
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
     if (triggers.length !== 0) {
+      fulfilledQueries.push(id);
       yield all(triggers.map((value: ITrigger) => {
-        if (value.success) {
+        if (!value.success) {
           const queryTrigger = queriesApp.find((qur: IQuery) => qur.id === value.triggerQueryId);
           const convertedQueryTrigger = {
             payload: {
               resourceId: queryTrigger.resourceId,
               data: {
+                id: queryTrigger.id,
                 code: queryTrigger.code,
                 triggers: queryTrigger.triggers
               },
-              appId: queryTrigger.appId
+              appId: queryTrigger.appId,
+              triggered: fulfilledQueries
             }
           };
           return call(runSelectQuery, convertedQueryTrigger);
@@ -74,8 +106,6 @@ function* runSelectQuery({ payload }: any): Routine<any> {
         return [];
       }));
     }
-  } catch (e) {
-    yield put(errorRoutineQuery.failure(e.message));
   }
 }
 
@@ -86,7 +116,7 @@ function* watchRunQueryRequest() {
 function* previewSelectedQuery({ payload }: Routine<any>): Routine<any> {
   try {
     const resultData = yield call(previewQuery, payload);
-    yield put(runSelectQueryRoutine.success(resultData));
+    yield put(previewSelectQueryRoutine.success(resultData));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
   }

@@ -1,5 +1,4 @@
 import { Routine } from 'redux-saga-routines';
-import { previewQueryRoutine } from '../components/Preview/routine';
 import {
   duplicateSelectQueryRoutine,
   fetchQueryRoutine,
@@ -8,10 +7,12 @@ import {
   setNewConfirmRoutine,
   setNewNameQueryRoutine,
   setNewRunRoutine,
-  setSelectQueryRoutine, setSuccessTriggersRoutine,
+  setSelectQueryRoutine,
+  setSuccessTriggersRoutine,
   setUnSuccessTriggersRoutine,
   setWaiterQueryRoutine,
-  runSelectQueryRoutine
+  runSelectQueryRoutine,
+  previewSelectQueryRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
@@ -195,11 +196,18 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         resultData: action.payload,
         isResultLoading: false
       };
-    case previewQueryRoutine.SUCCESS:
+    case previewSelectQueryRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: false,
+        isResultLoading: true
+      };
+    case previewSelectQueryRoutine.SUCCESS:
       return {
         ...state,
         resultData: action.payload,
-        isLoading: false
+        isLoading: false,
+        isResultLoading: false
       };
     default:
       return state;

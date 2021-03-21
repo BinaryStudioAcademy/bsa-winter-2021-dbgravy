@@ -33,9 +33,6 @@ interface IProps {
 
 const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
-  console.log('-----------------------------------');
-  console.log(query.resultData);
-  console.log('-----------------------------------');
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -46,16 +43,9 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
   const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
 
-  // const [showTable, setShowTable] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  // const [showSpan, setShowSpan] = useState(false);
 
   const isEmptyData = query.resultData.length === 0;
-  // useEffect(() => {
-  //   const isEmptyData = query.resultData.length === 0;
-  //   setShowTable(!isEmptyData);
-  //   setShowSpan(isEmptyData);
-  // }, [query.resultData]);
 
   const runQuery = (): void => {
     if (query.selectQuery.showConfirm) {
@@ -64,13 +54,15 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
       setShowConfirm(false);
       dispatch(runSelectQueryRoutine.trigger({
         data: {
+          id: query.selectQuery.selectQueryId,
           code: query.setNewCode,
           runAutomatically: query.setNewRun,
           showConfirm: query.setNewConfirm,
           triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
         },
         appId: id,
-        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3',
+        triggered: []
       }));
     }
   };
@@ -183,7 +175,6 @@ const Constructor: React.FC<IProps> = ({ id, resourceId }) => {
     }
   };
   const changeConfirm = () => {
-    console.log(query.selectQuery);
     if (query.setNewConfirm) {
       dispatch(setNewConfirmRoutine.trigger(false));
     } else {

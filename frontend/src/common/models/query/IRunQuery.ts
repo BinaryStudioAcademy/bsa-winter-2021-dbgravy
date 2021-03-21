@@ -9,4 +9,5 @@ export interface IRunQuery {
     appId?:string;
     resourceId?:string;
     data: IData
+    triggered?: Array<string>
 }
