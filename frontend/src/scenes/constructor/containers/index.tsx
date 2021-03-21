@@ -35,8 +35,11 @@ interface IProps {
 const Constructor: React.FC<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
+
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
     || query.selectQuery.runAutomatically !== query.setNewRun
     || query.selectQuery.showConfirm !== query.setNewConfirm
@@ -45,41 +48,51 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
 
-  const [showConfirm, setShowConfirm] = useState(false);
+  const handleCancelConfirmModal = () => {
+    setShowConfirm(false);
+  };
+  const handleSubmitConfirmModal = () => {
+    setShowConfirm(false);
+    runQuery();
+  };
+
+  const hadleRunButton = () => {
+    if (query.selectQuery.showConfirm) {
+      setShowConfirm(true);
+    } else {
+      runQuery();
+    }
+  };
 
   const isEmptyData = query.resultData.length === 0;
 
   const runQuery = (): void => {
-    if (query.selectQuery.showConfirm) {
-      setShowConfirm(true);
-    } else {
-      setShowConfirm(false);
-      dispatch(runSelectQueryRoutine.trigger({
-        data: {
-          id: query.selectQuery.selectQueryId,
-          code: query.setNewCode,
-          runAutomatically: query.setNewRun,
-          showConfirm: query.setNewConfirm,
-          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
-        },
-        appId: id,
-        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3',
-        triggered: []
-      }));
-    }
+    dispatch(runSelectQueryRoutine.trigger({
+      data: {
+        id: query.selectQuery.selectQueryId,
+        code: query.setNewCode,
+        runAutomatically: query.setNewRun,
+        showConfirm: query.setNewConfirm,
+        name: query.selectQuery.selectQueryName,
+        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+      },
+      appId: id,
+      resourceId: query.selectQuery.resourceId,
+      triggered: []
+    }));
   };
 
   const previewQuery = (): void => {
     dispatch(previewSelectQueryRoutine.trigger({
       data: {
         code: query.setNewCode,
+        name: query.selectQuery.selectQueryName,
         runAutomatically: query.setNewRun,
-        showConfirm: query.setNewConfirm,
-        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+        showConfirm: query.setNewConfirm
       },
       id: query.selectQuery.selectQueryId,
       appId: id,
-      resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+      resourceId: query.selectQuery.resourceId
     }));
   };
 
@@ -95,7 +108,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         },
         id: query.selectQuery.selectQueryId,
         appId: id,
-        resourceId: '27544918-2829-4982-8887-0f6375ad6cd3'
+        resourceId: query.selectQuery.resourceId
       }));
       const runTitle = query.setNewRun ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
@@ -259,7 +272,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 isDataChange || !isTriggersChange ? (
                   <Form.Control type="button" value="Save" onClick={saveCode} />
                 )
-                  : (<Form.Control type="button" value="Run" onClick={runQuery} />)
+                  : (<Form.Control type="button" value="Run" onClick={hadleRunButton} />)
               }
             </Form.Group>
           </Form.Group>
@@ -315,17 +328,28 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             />
           </Form.Group>
           {
-            !isEmptyData && <Table key={query.isResultLoading.toString()} values={query.resultData} />
+            !isEmptyData && (
+              <div style={{ padding: '20px' }}>
+                <Table
+                  key={query.isResultLoading.toString()}
+                  values={query.resultData}
+                  columnWidth={300}
+                  rowHeight={70}
+                />
+              </div>
+            )
           }
           {
-            isEmptyData && <span>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
       <ModalWindow id={id} />
-      {
-        showConfirm ? <ConfirmModal appId={id} /> : null
-      }
+      <ConfirmModal
+        showConfirm={showConfirm}
+        isCancel={handleCancelConfirmModal}
+        isSubmit={handleSubmitConfirmModal}
+      />
     </Loader>
   );
 };

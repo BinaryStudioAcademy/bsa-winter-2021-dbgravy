@@ -30,4 +30,5 @@ export interface IQueryState {
     waitingQuery: IWaitingQuery,
     resultData: any,
     isResultLoading: boolean,
+    triggerMessage: string
 }

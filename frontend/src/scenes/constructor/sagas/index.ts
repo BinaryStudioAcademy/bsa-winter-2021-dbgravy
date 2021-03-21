@@ -6,7 +6,8 @@ import {
   fetchQueryRoutine, openQueryRoutine,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
-  previewSelectQueryRoutine
+  previewSelectQueryRoutine,
+  runTriggerRoutine
 } from '../routines';
 import { IQuery } from '../../../common/models/apps/querys';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -51,13 +52,15 @@ function* watchSaveQueryRequest() {
 
 function* runSelectQuery({ payload }: any): Routine<any> {
   const fulfilledQueries = payload.triggered;
-  const { triggers, id } = payload.data;
+  const { triggers, id, name } = payload.data;
   const queriesApp = yield select(query);
   try {
     if (!fulfilledQueries.includes(id)) {
       const resultData = yield call(runQuery, payload);
       if (fulfilledQueries.length === 0) {
         yield put(runSelectQueryRoutine.success(resultData));
+      } else {
+        yield put(runTriggerRoutine.success(`${name} run successfully`));
       }
       if (triggers.length !== 0) {
         fulfilledQueries.push(id);
@@ -69,6 +72,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
                 resourceId: queryTrigger.resourceId,
                 data: {
                   id: queryTrigger.id,
+                  name: queryTrigger.name,
                   code: queryTrigger.code,
                   triggers: queryTrigger.triggers
                 },
@@ -83,7 +87,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
       }
     }
   } catch (e) {
-    yield put(errorRoutineQuery.failure(e.message));
+    yield put(runTriggerRoutine.failure(`${name}: query error!`));
     if (triggers.length !== 0) {
       fulfilledQueries.push(id);
       yield all(triggers.map((value: ITrigger) => {
@@ -94,6 +98,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
               resourceId: queryTrigger.resourceId,
               data: {
                 id: queryTrigger.id,
+                name: queryTrigger.name,
                 code: queryTrigger.code,
                 triggers: queryTrigger.triggers
               },

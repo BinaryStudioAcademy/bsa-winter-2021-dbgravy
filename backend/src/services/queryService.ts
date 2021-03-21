@@ -39,7 +39,8 @@ export const updateQueries = async (id: string, data: IUpdateQuery, appId: strin
     await getCustomRepository(QueryRepository).updateQuery(id, { name });
   } else {
     await getCustomRepository(QueryRepository).updateQuery(id, {
-      code, runAutomatically, showConfirm, resourceId });
+      code, runAutomatically, showConfirm, resourceId
+    });
     await getCustomRepository(TriggerRepository).updateTriggerArray(triggers, id);
   }
   const queries = await getQueries(appId);

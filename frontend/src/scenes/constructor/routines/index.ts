@@ -19,3 +19,4 @@ export const setUnSuccessTriggersRoutine = createRoutine('UNSUCCESS_TRIGGER_QUER
 export const setResourcesRoutine = createRoutine('RESOURCES_QUERY');
 export const setNewResourcesRoutine = createRoutine('SET_NEW_RESOURCES_QUERY');
 export const errorRoutineQuery = createRoutine('ERROR_QUERY');
+export const runTriggerRoutine = createRoutine('RUN_TRIGGER');

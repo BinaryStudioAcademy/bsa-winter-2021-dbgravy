@@ -14,7 +14,8 @@ import {
   setUnSuccessTriggersRoutine,
   setWaiterQueryRoutine,
   runSelectQueryRoutine,
-  previewSelectQueryRoutine
+  previewSelectQueryRoutine,
+  runTriggerRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
@@ -66,7 +67,8 @@ const initialState: IQueryState = {
   },
   isLoading: true,
   isResultLoading: true,
-  resultData: []
+  resultData: [],
+  triggerMessage: ''
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
@@ -146,7 +148,8 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         setNewRun: runAutomatically,
         setNewResource: baseSelectResource,
         setNewSuccessTriggers: successTriggers,
-        setNewUnSuccessTriggers: UnSuccessTriggers
+        setNewUnSuccessTriggers: UnSuccessTriggers,
+        resultData: []
       };
     case duplicateSelectQueryRoutine.SUCCESS:
       return {
@@ -232,6 +235,16 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         ...state,
         resultData: action.payload,
         isResultLoading: false
+      };
+    case runTriggerRoutine.FAILURE:
+      return {
+        ...state,
+        triggerMessage: action.payload
+      };
+    case runTriggerRoutine.SUCCESS:
+      return {
+        ...state,
+        triggerMessage: action.payload
       };
     case previewSelectQueryRoutine.TRIGGER:
       return {
