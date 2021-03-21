@@ -9,6 +9,7 @@ import {
 import { IQuery } from '../../../common/models/apps/querys';
 import { addQuery, deleteQuery, fetchQueries, updateQuery } from '../../../services/queryService';
 import { takeResourceTables } from '../../../services/resourceService';
+import { ITables } from '../../../common/models/resources/ITables';
 
 function* fetchQuery({ payload }: Routine<any>) {
   try {
@@ -66,7 +67,7 @@ function* watchDeleteQueryRequest() {
 
 function* takeRecourseData({ payload }: Routine<any>) {
   try {
-    const tables:Array<any> = yield call(takeResourceTables, payload);
+    const tables:ITables = yield call(takeResourceTables, payload);
     yield put(takeResourcesTableAndColumns.success(tables));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
