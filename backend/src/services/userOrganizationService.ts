@@ -14,6 +14,7 @@ import UserOrganizationRepository from '../data/repositories/userOrganizationRep
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { IInviteUserToOrganization } from '../common/models/userOrganization/IInviteUserToOrganization';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
+import { IOrganization } from '../common/models/organization/IOrganization';
 import { env } from '../env';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
@@ -26,6 +27,12 @@ export const getUserOrganization = async (organizationId: string, userId: string
   const userOrganization = await getCustomRepository(UserOrganizationRepository)
     .getUserOrganization(organizationId, userId);
   return formatResponse(userOrganization);
+};
+
+export const getUserOrganizations = async ({ id }: ITransportedUser): Promise<IOrganization[]> => {
+  const userOrganizations = await getCustomRepository(UserOrganizationRepository)
+    .getAllOrganizationsByUserId(id);
+  return userOrganizations.map(userOrganization => userOrganization.organization);
 };
 
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
