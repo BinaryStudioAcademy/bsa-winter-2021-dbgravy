@@ -93,7 +93,7 @@ export const takeResourceTable = async (resourceData: ICreateResource): Promise<
   );
     // eslint-disable-next-line camelcase
   const nameTables = Request.map((element: { table_name: string; }) => element.table_name);
-  const tablesAndColumns:any = {};
+  const tablesAndColumns:ITables = {};
   await Promise.all(nameTables.map(async (element: string) => {
     const tableColumn = await connection.query(
       `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='${element}'`

@@ -1,5 +1,5 @@
 export interface ITables {
-    tables: {
+    [tables:string]: {
         [key: string]: string[]
     }
 }

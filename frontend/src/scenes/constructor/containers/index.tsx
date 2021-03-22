@@ -14,7 +14,7 @@ import {
   saveSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
-  setNewConfirmRoutine, takeResourcesTableAndColumns
+  setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
@@ -141,6 +141,9 @@ const Constructor:React.FC<IProps> = ({ id }) => {
       dispatch(setNewConfirmRoutine.trigger(true));
     }
   };
+  function changeCode(e: string) {
+    dispatch(setNewCodeRoutine.trigger({ code: e }));
+  }
   function changeName(e:React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
@@ -228,7 +231,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
               <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
             </Form.Group>
             <Form.Label className={style.row} />
-            <QueryEditor tables={query.setSelectResourceTable} />
+            <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} />
             <Form.Label className={style.row} />
             <Form.Label className={style.row} />
             {
