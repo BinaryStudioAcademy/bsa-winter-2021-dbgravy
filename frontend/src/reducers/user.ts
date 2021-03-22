@@ -14,7 +14,6 @@ import {
   fetchUserOrganizationsRoutine,
   changeUserOrganizationRoutine
 } from '../containers/ProfilePopup/routines';
-import { addNewUserRoutine, fetchUserRoutine, loginUserRoutine, logotUserRoutine } from '../scenes/Auth/routines';
 import { IUser } from '../common/models/user/IUser';
 import { switchUserToOrganizationRoutine } from '../scenes/Settings/routines';
 import { IUserOrganization } from '../common/models/user/IUserOrganization';
