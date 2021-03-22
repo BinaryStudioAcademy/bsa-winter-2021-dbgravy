@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import style from './style.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectQueryRoutine, setWaiterQueryRoutine } from '../../routines';
+import { setSelectQueryRoutine, setWaiterQueryRoutine, takeResourcesTableAndColumns } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ITrigger } from '../../../../common/models/query/ITrigger';
 import { deepArray } from '../../../../common/helpers/arrayHelper';
@@ -30,6 +30,9 @@ const QueryBlock:FunctionComponent<IProps> = ({
     if (isDataChange && isTriggersChange) {
       const runTitle = runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
+      if (resourceId !== query.setNewResource?.id) {
+        dispatch(takeResourcesTableAndColumns.trigger(query.resources.find(element => element.id === resourceId)));
+      }
       dispatch(setSelectQueryRoutine.success({
         id, name, code, runAutomatically, triggers, showConfirm, runTitle, resourceId
       }));

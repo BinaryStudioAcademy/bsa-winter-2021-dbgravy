@@ -9,11 +9,16 @@ import Loader from '../Loader';
 import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 import { Routes } from '../../common/enums/Routes';
 import { Link } from 'react-router-dom';
+import SwitchOrganization from '../SwitchOrganization/SwitchOrganization';
+import { IBindingCallback1 } from '../../common/models/callback/IBindingCallback1';
 
 interface IProps {
   user: IUser,
-  organization?: IUserOrganization
+  organization?: IUserOrganization,
+  organizations: IUserOrganization[];
   fetchOrganization: (user?: IUser) => void,
+  fetchUserOrganizations: () => void;
+  changeUserOrganization: IBindingCallback1<string>;
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
   logout: () => void,
@@ -22,13 +27,25 @@ interface IProps {
 }
 
 const ProfilePopupInfo: React.FC<IProps> = (
-  { user, createOrganization, fetchOrganization, fullfill, logout, organization, isShow, setup }
+  { user,
+    createOrganization,
+    fetchOrganization,
+    fetchUserOrganizations,
+    changeUserOrganization,
+    fullfill,
+    logout,
+    organization,
+    organizations,
+    isShow,
+    setup }
 ) => {
   useEffect(() => {
     fetchOrganization(user);
+    fetchUserOrganizations();
   }, []);
 
   const [showCreator, setShowCreator] = useState(false);
+  const [showSwitcher, setShowSwitcher] = useState(false);
 
   const logoutUser = () => {
     logout();
@@ -38,7 +55,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     if (organization && organization.isLoading) {
       return (
         <div className={[styles.block, styles.loading].join(' ')}>
-          <Loader isLoading={organization.isLoading || false} isAbsolute={false} />
+          <Loader isLoading={organization.isLoading} isAbsolute={false} />
         </div>
       );
     }
@@ -79,6 +96,16 @@ const ProfilePopupInfo: React.FC<IProps> = (
       );
     }
 
+    if (showSwitcher) {
+      return (
+        <SwitchOrganization
+          setShow={setShowSwitcher}
+          organizations={organizations}
+          changeUserOrganization={changeUserOrganization}
+        />
+      );
+    }
+
     return (
       <div className={styles.container}>
         {isLoadFail()}
@@ -92,7 +119,12 @@ const ProfilePopupInfo: React.FC<IProps> = (
             <FontAwesomeIcon icon={faPlus} color="grey" />
             Create organization
           </span>
-          <span role="button">
+          <span
+            onClick={() => setShowSwitcher(true)}
+            role="button"
+            tabIndex={0}
+            onKeyPress={() => setShowSwitcher(true)}
+          >
             <FontAwesomeIcon icon={faSyncAlt} color="grey" />
             Switch Organization
           </span>

@@ -1,3 +1,4 @@
+import { ComponentType } from '../../enums/ComponentType';
 import { IButton } from './IButton';
 import { IInputText } from './IInputText';
 import { ITable } from './ITable';
@@ -10,6 +11,6 @@ export interface IDropItem {
   title: string,
   width: string,
   height:string
-  componentType: string,
+  componentType: ComponentType
   component: IComponent
 }

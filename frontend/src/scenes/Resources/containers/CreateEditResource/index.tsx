@@ -109,7 +109,7 @@ const CreateUpdateResource: React.FC<IProps> = (
         {
           showModal(isShow)
         }
-        <header className="pt-4">
+        <header>
           <h1>
             {
               id ? `Edit ${resource.name}` : 'Create Resource'
@@ -133,7 +133,7 @@ const CreateUpdateResource: React.FC<IProps> = (
             errors
           }) => (
 
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit} className={styles.body}>
               <Form.Group>
                 <Form.Label className={styles.requiredProperty}>Resource&#39;s type</Form.Label>
                 <Form.Control
