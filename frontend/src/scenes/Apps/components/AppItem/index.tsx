@@ -8,6 +8,7 @@ import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
 import UpdateApp from '../../containers/UpdateApp';
 import { Link } from 'react-router-dom';
+import DeleteModal from '../DeleteModal/index';
 
 interface IProps {
   app: IApps;
@@ -18,9 +19,19 @@ const AppItem: React.FC<IProps> = ({
   app, showEdit, deleteApp
 }) => {
   const [display, setDisplay] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const onEdit = () => {
     showEdit({ app, show: true });
     setDisplay(!display);
+  };
+
+  const handleCancelModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleSubmitModal = () => {
+    setShowDeleteModal(false);
+    deleteApp({ app });
   };
 
   return (
@@ -49,7 +60,7 @@ const AppItem: React.FC<IProps> = ({
             Edit
           </span>
           <span
-            onClick={() => deleteApp({ app })}
+            onClick={() => setShowDeleteModal(true)}
             role="button"
             onKeyPress={() => deleteApp({ app })}
             tabIndex={0}
@@ -64,6 +75,11 @@ const AppItem: React.FC<IProps> = ({
         </div>
         <UpdateApp />
       </div>
+      <DeleteModal
+        show={showDeleteModal}
+        cancel={handleCancelModal}
+        submit={handleSubmitModal}
+      />
     </div>
   );
 };
