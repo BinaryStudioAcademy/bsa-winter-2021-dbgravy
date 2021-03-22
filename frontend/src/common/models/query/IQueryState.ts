@@ -13,7 +13,9 @@ export interface IQueryState {
         selectQueryTriggers:Array<ITrigger>,
         runAutomatically: boolean,
         showConfirm: boolean,
-        resourceId:string
+        resourceId:string,
+        data?: any,
+        queryMessage: string
     },
     setNewCode:string,
     setSelectResourceTable:ITables,
@@ -29,5 +31,6 @@ export interface IQueryState {
     isLoading: boolean,
     isOpen:boolean,
     isDuplicate:boolean,
-    waitingQuery: IWaitingQuery
+    waitingQuery: IWaitingQuery,
+    isResultLoading: boolean
 }

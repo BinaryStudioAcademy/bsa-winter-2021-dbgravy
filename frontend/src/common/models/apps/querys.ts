@@ -8,5 +8,6 @@ export interface IQuery {
     resourceId:string,
     runAutomatically?:boolean,
     showConfirm?:boolean;
-    triggers:Array<ITrigger>|[]
+    triggers:Array<ITrigger>|[],
+    data?: any
 }

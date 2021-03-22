@@ -12,6 +12,8 @@ export interface IAppsState {
   isLoading: boolean,
   apps: Array<IApps>;
   currentlyApp: string;
+  setSelectAppName?:string;
+  setSelectApp?:IApps;
   editedApp?: {
     app?: IApps,
     name?: string,
