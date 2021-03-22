@@ -7,13 +7,14 @@ import { ITransportedResource } from '../common/models/resource/ITransportedReso
 import { ICreateResource } from '../common/models/resource/ICreateResource';
 import { IEditResource } from '../common/models/resource/IEditResource';
 import { ITables } from '../common/models/query/ITables';
+import { HttpStatusCode } from '../common/constants/http';
 
 export const getResources = async (user: ITransportedUser): Promise<ITransportedResource[]> => {
   const { currentOrganizationId } = user;
   const resources = await getCustomRepository(ResourceRepository)
     .getAllResourcesByOrganizationId(currentOrganizationId);
   if (!resources) {
-    throw new CustomError('Resources not found', 404);
+    throw new CustomError('Resources not found', HttpStatusCode.NOT_FOUND);
   }
   return extractTransportedResources(resources);
 };
@@ -22,7 +23,7 @@ export const checkResourceExistByNameByOrganizationId = async (name: string, org
   const resource = await getCustomRepository(ResourceRepository)
     .getResourceByNameByOrganizationId(name, organizationId);
   if (resource) {
-    throw new CustomError('Resource name already exists', 400);
+    throw new CustomError('Resource name already exists', HttpStatusCode.BAD_REQUEST);
   }
 };
 
@@ -49,7 +50,7 @@ export const addResource = async (resourceData: ICreateResource,
 export const getResourceById = async (id: string): Promise<ITransportedResource> => {
   const resource = await getCustomRepository(ResourceRepository).getResourceById(id);
   if (!resource) {
-    throw new CustomError('Resource not found', 404);
+    throw new CustomError('Resource not found', HttpStatusCode.NOT_FOUND);
   }
   return extractTransportedResource(resource);
 };
@@ -71,7 +72,7 @@ export const testResource = async (resourceData: ICreateResource): Promise<boole
     connection.close();
     return isConnected;
   } catch (error) {
-    throw new CustomError('Testing failed', 400);
+    throw new CustomError('Testing failed', HttpStatusCode.BAD_REQUEST);
   }
 };
 

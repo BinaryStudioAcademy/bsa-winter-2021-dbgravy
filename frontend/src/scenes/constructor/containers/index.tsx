@@ -231,7 +231,7 @@ const Constructor:React.FC<IProps> = ({ id }) => {
               <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
             </Form.Group>
             <Form.Label className={style.row} />
-            <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} />
+            <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
             <Form.Label className={style.row} />
             <Form.Label className={style.row} />
             {

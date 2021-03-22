@@ -6,6 +6,7 @@ import { IUserOrganization } from '../../common/models/userOrganization/IUserOrg
 import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
 import { Role } from '../../common/enums/Role';
+import { HttpStatusCode } from '../../common/constants/http';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
@@ -19,20 +20,33 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     'user.firstName',
     'user.lastName'
   ];
-  async addUserOrganization(userId: string, data: ICreateUserOrganization): Promise<IUserOrganization> {
-    const userOrganization = await this.findOne({ where: { userId, organizationId: data.organizationId } });
+
+  getAllOrganizationsByUserId(userId: string): Promise<IUserOrganization[]> {
+    const userOrganizations = this.createQueryBuilder('user_organization')
+      .where({ userId })
+      .innerJoinAndSelect('user_organization.organization', 'organization')
+      .select(['user_organization.id', 'organization.id', 'organization.name', 'organization.createdByUserId'])
+      .getMany();
+    return userOrganizations;
+  }
+
+  async addUserOrganization(
+    userId: string,
+    data: ICreateUserOrganization
+  ): Promise<IUserOrganization> {
+    const userOrganization = await this.findOne({
+      where: { userId, organizationId: data.organizationId }
+    });
     if (userOrganization) {
-      throw new CustomError('User already invited.', 400);
+      throw new CustomError('User already invited.', HttpStatusCode.BAD_REQUEST);
     }
     const { role, status } = data;
-    const userOrganizationData = this.create(
-      {
-        role,
-        status,
-        userId,
-        organizationId: data.organizationId
-      }
-    );
+    const userOrganizationData = this.create({
+      role,
+      status,
+      userId,
+      organizationId: data.organizationId
+    });
     const newUserOrganization = await userOrganizationData.save();
 
     const { id } = newUserOrganization;
@@ -55,22 +69,31 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
     return users;
   }
 
-  async getUserOrganization(organizationId: string, userId: string): Promise<IUserOrganization> {
+  async getUserOrganization(
+    organizationId: string,
+    userId: string
+  ): Promise<IUserOrganization> {
     const response = await this.createQueryBuilder('user_organization')
       .select(this.select)
       .where('user_organization.userId = :userId', { userId })
-      .andWhere('user_organization.organizationId = :organizationId', { organizationId })
+      .andWhere('user_organization.organizationId = :organizationId', {
+        organizationId
+      })
       .leftJoin('user_organization.user', 'user')
       .getOne();
 
     return response;
   }
 
-  async updateUserOrganization(data: IUpdateUserOrganization): Promise<IUserOrganization> {
+  async updateUserOrganization(
+    data: IUpdateUserOrganization
+  ): Promise<IUserOrganization> {
     const { userId, organizationId } = data;
-    const userOrganization = await this.findOne({ where: { userId, organizationId } });
+    const userOrganization = await this.findOne({
+      where: { userId, organizationId }
+    });
     if (!userOrganization) {
-      throw new CustomError('User organization not found.', 404);
+      throw new CustomError('User organization not found.', HttpStatusCode.NOT_FOUND);
     }
     const { id } = userOrganization;
     await this.update(id, data);
@@ -82,8 +105,13 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
 
     return response;
   }
-  async getOrganizationUser(userId: string, organizationId: string): Promise<UserOrganization> {
-    const userOrganization: UserOrganization = await this.findOne({ where: { userId, organizationId } });
+  async getOrganizationUser(
+    userId: string,
+    organizationId: string
+  ): Promise<UserOrganization> {
+    const userOrganization: UserOrganization = await this.findOne({
+      where: { userId, organizationId }
+    });
     return userOrganization;
   }
 
@@ -97,11 +125,15 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
         userId,
         organizationId,
         status
-      } });
+      }
+    });
     return userOrganization;
   }
 
-  async addUserOrganizationOwner(userId: string, organizationId: string): Promise<UserOrganization> {
+  async addUserOrganizationOwner(
+    userId: string,
+    organizationId: string
+  ): Promise<UserOrganization> {
     const userOrganization = {
       userId,
       organizationId,

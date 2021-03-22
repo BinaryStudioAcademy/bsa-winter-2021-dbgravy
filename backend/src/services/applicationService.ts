@@ -6,12 +6,13 @@ import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { extractTransportedApp, extractTransportedApps } from '../common/helpers/appExtractorHelper';
 import { ITransportedApplication } from '../common/models/application/ITransportedApplication';
 import { getUserOrganization } from './userOrganizationService';
+import { HttpStatusCode } from '../common/constants/http';
 
 export const checkAppExistByNameByOrganizationId = async (name: string, organizationId: string): Promise<void> => {
   const app = await getCustomRepository(ApplicationRepository)
     .getAppByNameByOrganizationId(name, organizationId);
   if (app) {
-    throw new CustomError('App name already exists', 400);
+    throw new CustomError('App name already exists', HttpStatusCode.BAD_REQUEST);
   }
 };
 
@@ -28,7 +29,7 @@ export const getApps = async (user: ITransportedUser): Promise<ITransportedAppli
 export const getAppById = async (id: string): Promise<ITransportedApplication> => {
   const app = await getCustomRepository(ApplicationRepository).getAppById(id);
   if (!app) {
-    throw new CustomError('App not found', 404);
+    throw new CustomError('App not found', HttpStatusCode.NOT_FOUND);
   }
   return extractTransportedApp(app);
 };

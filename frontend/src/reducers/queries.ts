@@ -33,7 +33,7 @@ const initialState:IQueryState = {
   setNewConfirm: false,
   setNewSuccessTriggers: [],
   setNewUnSuccessTriggers: [],
-  setSelectResourceTable: {},
+  setSelectResourceTable: { tables: {} },
   setNewResource: {
     id: '1',
     createdAt: undefined,

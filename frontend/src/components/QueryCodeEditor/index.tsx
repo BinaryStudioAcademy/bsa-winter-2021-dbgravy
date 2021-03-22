@@ -9,16 +9,14 @@ import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/sql-hint';
 import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/hint/show-hint.css';
-import { useSelector } from 'react-redux';
-import { IAppState } from '../../common/models/store/IAppState';
 
 interface IProps {
   tables:ITables
   changeCode:(e:string) => void
+  codeValue:string
 }
 
-const QueryEditor:React.FC<IProps> = ({ tables, changeCode }) => {
-  const query = useSelector((state: IAppState) => state.app.qur);
+const QueryEditor:React.FC<IProps> = ({ tables, changeCode, codeValue }) => {
   const autoComplete = (cm:any) => {
     const autocomlete = 'autocomlete';
     const hintOptions = {
@@ -31,7 +29,7 @@ const QueryEditor:React.FC<IProps> = ({ tables, changeCode }) => {
   return (
     <div>
       <CodeMirror
-        value={query.setNewCode}
+        value={codeValue}
         options={
             {
               lineNumbers: true,
