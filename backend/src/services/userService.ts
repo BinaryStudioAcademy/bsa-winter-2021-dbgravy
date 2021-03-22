@@ -4,6 +4,9 @@ import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { User } from '../data/entities/User';
 import { OrganizationRepository } from '../data/repositories/organizationRepository';
 import { UserRepository } from '../data/repositories/userRepository';
+import { CustomError } from '../common/models/error/CustomError';
+import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
+import { IUserOrganization } from '../common/models/userOrganization/IOrganizationUser';
 
 export const getUsers = async (): Promise<ITransportedUser[]> => {
   const userRepository = getCustomRepository(UserRepository);
@@ -17,17 +20,28 @@ export const getUserById = async (id: string): Promise<ITransportedUser> => {
   return extractTransportedUser(user);
 };
 
-export const switchUserOrganization = async (user: User, id: string) => {
-  const userRepository = getCustomRepository(UserRepository);
-  const organizationRepository = getCustomRepository(OrganizationRepository);
+export const switchUserOrganization = async (
+  organizationId: string,
+  user: ITransportedUser
+): Promise<IUserOrganization> => {
+  const organization = await getCustomRepository(OrganizationRepository).getById(organizationId);
+  if (!organization) {
+    throw new CustomError('Organization not found', 404);
+  }
+  const { currentOrganizationId } = await getCustomRepository(UserRepository)
+    .updateCurrentOrganizationId(user.id, organizationId);
 
-  const nextUserOrganization = await organizationRepository.getById(id);
+  const userOrganization = await getCustomRepository(
+    UserOrganizationRepository
+  ).getOrganizationUser(user.id, organizationId);
 
-  const updatedUser = {
-    ...user,
-    currentOrganization: nextUserOrganization
-  };
+  if (!userOrganization) {
+    throw new CustomError('There is no user in organization', 404);
+  }
 
-  await userRepository.updateUser(updatedUser as User);
-  return nextUserOrganization;
+  const { role } = userOrganization;
+  const { name } = organization;
+
+  const response: IUserOrganization = { role, name, id: currentOrganizationId };
+  return response;
 };
