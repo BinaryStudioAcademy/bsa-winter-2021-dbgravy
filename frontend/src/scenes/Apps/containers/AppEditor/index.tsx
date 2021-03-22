@@ -12,7 +12,7 @@ const AppEditor: React.FC<any> = () => {
   return (
     <div className={styles.appEditor}>
       <DndProvider backend={HTML5Backend}>
-        <Editor />
+        <Editor appId={id} />
       </DndProvider>
       <Constructor id={id} />
     </div>
