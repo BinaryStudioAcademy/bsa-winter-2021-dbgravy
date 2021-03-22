@@ -4,6 +4,7 @@ import { addAppRoutine, deleteAppRoutine, editAppRoutine, fetchAppRoutine, showE
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { IApps } from '../../../common/models/apps/IApps';
+import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
 function* fetchApps(): Routine<any> {
   try {
@@ -11,6 +12,7 @@ function* fetchApps(): Routine<any> {
     yield put(fetchAppRoutine.success(apps));
   } catch (error) {
     yield put(fetchAppRoutine.failure(error));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -22,8 +24,10 @@ function* addApp({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(appService.addApp, payload);
     yield put(fetchAppRoutine.trigger());
+    successToastMessage('App added successfully');
   } catch (error) {
     yield put(addAppRoutine.failure(error));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -35,8 +39,10 @@ function* deleteApp() {
     yield call(appService.deleteApp, app);
     yield put(deleteAppRoutine.success());
     yield put(fetchAppRoutine.trigger());
-  } catch {
+    successToastMessage('App deleted successfully');
+  } catch (error) {
     yield put(deleteAppRoutine.failure({ app }));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -46,8 +52,10 @@ function* editApp() {
     const response: IApps = yield call(appService.editApp, app, { name });
     yield put(editAppRoutine.success(response));
     yield put(showEditRoutine.trigger(false));
-  } catch {
+    successToastMessage('App edited successfully');
+  } catch (error) {
     yield put(editAppRoutine.failure({ app }));
+    errorToastMessage(error.msg);
   }
 }
 
