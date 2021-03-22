@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { IUpdateComponent } from '../../../../common/models/editor/IUpdateComponent';
+import { ComponentType } from '../../../../common/enums/ComponentType';
 
 interface IEditorProps {
   appId: string,
@@ -23,7 +24,7 @@ const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponent
     fetchComponents({ appId });
   }, []);
 
-  const [active, setActive] = useState('insert');
+  const [active, setActive] = useState<'inspect' | 'insert'>('insert');
   const [selected, setSelected] = useState<IDropItem | null>(null);
   const addElement = (component: IDropItem) => {
     addComponent({ appId, component });
@@ -79,21 +80,21 @@ const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponent
                     itemTitle="Text Input"
                     itemDesc="Control other components or queries with text."
                     addElement={addElement}
-                    itemType="input"
+                    itemType={ComponentType.input}
                   />
                   <Item
                     itemIcon={faTable}
                     itemTitle="Table"
                     itemDesc="Display tabular data with pagination."
                     addElement={addElement}
-                    itemType="table"
+                    itemType={ComponentType.table}
                   />
                   <Item
                     itemIcon={faWindowMinimize}
                     itemTitle="Button"
                     itemDesc="Trigger actions like run queries."
                     addElement={addElement}
-                    itemType="button"
+                    itemType={ComponentType.button}
                   />
                 </>
               )

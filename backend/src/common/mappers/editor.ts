@@ -1,3 +1,6 @@
+import { ComponentType } from '../enums/ComponentType';
+import { IResponse } from '../models/editor/IResponse';
+
 interface IElement {
   id: string,
   name: string,
@@ -8,7 +11,7 @@ interface IElement {
 }
 
 export const formatResponse = (components: IElement[]) => {
-  let response = {};
+  let response = <IResponse>{};
   components.forEach((element: IElement) => {
     const {
       id,
@@ -20,18 +23,19 @@ export const formatResponse = (components: IElement[]) => {
     } = element;
 
     let component = {};
-    let componentType = '';
-    switch (name) {
-      case 'Input':
+    let componentType: ComponentType;
+    const compType = name.slice(0, -1);
+    switch (compType) {
+      case 'input':
         component = {
           type: 'text',
           label: 'Name',
           defaultValue: '',
           placeholder: ''
         };
-        componentType = 'input';
+        componentType = ComponentType.input;
         break;
-      case 'Table':
+      case 'table':
         component = {
           data: [{
             id: 1,
@@ -60,14 +64,14 @@ export const formatResponse = (components: IElement[]) => {
             sales: 243
           }]
         };
-        componentType = 'table';
+        componentType = ComponentType.table;
         break;
-      case 'Button':
+      case 'button':
         component = {
           text: '',
           color: ''
         };
-        componentType = 'button';
+        componentType = ComponentType.button;
         break;
       default:
         component = {};
@@ -86,5 +90,6 @@ export const formatResponse = (components: IElement[]) => {
       }
     };
   });
+
   return response;
 };

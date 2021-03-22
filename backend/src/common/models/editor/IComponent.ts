@@ -7,7 +7,7 @@ type IComponentType = IInputText | ITable | IButton;
 export interface IComponent {
   top: number,
   left: number,
-  title: string,
+  name: string,
   width: string,
   height:string
   componentType: string,

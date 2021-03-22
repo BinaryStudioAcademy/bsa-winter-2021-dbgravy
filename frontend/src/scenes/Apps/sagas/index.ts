@@ -86,7 +86,7 @@ function* watchFetchComponents() {
 function* addComponent({ payload }: Routine<any>) {
   try {
     yield call(appService.addComponent, payload);
-    yield call(fetchComponents, { payload: { appId: payload.appId } });
+    yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {
     yield put(addComponentRoutine.failure(error));
   }
@@ -99,7 +99,7 @@ function* watchAddComponent() {
 function* updateComponent({ payload }: Routine<any>) {
   try {
     yield call(appService.updateComponent, payload);
-    // yield call(fetchComponents, { payload: { appId: payload.appId } });
+    yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {
     yield put(updateComponentRoutine.failure(error));
   }

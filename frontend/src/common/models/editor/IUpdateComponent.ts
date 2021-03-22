@@ -1,6 +1,7 @@
 import { IButton } from './IButton';
 import { IInputText } from './IInputText';
 import { ITable } from './ITable';
+import { ComponentType } from '../../enums/ComponentType';
 
 type IComponent = IInputText | ITable | IButton;
 
@@ -11,6 +12,6 @@ export interface IUpdateComponent {
   title?: string,
   width?: string,
   height?:string
-  componentType?: string,
+  componentType?: ComponentType
   component?: IComponent
 }

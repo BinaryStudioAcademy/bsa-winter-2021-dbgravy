@@ -7,6 +7,7 @@ import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
 import { IInputText } from '../../../../common/models/editor/IInputText';
+import { ComponentType } from '../../../../common/enums/ComponentType';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
@@ -54,9 +55,14 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
     [items, setItems]
   );
 
+  const getId = (type: ComponentType) => {
+    const components = Object.keys(items).filter(el => items[el].componentType === type);
+    return components.length + 1;
+  };
+
   const [, drop] = useDrop(
     () => ({
-      accept: ['table', 'input', 'button'],
+      accept: [ComponentType.button, ComponentType.table, ComponentType.input],
       drop(item: IDragItem, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
         const clientOffset = monitor.getSourceClientOffset() as XYCoord;
@@ -68,16 +74,20 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
         if (item.id) {
           updateElement({ id: item.id, left, top });
         }
+        let id: number;
         switch (item.type) {
-          case 'input':
-            setItemType('input');
-            return { key: 'input', left: l, top: t };
-          case 'table':
-            setItemType('table');
-            return { key: 'table', left: l, top: t };
-          case 'button':
-            setItemType('button');
-            return { key: 'button', left: l, top: t };
+          case ComponentType.input:
+            setItemType(ComponentType.input);
+            id = getId(ComponentType.input);
+            return { name: `${ComponentType.input}${id}`, left: l, top: t };
+          case ComponentType.table:
+            setItemType(ComponentType.table);
+            id = getId(ComponentType.table);
+            return { name: `${ComponentType.table}${id}`, left: l, top: t };
+          case ComponentType.button:
+            setItemType(ComponentType.button);
+            id = getId(ComponentType.button);
+            return { name: `${ComponentType.button}${id}`, left: l, top: t };
           default:
             return undefined;
         }
@@ -107,10 +117,10 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
                 (key === selectedItem) ? `${styles.label} ${styles.activeLabel}` : `${styles.label}`
               }
             >
-              {componentType}
+              {title}
             </span>
             {
-              (componentType === 'input') && (
+              (componentType === ComponentType.input) && (
                 <Form style={{ display: 'flex', position: 'relative' }}>
                   <Form.Label
                     style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
@@ -127,7 +137,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
               )
             }
             {
-              (componentType === 'table') && (
+              (componentType === ComponentType.table) && (
                 <Table striped bordered hover size="sm" style={{ height: '100%', width: '100%' }}>
                   <thead>
                     <tr>
@@ -160,7 +170,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
               )
             }
             {
-              (componentType === 'button') && (
+              (componentType === ComponentType.button) && (
                 <Button
                   as="input"
                   type="button"

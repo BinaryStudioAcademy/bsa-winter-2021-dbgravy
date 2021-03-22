@@ -3,18 +3,19 @@ import styles from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDrag } from 'react-dnd';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { ComponentType } from '../../../../common/enums/ComponentType';
 
 export interface IItemProps {
   itemIcon: IconDefinition,
   addElement: Function,
   itemTitle: string,
   itemDesc: string,
-  itemType: string
+  itemType: ComponentType
 
 }
 
 interface IDropResult {
-  key: string,
+  name: string,
   left: string,
   top: string
 }
@@ -26,17 +27,17 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<IDropResult>();
       if (dropResult) {
-        const { left, top } = dropResult;
+        const { left, top, name } = dropResult;
         switch (itemType) {
-          case 'input':
+          case ComponentType.input:
             addElement(
               {
                 top,
                 left,
-                title: 'Input',
+                name,
                 width: '300px',
                 height: '60px',
-                componentType: 'input',
+                componentType: ComponentType.input,
                 component: {
                   type: 'text',
                   label: 'Name',
@@ -46,15 +47,15 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
               }
             );
             break;
-          case 'table':
+          case ComponentType.table:
             addElement(
               {
                 top,
                 left,
-                title: 'Table',
+                name,
                 height: '400px',
                 width: '600px',
-                componentType: 'table',
+                componentType: ComponentType.table,
                 component: {
                   data: [{
                     id: 1,
@@ -86,15 +87,15 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
               }
             );
             break;
-          case 'button':
+          case ComponentType.button:
             addElement(
               {
                 top,
                 left,
-                title: 'Button',
+                name,
                 height: '60px',
                 width: '200px',
-                componentType: 'button',
+                componentType: ComponentType.button,
                 component: {
                   text: '',
                   color: ''
