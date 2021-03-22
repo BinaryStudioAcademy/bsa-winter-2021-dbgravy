@@ -15,7 +15,6 @@ import Resources from '../../scenes/Routing/index';
 import Loader from '../../components/Loader';
 import Home from '../Home/index';
 import NotFound from '../../scenes/NotFound/components/NotFound';
-import Preview from '../../components/Preview/index';
 import AppEditor from '../../scenes/Apps/containers/AppEditor/index';
 
 interface IProps {
@@ -45,7 +44,6 @@ const Routing: React.FC<IProps> = ({
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute exact path={Routes.AppEditor} component={AppEditor} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
-        <PrivateRoute path="/test" component={Preview} />
         <Route path={Routes.Invite} component={Home} />
         <PublicRoute path="*" component={NotFound} />
       </Switch>

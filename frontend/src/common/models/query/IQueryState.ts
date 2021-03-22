@@ -12,7 +12,9 @@ export interface IQueryState {
         selectQueryTriggers:Array<ITrigger>,
         runAutomatically: boolean,
         showConfirm: boolean,
-        resourceId:string
+        resourceId:string,
+        data?: any,
+        queryMessage: string
     },
     setNewCode:string,
     resources: Array<IResource>,
@@ -28,8 +30,5 @@ export interface IQueryState {
     isOpen:boolean,
     isDuplicate:boolean,
     waitingQuery: IWaitingQuery,
-    resultData: any,
-    isResultLoading: boolean,
-    triggerMessage: string,
-    queryMessage: string
+    isResultLoading: boolean
 }

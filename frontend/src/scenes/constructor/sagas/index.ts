@@ -60,7 +60,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
       if (fulfilledQueries.length === 0) {
         yield put(runSelectQueryRoutine.success({ resultData, name }));
       } else {
-        yield put(runTriggerRoutine.success(`${name} run successfully`));
+        yield put(runTriggerRoutine.success({ resultData, name }));
       }
       if (triggers.length !== 0) {
         fulfilledQueries.push(id);

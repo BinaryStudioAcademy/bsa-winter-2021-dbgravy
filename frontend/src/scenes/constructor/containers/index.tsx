@@ -66,7 +66,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     }
   };
 
-  const isEmptyData = query.resultData.length === 0;
+  const isEmptyData = query.selectQuery.data.length === 0;
 
   const runQuery = (): void => {
     dispatch(runSelectQueryRoutine.trigger({
@@ -220,11 +220,11 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
   useEffect(() => {
-    if (query.queryMessage.length !== 0) {
+    if (query.selectQuery.queryMessage.length !== 0) {
       setShowQuery(true);
       setTimeout(() => setShowQuery(false), 1000);
     }
-  }, [query.queryMessage]);
+  }, [query.selectQuery.queryMessage]);
   return (
     <Loader isLoading={query.isLoading}>
       <Form className={style.wrapper} onClick={closeNameEditor}>
@@ -340,7 +340,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               <div style={{ padding: '20px' }}>
                 <Table
                   key={query.isResultLoading.toString()}
-                  values={query.resultData}
+                  values={[...query.selectQuery.data]}
                   columnWidth={300}
                   rowHeight={70}
                 />
@@ -358,7 +358,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isCancel={handleCancelConfirmModal}
         isSubmit={handleSubmitConfirmModal}
       />
-      <QueryResult show={showQuery} message={query.queryMessage} />
+      <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
     </Loader>
   );
 };

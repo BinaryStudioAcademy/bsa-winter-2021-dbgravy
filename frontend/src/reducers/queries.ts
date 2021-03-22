@@ -30,7 +30,9 @@ const initialState: IQueryState = {
     selectQueryTriggers: [],
     runAutomatically: false,
     showConfirm: false,
-    resourceId: ''
+    resourceId: '',
+    data: [],
+    queryMessage: ''
   },
   setNewCode: '',
   runAutomaticallyTitle: 'Run query automatically when inputs change',
@@ -66,10 +68,7 @@ const initialState: IQueryState = {
     showConfirm: false
   },
   isLoading: true,
-  isResultLoading: true,
-  resultData: [],
-  triggerMessage: '',
-  queryMessage: ''
+  isResultLoading: true
 };
 
 export const queries = (state = initialState, action: Routine<any>): IQueryState => {
@@ -106,7 +105,9 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryTriggers: action.payload[0].triggers,
           showConfirm: action.payload[0].showConfirm,
           runAutomatically: action.payload[0].runAutomatically,
-          resourceId: action.payload[0].resourceId
+          resourceId: action.payload[0].resourceId,
+          data: [],
+          queryMessage: ''
         },
         setNewCode: action.payload[0].code,
         setNewName: action.payload[0].name,
@@ -139,7 +140,9 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryTriggers: triggers,
           resourceId,
           showConfirm,
-          runAutomatically
+          runAutomatically,
+          queryMessage: '',
+          data: []
         },
         runAutomaticallyTitle: action.payload.runTitle,
         isOpen: action.payload.isOpen,
@@ -149,8 +152,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         setNewRun: runAutomatically,
         setNewResource: baseSelectResource,
         setNewSuccessTriggers: successTriggers,
-        setNewUnSuccessTriggers: UnSuccessTriggers,
-        resultData: []
+        setNewUnSuccessTriggers: UnSuccessTriggers
       };
     case duplicateSelectQueryRoutine.SUCCESS:
       return {
@@ -230,36 +232,68 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         isResultLoading: true,
-        queryMessage: ''
+        selectQuery: {
+          ...state.selectQuery,
+          queryMessage: ''
+        }
       };
     case runSelectQueryRoutine.SUCCESS:
       return {
         ...state,
-        resultData: action.payload.resultData,
-        isResultLoading: false,
-        queryMessage: `${action.payload.name} successfully run`
+        queriesApp: state.queriesApp.map(query => {
+          if (query.name === action.payload.name) {
+            return {
+              ...query,
+              data: action.payload.resultData
+            };
+          }
+          return query;
+        }),
+        selectQuery: {
+          ...state.selectQuery,
+          data: action.payload.resultData,
+          queryMessage: `${action.payload.name} successfully run`
+        },
+        isResultLoading: false
       };
     case runTriggerRoutine.FAILURE:
       return {
         ...state,
-        triggerMessage: action.payload,
-        queryMessage: `${action.payload} run failed`
+        selectQuery: {
+          ...state.selectQuery,
+          queryMessage: `${action.payload} run failed`
+        }
       };
     case runTriggerRoutine.SUCCESS:
       return {
         ...state,
-        triggerMessage: action.payload
+        queriesApp: state.queriesApp.map(query => {
+          if (query.name === action.payload.name) {
+            return {
+              ...query,
+              data: action.payload.resultData
+            };
+          }
+          return query;
+        })
       };
     case previewSelectQueryRoutine.TRIGGER:
       return {
         ...state,
         isLoading: false,
-        isResultLoading: true
+        isResultLoading: true,
+        selectQuery: {
+          ...state.selectQuery,
+          data: []
+        }
       };
     case previewSelectQueryRoutine.SUCCESS:
       return {
         ...state,
-        resultData: action.payload,
+        selectQuery: {
+          ...state.selectQuery,
+          data: action.payload
+        },
         isLoading: false,
         isResultLoading: false
       };
