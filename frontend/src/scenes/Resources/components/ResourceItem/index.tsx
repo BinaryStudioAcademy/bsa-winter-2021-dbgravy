@@ -36,6 +36,7 @@ const ResourceItem: React.FC<IProps> = ({
           <span
             onClick={() => remove({ resource })}
             role="button"
+            className={styles.action}
             onKeyPress={() => remove({ resource })}
             tabIndex={0}
           >

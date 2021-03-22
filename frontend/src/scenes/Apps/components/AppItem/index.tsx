@@ -43,6 +43,7 @@ const AppItem: React.FC<IProps> = ({
           <span
             onClick={() => onEdit()}
             role="button"
+            className={styles.action}
             onKeyPress={() => onEdit()}
             tabIndex={0}
           >
@@ -51,13 +52,14 @@ const AppItem: React.FC<IProps> = ({
           <span
             onClick={() => deleteApp({ app })}
             role="button"
+            className={styles.delete}
             onKeyPress={() => deleteApp({ app })}
             tabIndex={0}
           >
             Delete
           </span>
-          <span role="button">
-            <Link to={`/app/editor/${app.id}`}>
+          <span role="button" className={styles.action}>
+            <Link to={`/app/editor/${app.id}`} className={styles['app-editor']}>
               App Editor
             </Link>
           </span>

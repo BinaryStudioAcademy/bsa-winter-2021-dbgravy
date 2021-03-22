@@ -4,21 +4,32 @@
   display: none;
   flex-direction: column;
   background-color: #fff;
-  box-shadow: 1px 1px 9px -1px rgba(0,0,0,0.41);
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
   padding: 10px;
   border-radius: 5px;
   margin-top: 5px;
+
+  .action:focus,
+  .action:active,
+  .action:hover {
+    text-decoration: underline;
+    outline: none;
+  }
 
   span {
     cursor: pointer;
     margin-bottom: 3px;
     font-size: 15px;
 
-    .linklike:hover, .linklike:visited, .linklike:link, .linklike:active
-    {
-      color: #000;
-      text-decoration: none;
-      border: none;
+    .linklike {
+      color: #2e2e2e;
+
+      &:hover,
+      &u:active {
+        color: #000;
+        text-decoration: underline;
+        border: none;
+      }
     }
   }
 
@@ -31,4 +42,3 @@
 .none {
   display: flex;
 }
-
