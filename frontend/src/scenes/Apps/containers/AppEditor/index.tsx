@@ -89,7 +89,7 @@ const AppEditor: React.FC<any> = () => {
         </Nav>
         <Nav>
           <Button onClick={changeStatusBottom}>
-            <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.goToHome}>
+            <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
               Preview
             </NavLink>
           </Button>
