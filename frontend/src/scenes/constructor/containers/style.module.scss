@@ -167,3 +167,10 @@ a.delete:hover{
   margin-left: 20px;
   margin-bottom: 5px;
 }
+
+.table-wrp {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 400px;
+}

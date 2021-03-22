@@ -33,4 +33,8 @@ export class TriggerRepository extends Repository<Trigger> {
     await this.create(newTriggers);
     await this.save(newTriggers);
   }
+  async getTriggersByQueryId(queryId: string): Promise<Trigger[]> {
+    const triggers: Trigger[] = await this.find({ where: { queryId } });
+    return triggers;
+  }
 }
