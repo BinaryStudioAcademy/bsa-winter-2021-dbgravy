@@ -46,7 +46,7 @@ const AppItem: React.FC<IProps> = ({
             onKeyPress={() => onEdit()}
             tabIndex={0}
           >
-            Edit
+            Rename
           </span>
           <span
             onClick={() => deleteApp({ app })}
