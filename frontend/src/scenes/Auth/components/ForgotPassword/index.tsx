@@ -5,7 +5,7 @@ import { IForgotPasswordInput } from '../../../../common/models/auth/IForgotPass
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
 import forgotPasswordSchema from '../../../../common/models/formik/forgotPasswordSchema';
 import THandleForgotPassword from '../../../../common/models/auth/THandleForgotPassword';
-import initialValuesForgotPassword from '../../../../common/models/formik/initialValuesForgotPassword';
+import TForgotPassword from '../../../../common/models/auth/TForgotPassword';
 
 import styles from './styles.module.scss';
 
@@ -13,9 +13,13 @@ interface IProps {
   forgotPassword: IBindingCallback1<IForgotPasswordInput>;
 }
 
+const initialValuesForgotPassword: TForgotPassword = {
+  email: ''
+};
+
 const ForgotPassword: FC<IProps> = ({ forgotPassword }) => {
-  const handleForgotPassword: THandleForgotPassword = async ({ email }, formikHelpers) => {
-    await forgotPassword({ email });
+  const handleForgotPassword: THandleForgotPassword = ({ email }, formikHelpers) => {
+    forgotPassword({ email });
     formikHelpers.setSubmitting(false);
   };
 

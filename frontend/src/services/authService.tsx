@@ -40,9 +40,9 @@ export const removeToken = async (token: string | null) => {
   return response;
 };
 
-export const forgotPassword = (forgotpassword: IForgotPasswordInput) => api.post(
-  '/api/auth/forgotpass',
-  forgotpassword
+export const forgotPassword = (payload: IForgotPasswordInput) => api.post(
+  '/api/auth/forgot-pass',
+  payload
 );
 
 interface IResetPassword {
@@ -50,4 +50,7 @@ interface IResetPassword {
   token: string;
 }
 
-export const resetPassword = (payload: IResetPassword) => api.post('/api/auth/resetpass', payload);
+export const resetPassword = (payload: IResetPassword) => api.post(
+  '/api/auth/reset-pass',
+  payload
+);

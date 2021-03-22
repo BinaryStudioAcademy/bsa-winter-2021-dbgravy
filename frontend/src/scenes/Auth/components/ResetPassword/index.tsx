@@ -9,7 +9,7 @@ import { IResetPasswordCallback } from '../../../../common/models/auth/IResetPas
 import { Routes } from '../../../../common/enums/Routes';
 import resetPasswordSchema from '../../../../common/models/formik/resetPasswordSchema';
 import { THandleResetPassword } from '../../../../common/models/auth/THandleResetPassword';
-import initialValuesResetPassword from '../../../../common/models/formik/initialValuesResetPassword';
+import { IResetPassword } from '../../../../common/models/auth/IResetPassword';
 
 import styles from './styles.module.scss';
 
@@ -18,12 +18,17 @@ interface IProps {
   token: string
 }
 
+const initialValuesResetPassword: IResetPassword = {
+  password: '',
+  confirmPassword: ''
+};
+
 const ResetPassword: FC<IProps> = ({ resetPassword, token }) => {
   const history = useHistory<string>();
   const [isPassword, setPassword] = useState(true);
   const [isConfirmPassword, setConfirmPassword] = useState(true);
-  const handleResetPassword: THandleResetPassword = async ({ password }) => {
-    await resetPassword({ token, password });
+  const handleResetPassword: THandleResetPassword = ({ password }) => {
+    resetPassword({ token, password });
     history.push(Routes.SignIn);
   };
 

@@ -1,10 +1,8 @@
 import * as Yup from 'yup';
+import { email } from './ValidationSchemas';
 
 const forgotPasswordSchema = Yup.object({
-  email: Yup
-    .string()
-    .email('You entered incorrectly email')
-    .required('This field is required.')
+  email
 });
 
 export default forgotPasswordSchema;
