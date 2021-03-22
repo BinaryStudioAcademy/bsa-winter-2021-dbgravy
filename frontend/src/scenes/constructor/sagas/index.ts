@@ -22,6 +22,7 @@ import {
   runQuery,
   previewQuery
 } from '../../../services/queryService';
+import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
 const query = (state: IAppState) => state.app.qur.queriesApp;
 
@@ -32,6 +33,7 @@ function* fetchQuery({ payload }: Routine<any>) {
     yield put(openQueryRoutine.success(queries));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 
@@ -43,8 +45,10 @@ function* saveQuery({ payload }: Routine<any>): Routine<any> {
   try {
     const queries: IQuery = yield call(addQuery, payload);
     yield put(duplicateSelectQueryRoutine.success(queries));
+    successToastMessage('Query saved successfully');
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 
@@ -128,6 +132,7 @@ function* previewSelectedQuery({ payload }: Routine<any>): Routine<any> {
     yield put(previewSelectQueryRoutine.success(resultData));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 
@@ -139,8 +144,10 @@ function* updateQueryData({ payload }: Routine<any>) {
   try {
     const queries: Array<IQuery> = yield call(updateQuery, payload);
     yield put(fetchQueryRoutine.success(queries));
+    successToastMessage('Query updated successfully');
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 
@@ -153,8 +160,10 @@ function* deleteSelectQuery({ payload }: Routine<any>) {
     const queries: Array<IQuery> = yield call(deleteQuery, payload);
     yield put(fetchQueryRoutine.success(queries));
     yield put(openQueryRoutine.success(queries));
+    successToastMessage('Query deleted successfully');
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 
@@ -168,6 +177,7 @@ function* takeRecourseData({ payload }: Routine<any>) {
     yield put(takeResourcesTableAndColumns.success(tables));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
+    errorToastMessage(e.message);
   }
 }
 

@@ -17,6 +17,7 @@ import { logotUserRoutine } from '../../scenes/Auth/routines';
 import { removeToken } from '../../services/authService';
 import { clearStorage, getRefreshToken } from '../../common/helpers/storageHelper';
 import { Routine } from 'redux-saga-routines';
+import { errorToastMessage } from '../../common/helpers/toastMessageHelper';
 
 function* watchFetchUserOrganization() {
   yield takeEvery(fetchOrgInfoRoutine.TRIGGER, fetchUserOrganization);
@@ -31,8 +32,9 @@ function* fetchUserOrganization() {
       fetchOrganization, user.id || '', user.organizationId || ''
     );
     yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
-  } catch {
+  } catch (error) {
     yield put(fetchOrgInfoRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -40,8 +42,9 @@ function* fetchUserOrganizations() {
   try {
     const response: IUserOrganization = yield call(fetchOrganizations);
     yield put(fetchUserOrganizationsRoutine.success(response));
-  } catch {
+  } catch (error) {
     yield put(fetchUserOrganizationsRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -62,8 +65,9 @@ function* createOrganization() {
     } else {
       yield put(createOrganizationRoutine.failure({ user }));
     }
-  } catch {
+  } catch (error) {
     yield put(createOrganizationRoutine.failure({ user }));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -71,8 +75,9 @@ function* changeUserOrganization({ payload }: Routine<any>): Routine<any> {
   try {
     const response: IUserOrganization = yield call(changeCurrentUserOrganization, payload);
     yield put(changeUserOrganizationRoutine.success(response));
-  } catch {
+  } catch (error) {
     yield put(changeUserOrganizationRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -82,9 +87,10 @@ function* logout() {
     yield removeToken(token);
     yield call(clearStorage);
     yield put(logotUserRoutine.success());
-  } catch {
+  } catch (error) {
     yield call(clearStorage);
     yield put(logotUserRoutine.success());
+    errorToastMessage(error.msg);
   }
 }
 

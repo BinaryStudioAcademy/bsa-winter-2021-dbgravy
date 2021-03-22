@@ -11,6 +11,7 @@ import {
 import * as resourceService from '../../../services/resourceService';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { setResourcesRoutine } from '../../constructor/routines';
+import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
 function* fetchResources(): Routine<any> {
   try {
@@ -19,6 +20,7 @@ function* fetchResources(): Routine<any> {
     yield put(setResourcesRoutine.trigger(resources));
   } catch (error) {
     yield put(fetchResourceRoutine.failure(error.message));
+    errorToastMessage(error.message);
   }
 }
 
@@ -32,6 +34,7 @@ function* getResource({ payload }: Routine<any>): Routine<any> {
     yield put(getResourceByIdRoutine.success(resource));
   } catch (error) {
     yield put(getResourceByIdRoutine.failure(error.message));
+    errorToastMessage(error.message);
   }
 }
 
@@ -43,8 +46,10 @@ function* addResource({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(resourceService.addResource, payload);
     yield put(fetchResourceRoutine.trigger());
+    successToastMessage('Resource added successfully');
   } catch (error) {
     yield put(createResourceRoutine.failure(error.message));
+    errorToastMessage(error.message);
   }
 }
 
@@ -56,8 +61,10 @@ function* testResource({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(resourceService.testResource, payload);
     yield put(testResourceRoutine.success());
+    successToastMessage('Test connect success');
   } catch (error) {
     yield put(testResourceRoutine.failure(error.message));
+    errorToastMessage(error.message);
   }
 }
 
@@ -69,8 +76,10 @@ function* updateResource({ payload }: Routine<any>): Routine<any> {
   try {
     yield call(resourceService.updateResource, payload);
     yield put(fetchResourceRoutine.trigger());
+    successToastMessage('Resource updated successfully');
   } catch (error) {
     yield put(updateResourceRoutine.failure());
+    errorToastMessage(error.message);
   }
 }
 
@@ -85,8 +94,10 @@ function* deleteResource() {
   try {
     yield call(resourceService.delResource, resource.id);
     yield put(fetchResourceRoutine.trigger());
+    successToastMessage('Resource deleted successfully');
   } catch (error) {
     yield put(deleteResourceRoutine.failure(error.message));
+    errorToastMessage(error.message);
   }
 }
 
