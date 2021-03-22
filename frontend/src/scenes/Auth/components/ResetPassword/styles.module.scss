@@ -1,0 +1,73 @@
+.form{
+
+  min-width:30rem !important;
+  background-color: white;
+  padding-left: 2.2rem;
+  padding-right: 2.2rem;
+  padding-bottom: 2rem;
+  padding-top: 7.2rem;
+  border-radius: .5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+  background-image: url('../../../../assets/images/logo.svg');
+  background-repeat: no-repeat;
+  background-size: 8rem 8rem;
+  background-position: 12% 2%;
+
+  overflow: auto;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0; }
+}
+
+.title{
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.description{
+  font-size: 1.2rem;
+  margin-top: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.emailField{
+  $font-size:1.25rem;
+  font-size: $font-size;
+  line-height: 1rem;
+
+  &::-webkit-input-placeholder{
+    font-size:$font-size;
+    line-height: 1rem;
+  }
+
+  &:-moz-placeholder{
+    font-size:$font-size;
+  }
+
+  &:-o-placeholder{
+    font-size:$font-size;
+  }
+  &:-khtml-placeholder{
+    font-size:1.25rem;
+  }
+
+  &:placeholder {
+   font-size:$font-size;
+  }
+}
+
+.btnSave {
+  margin-top: 2rem;
+  padding: 1rem 4.5rem !important;
+}
+
+.secret {
+  cursor:pointer;
+}
+
+.error{
+  height: 1rem;
+  color: #dc3545
+}
+
