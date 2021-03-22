@@ -6,6 +6,7 @@ import { Routes } from '../../../../common/enums/Routes';
 import { IResource } from '../../../../common/models/resources/IResource';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import styles from './styles.module.scss';
+import DeleteModal from '../DeleteModal/index';
 
 interface IProps {
   resource: IResource;
@@ -17,6 +18,17 @@ const ResourceItem: React.FC<IProps> = ({
   remove
 }) => {
   const [display, setDisplay] = useState(false);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleCancelModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleSubmitModal = () => {
+    setShowDeleteModal(false);
+    remove({ resource });
+  };
 
   return (
     <tr>
@@ -34,15 +46,20 @@ const ResourceItem: React.FC<IProps> = ({
             <Link to={`${Routes.ResourcesAddEdit}/${resource.id}`} className={styles.linklike}>Edit</Link>
           </span>
           <span
-            onClick={() => remove({ resource })}
+            onClick={() => setShowDeleteModal(true)}
             role="button"
-            onKeyPress={() => remove({ resource })}
+            onKeyPress={() => setShowDeleteModal(true)}
             tabIndex={0}
           >
             Delete
           </span>
         </div>
       </td>
+      <DeleteModal
+        show={showDeleteModal}
+        cancel={handleCancelModal}
+        submit={handleSubmitModal}
+      />
     </tr>
   );
 };
