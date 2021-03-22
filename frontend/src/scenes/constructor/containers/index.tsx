@@ -216,8 +216,11 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   };
   useEffect(() => {
     dispatch(fetchResourceRoutine.trigger());
-    dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchQueryRoutine.trigger({ id }));
+  }, [query.resources]);
 
   useEffect(() => {
     if (!query.isLoading) {
