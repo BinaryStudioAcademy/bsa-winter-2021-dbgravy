@@ -5,6 +5,7 @@ import {
   deleteAppRoutine,
   editAppRoutine,
   fetchAppRoutine,
+  fetchSelectAppRoutine,
   showEditRoutine,
   fetchEditorComponentsRoutine,
   addComponentRoutine,
@@ -61,6 +62,7 @@ function* editApp() {
   try {
     const response: IApps = yield call(appService.editApp, app, { name });
     yield put(editAppRoutine.success(response));
+    yield put(fetchSelectAppRoutine.success(response));
     yield put(showEditRoutine.trigger(false));
     successToastMessage('App edited successfully');
   } catch (error) {
@@ -68,10 +70,22 @@ function* editApp() {
     errorToastMessage(error.msg);
   }
 }
-
 function* watchAppsEdit() {
   yield takeEvery(editAppRoutine.TRIGGER, editApp);
   yield takeEvery(deleteAppRoutine.TRIGGER, deleteApp);
+}
+
+function* fetchSelectApp({ payload }: Routine<any>): Routine<any> {
+  try {
+    const app = yield call(appService.getAppById, payload.id);
+    yield put(fetchSelectAppRoutine.success(app));
+  } catch (error) {
+    yield put(fetchAppRoutine.failure(error));
+  }
+}
+
+function* watchFetchSelectApp() {
+  yield takeEvery(fetchSelectAppRoutine.TRIGGER, fetchSelectApp);
 }
 
 function* watchAddApp() {
@@ -122,6 +136,7 @@ export default function* appSaga() {
     watchAddApp(),
     watchFetchApps(),
     watchAppsEdit(),
+    watchFetchSelectApp(),
     watchFetchComponents(),
     watchAddComponent(),
     watchUpdateComponent()

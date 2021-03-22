@@ -16,6 +16,7 @@ import Loader from '../../components/Loader';
 import Home from '../Home/index';
 import NotFound from '../../scenes/NotFound/components/NotFound';
 import AppEditor from '../../scenes/Apps/containers/AppEditor/index';
+import Preview from '../../scenes/Apps/containers/Preview';
 
 interface IProps {
   isLoading: boolean;
@@ -45,6 +46,7 @@ const Routing: React.FC<IProps> = ({
         <PrivateRoute exact path={Routes.AppEditor} component={AppEditor} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
         <Route path={Routes.Invite} component={Home} />
+        <Route path={Routes.Preview} component={Preview} />
         <PublicRoute path="*" component={NotFound} />
       </Switch>
     </Loader>
