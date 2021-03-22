@@ -23,7 +23,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
         )
       }
       {
-        (selectedItem && selectedItem.componentType === 'textInput') && (
+        (selectedItem && selectedItem.componentType === 'input') && (
           <Form>
             <Form.Label>Label</Form.Label>
             <Form.Control
