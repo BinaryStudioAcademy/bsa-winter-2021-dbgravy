@@ -57,7 +57,7 @@ const AppEditor: React.FC<any> = () => {
     <div className="h-100" onClick={closeNameEditor} onKeyDown={closeNameEditor} role="button" tabIndex={0}>
       <Navbar bg="light" expand="lg">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Nav className="mr-auto">
+        <Nav className={`${styles.leftNav} mr-auto`}>
           <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
           <NavDropdown title=" " id="basic-nav-dropdown" className={styles.dropButton}>
             <NavLink to={Routes.Apps} activeStyle={{ color: '#000' }} className={styles.goToHome}>
