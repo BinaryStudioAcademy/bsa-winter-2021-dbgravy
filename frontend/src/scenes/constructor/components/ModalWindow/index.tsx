@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   duplicateSelectQueryRoutine,
   setSelectQueryRoutine,
-  setWaiterQueryRoutine
+  setWaiterQueryRoutine, takeResourcesTableAndColumns
 } from '../../routines';
 import { Button, Modal } from 'react-bootstrap';
 import { IAppState } from '../../../../common/models/store/IAppState';
@@ -25,6 +25,13 @@ const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
     if (!query.isDuplicate) {
       const runTitle:string = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
+      if (query.waitingQuery.resourceId !== query.setNewResource?.id) {
+        dispatch(
+          takeResourcesTableAndColumns.trigger(
+            query.resources.find(element => element.id === query.waitingQuery.resourceId)
+          )
+        );
+      }
       dispatch(setSelectQueryRoutine.success({
         id: query.waitingQuery.queryId,
         name: query.waitingQuery.queryName,

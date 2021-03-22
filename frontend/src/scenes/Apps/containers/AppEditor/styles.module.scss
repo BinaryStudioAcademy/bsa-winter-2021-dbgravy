@@ -6,4 +6,17 @@
   width: 100%;
   height: 400px;
 }
-
+.header{
+  height: 4rem;
+  width: 100%;
+}
+.dropButton,.dropButton>a{
+  position: absolute!important;
+  width: 93px;
+  height: 71px;
+}
+.goToHome{
+  display: flex;
+  justify-content: center;
+  color: black!important;
+}

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { ITables } from '../../common/models/resources/ITables';
-
 import 'codemirror/mode/handlebars/handlebars';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/sql/sql';
@@ -11,9 +10,13 @@ import 'codemirror/addon/hint/sql-hint';
 import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/hint/show-hint.css';
 
-const QueryEditor: React.FC<ITables> = ({ tables }) => {
-  const [query, setQuery] = useState('');
+interface IProps {
+  tables:ITables
+  changeCode:(e:string) => void
+  codeValue:string
+}
 
+const QueryEditor:React.FC<IProps> = ({ tables, changeCode, codeValue }) => {
   const autoComplete = (cm:any) => {
     const autocomlete = 'autocomlete';
     const hintOptions = {
@@ -26,7 +29,7 @@ const QueryEditor: React.FC<ITables> = ({ tables }) => {
   return (
     <div>
       <CodeMirror
-        value={query}
+        value={codeValue}
         options={
             {
               lineNumbers: true,
@@ -39,18 +42,11 @@ const QueryEditor: React.FC<ITables> = ({ tables }) => {
             }
         }
         onBeforeChange={(editor, data, value) => {
-          setQuery(value);
+          changeCode(value);
         }}
       />
     </div>
   );
-};
-
-QueryEditor.defaultProps = {
-  tables: {
-    table_name: ['column1', 'column2', 'column3', 'etc'],
-    another_table: ['columnA', 'columnB']
-  }
 };
 
 export default QueryEditor;

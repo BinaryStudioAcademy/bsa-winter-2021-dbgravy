@@ -14,7 +14,9 @@ import UserOrganizationRepository from '../data/repositories/userOrganizationRep
 import { extractTransportedUser } from '../common/helpers/userExtractorHelper';
 import { IInviteUserToOrganization } from '../common/models/userOrganization/IInviteUserToOrganization';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
+import { IOrganization } from '../common/models/organization/IOrganization';
 import { env } from '../env';
+import { HttpStatusCode } from '../common/constants/http';
 
 export const getUsers = async (organizationId: string): Promise<IUserOrganizationResponse[]> => {
   const users = await getCustomRepository(UserOrganizationRepository).getUsers(organizationId);
@@ -26,6 +28,12 @@ export const getUserOrganization = async (organizationId: string, userId: string
   const userOrganization = await getCustomRepository(UserOrganizationRepository)
     .getUserOrganization(organizationId, userId);
   return formatResponse(userOrganization);
+};
+
+export const getUserOrganizations = async ({ id }: ITransportedUser): Promise<IOrganization[]> => {
+  const userOrganizations = await getCustomRepository(UserOrganizationRepository)
+    .getAllOrganizationsByUserId(id);
+  return userOrganizations.map(userOrganization => userOrganization.organization);
 };
 
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
@@ -73,7 +81,7 @@ export const getUserCurOrganization = async (user: ITransportedUser): Promise<IU
   ).getById(currentOrganizationId);
 
   if (!organization) {
-    throw new CustomError('Organization not found', 404);
+    throw new CustomError('Organization not found', HttpStatusCode.NOT_FOUND);
   }
 
   const userOrganization = await getCustomRepository(
@@ -81,7 +89,7 @@ export const getUserCurOrganization = async (user: ITransportedUser): Promise<IU
   ).getOrganizationUser(userId, organization.id);
 
   if (!userOrganization) {
-    throw new CustomError('There is no user in organization', 404);
+    throw new CustomError('There is no user in organization', HttpStatusCode.NOT_FOUND);
   }
 
   const { role } = userOrganization;
@@ -97,12 +105,12 @@ export const switchUserToOrganization = async (
 ): Promise<ITransportedUser> => {
   const organization = await getCustomRepository(OrganizationRepository).getById(organizationId);
   if (!organization) {
-    throw new CustomError('Organization not found', 404);
+    throw new CustomError('Organization not found', HttpStatusCode.NOT_FOUND);
   }
   const userOrganizationExist = await getCustomRepository(UserOrganizationRepository)
     .getOrganizationUserByUserIdByStatus(user.id, organizationId, OrganizationStatus.ACTIVE);
   if (userOrganizationExist) {
-    throw new CustomError('User already switch to this organization', 400);
+    throw new CustomError('User already switch to this organization', HttpStatusCode.BAD_REQUEST);
   }
   await getCustomRepository(UserOrganizationRepository)
     .updateUserOrganization({

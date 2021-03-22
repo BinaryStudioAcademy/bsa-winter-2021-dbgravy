@@ -2,11 +2,21 @@ import { takeEvery, select, put, call, all } from 'redux-saga/effects';
 import { IAppState } from '../../common/models/store/IAppState';
 import { IUser } from '../../common/models/user/IUser';
 import { IUserOrganization } from '../../common/models/user/IUserOrganization';
-import { fetchOrganization, postCreateOrganization } from '../../services/userService';
-import { fetchOrgInfoRoutine, createOrganizationRoutine } from './routines';
+import {
+  fetchOrganization,
+  postCreateOrganization,
+  fetchOrganizations,
+  changeCurrentUserOrganization
+} from '../../services/userService';
+import {
+  fetchOrgInfoRoutine,
+  createOrganizationRoutine,
+  fetchUserOrganizationsRoutine,
+  changeUserOrganizationRoutine } from './routines';
 import { logotUserRoutine } from '../../scenes/Auth/routines';
 import { removeToken } from '../../services/authService';
 import { clearStorage, getRefreshToken } from '../../common/helpers/storageHelper';
+import { Routine } from 'redux-saga-routines';
 
 function* watchFetchUserOrganization() {
   yield takeEvery(fetchOrgInfoRoutine.TRIGGER, fetchUserOrganization);
@@ -23,6 +33,15 @@ function* fetchUserOrganization() {
     yield put(fetchOrgInfoRoutine.success({ currentOrganization: response }));
   } catch {
     yield put(fetchOrgInfoRoutine.failure());
+  }
+}
+
+function* fetchUserOrganizations() {
+  try {
+    const response: IUserOrganization = yield call(fetchOrganizations);
+    yield put(fetchUserOrganizationsRoutine.success(response));
+  } catch {
+    yield put(fetchUserOrganizationsRoutine.failure());
   }
 }
 
@@ -48,6 +67,15 @@ function* createOrganization() {
   }
 }
 
+function* changeUserOrganization({ payload }: Routine<any>): Routine<any> {
+  try {
+    const response: IUserOrganization = yield call(changeCurrentUserOrganization, payload);
+    yield put(changeUserOrganizationRoutine.success(response));
+  } catch {
+    yield put(changeUserOrganizationRoutine.failure());
+  }
+}
+
 function* logout() {
   const token = getRefreshToken();
   try {
@@ -64,10 +92,20 @@ function* watchLogout() {
   yield takeEvery(logotUserRoutine.TRIGGER, logout);
 }
 
+function* watchFetchUserOrganizations() {
+  yield takeEvery(fetchUserOrganizationsRoutine.TRIGGER, fetchUserOrganizations);
+}
+
+function* watchChangeUserOrganization() {
+  yield takeEvery(changeUserOrganizationRoutine.TRIGGER, changeUserOrganization);
+}
+
 export default function* organizationUserSaga() {
   yield all([
     watchFetchUserOrganization(),
+    watchFetchUserOrganizations(),
     watchCreateOrganization(),
+    watchChangeUserOrganization(),
     watchLogout()
   ]);
 }

@@ -18,9 +18,8 @@ const TableContainer: React.FC<IProps> = ({
     <thead>
       <tr>
         {
-          Object.values(TableHeaders).map(value => <th style={{ width: '300px' }} key={value}>{value}</th>)
+          Object.values(TableHeaders).map(value => <th key={value}>{value}</th>)
         }
-        <th> </th>
       </tr>
     </thead>
     <tbody>

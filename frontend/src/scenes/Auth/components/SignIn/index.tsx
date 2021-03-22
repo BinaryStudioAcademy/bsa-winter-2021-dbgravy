@@ -50,13 +50,13 @@ const SignIn: FunctionComponent<IProps> = ({
             Sign up
           </Link>
         </p>
-        { inviteToOrganization.isLoading
-        && (
-        <p>
-          {'You were invited to '}
-          <span className={styles.organization}>{`${inviteToOrganization.organizationName}!`}</span>
-        </p>
-        )}
+        {inviteToOrganization.isLoading
+          && (
+            <p>
+              {'You were invited to '}
+              <span className={styles.organization}>{`${inviteToOrganization.organizationName}!`}</span>
+            </p>
+          )}
       </header>
       <Formik
         enableReinitialize
@@ -74,6 +74,8 @@ const SignIn: FunctionComponent<IProps> = ({
             placeholder="user@gmail.com"
           />
           <InputField
+            link={Routes.ForgotPassword}
+            linkDescription="Forgot password?"
             label="Password"
             name="password"
             type="password"

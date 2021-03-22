@@ -2,6 +2,7 @@ import { IQuery } from '../apps/querys';
 import { ITrigger } from './ITrigger';
 import { IWaitingQuery } from './IWaitingQuery';
 import { IResource } from '../resources/IResource';
+import { ITables } from '../resources/ITables';
 
 export interface IQueryState {
     queriesApp: Array<IQuery>;
@@ -12,9 +13,12 @@ export interface IQueryState {
         selectQueryTriggers:Array<ITrigger>,
         runAutomatically: boolean,
         showConfirm: boolean,
-        resourceId:string
+        resourceId:string,
+        data?: any,
+        queryMessage: string
     },
     setNewCode:string,
+    setSelectResourceTable:ITables,
     resources: Array<IResource>,
     setNewRun: boolean,
     runAutomaticallyTitle:string,
@@ -27,5 +31,6 @@ export interface IQueryState {
     isLoading: boolean,
     isOpen:boolean,
     isDuplicate:boolean,
-    waitingQuery: IWaitingQuery
+    waitingQuery: IWaitingQuery,
+    isResultLoading: boolean
 }
