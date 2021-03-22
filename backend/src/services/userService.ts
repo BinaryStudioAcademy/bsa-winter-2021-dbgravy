@@ -20,7 +20,10 @@ export const getUserById = async (id: string): Promise<ITransportedUser> => {
   return extractTransportedUser(user);
 };
 
-export const switchUserOrganization = async (organizationId: string, user: ITransportedUser) => {
+export const switchUserOrganization = async (
+  organizationId: string,
+  user: ITransportedUser
+): Promise<IUserOrganization> => {
   const organization = await getCustomRepository(OrganizationRepository).getById(organizationId);
   if (!organization) {
     throw new CustomError('Organization not found', 404);
