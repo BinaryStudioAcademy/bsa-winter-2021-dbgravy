@@ -55,7 +55,7 @@ const AppEditor: React.FC<any> = () => {
   }, []);
   return (
     <div className="h-100" onClick={closeNameEditor} onKeyDown={closeNameEditor} role="button" tabIndex={0}>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="light" expand="lg" className={styles.mainNav}>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className={`${styles.leftNav} mr-auto`}>
           <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
