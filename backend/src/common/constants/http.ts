@@ -1,2 +1,5 @@
-export const HTTP_STATUS_ERROR_BAD_REQUEST = 400;
-export const HTTP_STATUS_ERROR_NOT_FOUND = 404;
+export const enum HttpStatusCode {
+  BAD_REQUEST = 400,
+  NOT_FOUND = 404,
+}
+

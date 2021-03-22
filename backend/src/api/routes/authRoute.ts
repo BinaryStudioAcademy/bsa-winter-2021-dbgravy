@@ -28,8 +28,8 @@ router
   .post('/sign-in', authenticationMiddleware, run(req => (
     login(req.user as ITransportedUser, req.body.currentOrganizationId))))
   .post('/sign-up', registrationMiddleware, run(req => register(req.body.organizationName, req.user as IRegisterUser)))
-  .post('/forgotpass', userMiddleware, run(req => forgotPassword(req.body)))
-  .post('/resetpass', jwtNewPassMiddleware, run(req => resetPassword(req.user as ITransportedUser, req.body.password)))
+  .post('/forgot-pass', userMiddleware, run(req => forgotPassword(req.body)))
+  .post('/reset-pass', jwtNewPassMiddleware, run(req => resetPassword(req.user as ITransportedUser, req.body.password)))
   .delete('/tokens', run(req => removeToken(req.body.token)));
 
 export default router;

@@ -3,6 +3,6 @@ export default [
   '/auth/sign-up',
   '/auth/token',
   /^\/user\/organization\/invite\/(?:([^/]+?))$/i,
-  '/auth/forgotpass',
-  '/auth/resetpass'
+  '/auth/forgot-pass',
+  '/auth/reset-pass'
 ];

@@ -18,7 +18,7 @@ import { sendResetPasswordMail } from './mailService';
 import { Role } from '../common/enums/Role';
 import { OrganizationStatus } from '../common/enums/OrganizationStatus';
 import { IForgotPasswordUser } from '../common/models/user/IForgotPasswordUser';
-import { HTTP_STATUS_ERROR_BAD_REQUEST, HTTP_STATUS_ERROR_NOT_FOUND } from '../common/constants/http';
+import { HttpStatusCode } from '../common/constants/http';
 
 const getExpiration = (): Date => {
   const date = new Date();
@@ -80,7 +80,7 @@ export const login = async (
 export const register = async (organizationName: string, user: IRegisterUser): Promise<IAuthUser> => {
   const organization = await getCustomRepository(OrganizationRepository).getByName(organizationName);
   if (organization) {
-    throw new CustomError('Organization already exists.', HTTP_STATUS_ERROR_BAD_REQUEST);
+    throw new CustomError('Organization already exists.', HttpStatusCode.BAD_REQUEST);
   }
   const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
@@ -127,14 +127,15 @@ export const register = async (organizationName: string, user: IRegisterUser): P
 export const refreshToken = (user: ITransportedUser, rt?: string): Promise<IAuthUser> => login(user, rt);
 
 export const forgotPassword = async ({ email }: IForgotPasswordUser) => {
-  const { id, ...user } = await getCustomRepository(UserRepository).getByEmail(email);
-  if (!id) {
-    throw new CustomError('Wrong email', HTTP_STATUS_ERROR_NOT_FOUND);
+  try {
+    const { id, ...user } = await getCustomRepository(UserRepository).getByEmail(email);
+    await sendResetPasswordMail({
+      to: email, token: createAccessToken(id)
+    });
+    return { ...user, id };
+  } catch (err) {
+    throw new CustomError('Wrong email', HttpStatusCode.NOT_FOUND);
   }
-  await sendResetPasswordMail({
-    to: email, token: createAccessToken(id)
-  });
-  return { ...user, id };
 };
 
 export const resetPassword = async ({ id }: { id: string }, password: string) => {
