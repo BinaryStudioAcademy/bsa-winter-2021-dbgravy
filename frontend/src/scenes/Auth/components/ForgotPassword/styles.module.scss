@@ -1,0 +1,66 @@
+.form{
+  max-width:40rem;
+  background-color: white;
+  padding-left: 2.2rem;
+  padding-right: 2.2rem;
+  padding-bottom: 5rem;
+  padding-top: 4rem;
+  border-radius: .5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+  overflow: auto;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0; }
+}
+
+.title{
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.description{
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.emailField{
+  $font-size:1.25rem;
+
+  font-size: $font-size;
+
+  &::-webkit-input-placeholder{
+    font-size:$font-size;
+  }
+
+  &:-moz-placeholder{
+    font-size:$font-size;
+  }
+
+  &:-o-placeholder{
+    font-size:$font-size;
+  }
+  &:-khtml-placeholder{
+    font-size:1.25rem;
+  }
+
+  &:placeholder {
+   font-size:$font-size;
+  }
+}
+
+.btnResetLink{
+  font-weight: 600 !important;
+  margin-top: 0.46rem;
+  background-color: #7a55dd !important;
+  border-color:  #5f44aa !important;
+}
+
+.btnResetLink:hover{
+  background-color: #5f44aa !important;
+}
+
+.errorMessage{
+  height: 1.5rem !important;
+  color: #dc3545;
+}

@@ -6,6 +6,7 @@ import { IUserOrganization } from '../../common/models/userOrganization/IUserOrg
 import { ICreateUserOrganization } from '../../common/models/userOrganization/ICreateUserOrganization';
 import { IUpdateUserOrganization } from '../../common/models/userOrganization/IUpdateUserOrganization';
 import { Role } from '../../common/enums/Role';
+import { HttpStatusCode } from '../../common/constants/http';
 
 @EntityRepository(UserOrganization)
 class UserOrganizationRepository extends Repository<UserOrganization> {
@@ -37,7 +38,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
       where: { userId, organizationId: data.organizationId }
     });
     if (userOrganization) {
-      throw new CustomError('User already invited.', 400);
+      throw new CustomError('User already invited.', HttpStatusCode.BAD_REQUEST);
     }
     const { role, status } = data;
     const userOrganizationData = this.create({
@@ -92,7 +93,7 @@ class UserOrganizationRepository extends Repository<UserOrganization> {
       where: { userId, organizationId }
     });
     if (!userOrganization) {
-      throw new CustomError('User organization not found.', 404);
+      throw new CustomError('User organization not found.', HttpStatusCode.NOT_FOUND);
     }
     const { id } = userOrganization;
     await this.update(id, data);
