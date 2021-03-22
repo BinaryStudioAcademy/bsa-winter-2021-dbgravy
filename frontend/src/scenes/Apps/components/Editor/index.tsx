@@ -20,7 +20,7 @@ const Editor: React.FC = memo(() => {
   };
 
   return (
-    <div className="mt-5 h-100" style={{ maxHeight: '50vh' }}>
+    <div className="h-100" style={{ maxHeight: '50vh' }}>
       <div className="d-flex h-100 flex-wrap">
         <div className={`${styles.dropArea} dropArea`}>
           <DropArea elements={elements} selectItem={selectItem} />

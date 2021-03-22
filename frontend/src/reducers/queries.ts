@@ -12,7 +12,7 @@ import {
   setNewResourcesRoutine,
   setResourcesRoutine,
   setUnSuccessTriggersRoutine,
-  setWaiterQueryRoutine,
+  setWaiterQueryRoutine, takeResourcesTableAndColumns,
   runSelectQueryRoutine,
   previewSelectQueryRoutine,
   runTriggerRoutine
@@ -41,6 +41,7 @@ const initialState: IQueryState = {
   setNewConfirm: false,
   setNewSuccessTriggers: [],
   setNewUnSuccessTriggers: [],
+  setSelectResourceTable: { tables: {} },
   setNewResource: {
     id: '1',
     createdAt: undefined,
@@ -79,8 +80,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         queriesApp: [...action.payload],
-        queriesAppLength: action.payload.length,
-        isLoading: false
+        queriesAppLength: action.payload.length
       };
     case openQueryRoutine.SUCCESS:
       const runTitle = action.payload[0].runAutomatically ? 'Run query only when manually triggered'
@@ -116,7 +116,8 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers,
         setNewConfirm: action.payload[0].showConfirm,
-        runAutomaticallyTitle: runTitle
+        runAutomaticallyTitle: runTitle,
+        isLoading: false
       };
     case setSelectQueryRoutine.SUCCESS:
       action.payload.triggers.forEach((element: ITrigger) => {
@@ -212,6 +213,11 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         resources: action.payload
+      };
+    case takeResourcesTableAndColumns.SUCCESS:
+      return {
+        ...state,
+        setSelectResourceTable: action.payload
       };
     case setWaiterQueryRoutine.TRIGGER:
       return {

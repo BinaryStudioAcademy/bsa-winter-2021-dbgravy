@@ -7,7 +7,6 @@ import Loader from '../../../components/Loader';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
-  setNewCodeRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
   fetchQueryRoutine,
@@ -17,7 +16,7 @@ import {
   previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
-  setNewConfirmRoutine
+  setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
@@ -25,6 +24,7 @@ import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
+import QueryEditor from '../../../components/QueryCodeEditor';
 import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
 import QueryResult from '../components/ModalWindow/queryResult';
@@ -201,13 +201,12 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       dispatch(setNewConfirmRoutine.trigger(true));
     }
   };
-  function changeName(e: React.FormEvent) {
+  function changeCode(e: string) {
+    dispatch(setNewCodeRoutine.trigger({ code: e }));
+  }
+  function changeName(e:React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
-  }
-  function changeCode(e: React.FormEvent) {
-    const target: HTMLInputElement = e.target as HTMLInputElement;
-    dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
@@ -219,6 +218,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     dispatch(fetchResourceRoutine.trigger());
     dispatch(fetchQueryRoutine.trigger({ id }));
   }, []);
+
+  useEffect(() => {
+    if (!query.isLoading) {
+      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    }
+  }, [query.isLoading]);
+
   useEffect(() => {
     if (query.selectQuery.queryMessage.length !== 0) {
       setShowQuery(true);
@@ -297,13 +303,8 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
             </Form.Group>
             <Form.Label className={style.row} />
-            <Form.Control
-              as="textarea"
-              value={query.setNewCode}
-              rows={5}
-              onChange={changeCode}
-              className={style.codeEditor}
-            />
+            <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
+            <Form.Label className={style.row} />
             <Form.Label className={style.row} />
             {
               query.setNewConfirm ? (

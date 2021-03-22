@@ -3,12 +3,14 @@ import { Routine } from 'redux-saga-routines';
 import {
   deleteSelectQueryRoutine,
   duplicateSelectQueryRoutine, errorRoutineQuery,
-  fetchQueryRoutine, openQueryRoutine,
+  fetchQueryRoutine, openQueryRoutine, takeResourcesTableAndColumns,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
   previewSelectQueryRoutine,
   runTriggerRoutine
 } from '../routines';
+import { takeResourceTables } from '../../../services/resourceService';
+import { ITables } from '../../../common/models/resources/ITables';
 import { IQuery } from '../../../common/models/apps/querys';
 import { IAppState } from '../../../common/models/store/IAppState';
 import { ITrigger } from '../../../../../backend/src/common/models/query/Trigger';
@@ -160,12 +162,26 @@ function* watchDeleteQueryRequest() {
   yield takeEvery(deleteSelectQueryRoutine.TRIGGER, deleteSelectQuery);
 }
 
+function* takeRecourseData({ payload }: Routine<any>) {
+  try {
+    const tables:ITables = yield call(takeResourceTables, payload);
+    yield put(takeResourcesTableAndColumns.success(tables));
+  } catch (e) {
+    yield put(errorRoutineQuery.failure(e.message));
+  }
+}
+
+function* watchTakeRecourseRequest() {
+  yield takeEvery(takeResourcesTableAndColumns.TRIGGER, takeRecourseData);
+}
+
 export default function* userSaga() {
   yield all([
     watchQueryRequest(),
     watchSaveQueryRequest(),
     watchUpdateNameQueryRequest(),
     watchDeleteQueryRequest(),
+    watchTakeRecourseRequest(),
     watchRunQueryRequest(),
     watchPreviewQueryRequest()
   ]);

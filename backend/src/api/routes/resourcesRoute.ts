@@ -6,7 +6,7 @@ import {
   getResourceById,
   updateResource,
   testResource,
-  deleteResource
+  deleteResource, takeResourceTable
 } from '../../services/resourceService';
 import { ITransportedUser } from '../../common/models/user/ITransportedUser';
 
@@ -18,6 +18,7 @@ router
   .get('/', run(req => getResources(req.user as ITransportedUser)))
   .post('/', run(req => addResource(req.body.resource, req.user as ITransportedUser)))
   .post('/test', run(req => testResource(req.body.resource)))
+  .post('/take', run(req => takeResourceTable(req.body.resource)))
   .delete('/:id', run(req => deleteResource(req.params.id)));
 
 export default router;

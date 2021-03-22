@@ -2,6 +2,7 @@ import api from '../common/helpers/apiHelper';
 import { IResource } from '../common/models/resources/IResource';
 import { ICreateResource } from '../common/models/resources/ICreateResource';
 import { IEditResource } from '../common/models/resources/IEditResource';
+import { ITables } from '../common/models/resources/ITables';
 
 export const getResourceById = (id: string) => api.get(`/api/resources/${id}`);
 
@@ -14,5 +15,8 @@ export const testResource = (resource: ICreateResource) => api
 
 export const updateResource = (resource: IEditResource) => api
   .put<ICreateResource>(`/api/resources/${resource.id}`, { resource });
+
+export const takeResourceTables = (resource: ICreateResource) => api
+  .post<ITables>('/api/resources/take', { resource });
 
 export const delResource = (id: string) => api.delete<IResource>(`/api/resources/${id}`);
