@@ -17,94 +17,100 @@ interface IEditorProps {
   fetchComponents: (payload: { appId: string }) => void,
   addComponent: (payload: { appId: string, component: IDropItem }) => void,
   updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void
+  show:boolean
 }
 
-const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponents, addComponent, updateComponent }) => {
-  useEffect(() => {
-    fetchComponents({ appId });
-  }, []);
+const Editor: React.FC<IEditorProps> = memo(
+  ({ appId, components, fetchComponents, addComponent, updateComponent, show }) => {
+    useEffect(() => {
+      fetchComponents({ appId });
+    }, []);
 
-  const [active, setActive] = useState<'inspect' | 'insert'>('insert');
-  const [selected, setSelected] = useState<IDropItem | null>(null);
-  const addElement = (component: IDropItem) => {
-    addComponent({ appId, component });
-  };
+    const [active, setActive] = useState<'inspect' | 'insert'>('insert');
+    const [selected, setSelected] = useState<IDropItem | null>(null);
+    const addElement = (component: IDropItem) => {
+      addComponent({ appId, component });
+    };
 
-  const updateElement = (component: IUpdateComponent) => {
-    updateComponent({ appId, component });
-  };
-  const selectItem = (item: IDropItem) => {
-    setSelected(item);
-    setActive('inspect');
-  };
+    const updateElement = (component: IUpdateComponent) => {
+      updateComponent({ appId, component });
+    };
+    const selectItem = (item: IDropItem) => {
+      setSelected(item);
+      setActive('inspect');
+    };
 
-  return (
-    <div className="h-100" style={{ maxHeight: '50vh' }}>
-      <div className="d-flex h-100 flex-wrap">
-        <div className={`${styles.dropArea} dropArea`}>
-          <DropArea
-            elements={components}
-            selectItem={selectItem}
-            updateElement={updateElement}
-            appId={appId}
-          />
-        </div>
-        <div className={styles.sidebarWrp}>
-          <div className={styles.navbarTop}>
-            <button
-              type="button"
-              className={(active === 'inspect') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
-              onClick={() => setActive('inspect')}
-            >
-              Inspect
-            </button>
-            <button
-              type="button"
-              className={(active === 'insert') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
-              onClick={() => setActive('insert')}
-            >
-              Insert
-            </button>
+    return (
+      <div className="h-100" style={{ maxHeight: '50vh' }}>
+        <div className="d-flex h-100 flex-wrap">
+          <div className={`${styles.dropArea} dropArea`}>
+            <DropArea
+              elements={components}
+              selectItem={selectItem}
+              updateElement={updateElement}
+              appId={appId}
+            />
           </div>
-          <div className={styles.content}>
-            {
-              (active === 'inspect') && (
-                <Inspect selectedItem={selected} />
-              )
-            }
-            {
-              (active === 'insert') && (
-                <>
-                  <Item
-                    itemIcon={faGripLines}
-                    itemTitle="Text Input"
-                    itemDesc="Control other components or queries with text."
-                    addElement={addElement}
-                    itemType={ComponentType.input}
-                  />
-                  <Item
-                    itemIcon={faTable}
-                    itemTitle="Table"
-                    itemDesc="Display tabular data with pagination."
-                    addElement={addElement}
-                    itemType={ComponentType.table}
-                  />
-                  <Item
-                    itemIcon={faWindowMinimize}
-                    itemTitle="Button"
-                    itemDesc="Trigger actions like run queries."
-                    addElement={addElement}
-                    itemType={ComponentType.button}
-                  />
-                </>
-              )
-            }
-          </div>
+          { show ? (
+            <div className={styles.sidebarWrp}>
+              <div className={styles.navbarTop}>
+                <button
+                  type="button"
+                  className={(active === 'inspect') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
+                  onClick={() => setActive('inspect')}
+                >
+                  Inspect
+                </button>
+                <button
+                  type="button"
+                  className={(active === 'insert') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
+                  onClick={() => setActive('insert')}
+                >
+                  Insert
+                </button>
+              </div>
+              <div className={styles.content}>
+                {
+                  (active === 'inspect') && (
+                    <Inspect selectedItem={selected} />
+                  )
+                }
+                {
+                  (active === 'insert') && (
+                    <>
+                      <Item
+                        itemIcon={faGripLines}
+                        itemTitle="Text Input"
+                        itemDesc="Control other components or queries with text."
+                        addElement={addElement}
+                        itemType={ComponentType.input}
+                      />
+                      <Item
+                        itemIcon={faTable}
+                        itemTitle="Table"
+                        itemDesc="Display tabular data with pagination."
+                        addElement={addElement}
+                        itemType={ComponentType.table}
+                      />
+                      <Item
+                        itemIcon={faWindowMinimize}
+                        itemTitle="Button"
+                        itemDesc="Trigger actions like run queries."
+                        addElement={addElement}
+                        itemType={ComponentType.button}
+                      />
+                    </>
+                  )
+                }
+              </div>
+            </div>
+          )
+            : null}
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 Editor.defaultProps = {
   components: {}

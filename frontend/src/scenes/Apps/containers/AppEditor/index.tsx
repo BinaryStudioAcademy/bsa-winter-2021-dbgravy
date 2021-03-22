@@ -96,7 +96,7 @@ const AppEditor: React.FC<any> = () => {
         </Nav>
       </Navbar>
       <DndProvider backend={HTML5Backend}>
-        <Editor appId={id} />
+        <Editor appId={id} show={showRight} />
       </DndProvider>
       {showBottom
         ? (<Constructor id={id} />)
