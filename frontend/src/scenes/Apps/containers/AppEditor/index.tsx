@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
 
-const AppEditor: React.FC<any> = () => {
+const AppEditor: React.FC = () => {
   const query = useSelector((state: IAppState) => state.app.application);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
@@ -55,7 +55,7 @@ const AppEditor: React.FC<any> = () => {
   }, []);
   return (
     <div className="h-100" onClick={closeNameEditor} onKeyDown={closeNameEditor} role="button" tabIndex={0}>
-      <Navbar bg="light" expand="lg" className={styles.mainNav}>
+      <Navbar bg="white" expand="lg" className={styles.mainNav}>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className={`${styles.leftNav} mr-auto`}>
           <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />

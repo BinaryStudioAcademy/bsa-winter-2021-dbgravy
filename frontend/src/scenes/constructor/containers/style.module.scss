@@ -164,7 +164,20 @@ a.delete:hover{
   border-color: black;
   color: black;
 }
-.checkBox{
+.checkBoxWrapper{
+  display: flex;
+  flex-direction: row;
+}
+.Confirm{
+  margin-left: 20px;
+  border: none!important;
+  width: 23px;
+  height: 20px;
+}
+.Confirm:focus{
+  outline: none;
+}
+.spanText{
   margin-left: 20px;
 }
 .baseMargin{

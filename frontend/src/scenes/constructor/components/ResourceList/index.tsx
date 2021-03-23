@@ -6,15 +6,17 @@ import style from '../../containers/style.module.scss';
 
 interface IProps {
     resourceList:Array<IResource>,
-    titleName:string|undefined
+    resourceName:string|undefined
 }
 
 const ResourceList:FunctionComponent<IProps> = ({
   resourceList,
-  titleName
-}) => (
-  <DropdownButton id="dropdown-change" title={titleName} className={style.dropMenuChange}>
-    {
+  resourceName
+}) => {
+  const titleName = resourceName === undefined ? 'loading' : resourceName;
+  return (
+    <DropdownButton id="dropdown-change" title={titleName} className={style.dropMenuChange}>
+      {
             resourceList.map(resource => (
               <ResourceBlock
                 id={resource.id}
@@ -23,7 +25,8 @@ const ResourceList:FunctionComponent<IProps> = ({
               />
             ))
                 }
-  </DropdownButton>
-);
+    </DropdownButton>
+  );
+};
 
 export default ResourceList;
