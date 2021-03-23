@@ -48,6 +48,7 @@ const ResourceItem: React.FC<IProps> = ({
           <span
             onClick={() => setShowDeleteModal(true)}
             role="button"
+            className={styles.action}
             onKeyPress={() => setShowDeleteModal(true)}
             tabIndex={0}
           >

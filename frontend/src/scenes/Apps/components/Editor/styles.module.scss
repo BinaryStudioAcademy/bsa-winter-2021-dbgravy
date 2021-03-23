@@ -67,5 +67,6 @@
   flex: 1 1 30%;
   background-color: #cecece;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
+  min-height: 400px;
 }

@@ -19,6 +19,7 @@ import { IAuthServerResponse } from '../../../common/models/auth/AuthServerRespo
 import { IUser } from '../../../common/models/user/IUser';
 import { setTokens, clearStorage } from '../../../common/helpers/storageHelper';
 import { errorHelper } from '../../../common/helpers/errorHelper';
+import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
 function* fetchUserRequest() {
   try {
@@ -27,6 +28,7 @@ function* fetchUserRequest() {
   } catch (error) {
     yield call(clearStorage);
     yield put(fetchUserRoutine.failure(error.message));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -42,6 +44,7 @@ function* loginUserRequest({ payload }: Routine<any>) {
     yield put(inviteUserToOrganizationRoutine.failure());
   } catch (error) {
     yield put(loginUserRoutine.failure(error.message));
+    errorToastMessage(error.msg);
   }
 }
 
@@ -58,6 +61,7 @@ function* addNewUserRequest({ payload }: any): Routine<any> {
   } catch (error) {
     const message = errorHelper(error.code);
     yield put(loginUserRoutine.failure(message));
+    errorToastMessage(message);
   }
 }
 
@@ -69,10 +73,12 @@ function* forgotPasswordRequest({ payload }: Routine<any>) {
   try {
     yield call(forgotPassword, payload);
     yield put(forgotPasswordRoutine.success());
+    successToastMessage('Check your email.');
   } catch (error) {
     const message = errorHelper(error.code);
     yield put(forgotPasswordRoutine.failure(message));
     Error(message);
+    errorToastMessage(message);
   }
 }
 
@@ -84,9 +90,11 @@ function* resetPasswordRequest({ payload }: Routine<any>) {
   try {
     yield call(resetPassword, payload);
     yield put(resetPasswordRoutine.success());
+    successToastMessage('Password changed successfully.');
   } catch (error) {
     const message = errorHelper(error.code);
     yield put(resetPasswordRoutine.failure(message));
+    errorToastMessage(message);
   }
 }
 

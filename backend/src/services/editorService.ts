@@ -20,8 +20,8 @@ export const addComponent = async (appId: string, component: IComponent): Promis
       name,
       height: intHeight,
       width: intWidth,
-      left,
-      top,
+      left: Math.floor(left),
+      top: Math.floor(top),
       appId
     }
   );
