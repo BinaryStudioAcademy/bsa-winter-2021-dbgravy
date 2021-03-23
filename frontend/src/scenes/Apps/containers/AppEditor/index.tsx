@@ -6,21 +6,33 @@ import Editor from '../../components/Editor';
 import Constructor from '../../../constructor/containers';
 import { useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
-import { Navbar, NavDropdown, Nav, Image, Form, Button } from 'react-bootstrap';
 import logo from '../../../../images/Logo.svg';
-import { Routes } from '../../../../common/enums/Routes';
-import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { fetchResourceRoutine } from '../../../Resources/routines';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
+import Header from '../../../../components/Header';
+import appStyles from '../../styles.module.scss';
+import { Link, NavLink } from 'react-router-dom';
+import { IResource } from '../../../../common/models/resources/IResource';
+import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
+import { Routes } from '../../../../common/enums/Routes';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
 
-const AppEditor: React.FC = () => {
+interface IProps {
+  resources: Array<IResource>,
+  fetchResources: () => void
+}
+
+const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
+  const { id }: IFetchParams = useParams();
+  useEffect(() => {
+    fetchResources();
+  }, []);
   const query = useSelector((state: IAppState) => state.app.application);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [showBottom, setHiddenBottom] = useState<boolean>(true);
   const [showRight, setHiddenRight] = useState<boolean>(true);
-  const { id }: IFetchParams = useParams();
   const closeNameEditor = (e: React.FormEvent) => {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     if (target.id === 'appName') {
@@ -53,19 +65,44 @@ const AppEditor: React.FC = () => {
   useEffect(() => {
     dispatch(fetchSelectAppRoutine.trigger({ id }));
   }, []);
+
   return (
-    <div className="h-100" onClick={closeNameEditor} onKeyDown={closeNameEditor} role="button" tabIndex={0}>
-      <Navbar bg="white" expand="lg" className={styles.mainNav}>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Nav className={`${styles.leftNav} mr-auto`}>
-          <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
-          <NavDropdown title=" " id="basic-nav-dropdown" className={styles.dropButton}>
-            <NavLink to={Routes.Apps} activeStyle={{ color: '#000' }} className={styles.goToHome}>
-              Back to home
-            </NavLink>
-          </NavDropdown>
-          <Form.Group controlId="appName">
-            {
+    <>
+      {
+        (resources.length === 0) ? (
+          <div className={appStyles['apps-wrp']}>
+            <Header />
+            <div className="container mt-5">
+              <div>
+                No resources.
+                {' '}
+                <Link to="/resources/edit">Create new</Link>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div
+            className={(!showBottom) ? 'h-100' : ''}
+            onClick={closeNameEditor}
+            onKeyDown={closeNameEditor}
+            role="button"
+            tabIndex={0}
+
+          >
+            <Navbar bg="white" expand="lg" className={styles.mainNav}>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+              <Nav className={`${styles.leftNav} mr-auto`}>
+                <Col xs={6} md={4}>
+                  <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
+                </Col>
+                <NavDropdown title=" " id="basic-nav-dropdown" className={styles.dropButton}>
+                  <NavLink to={Routes.Apps} activeStyle={{ color: '#000' }} className={styles.goToHome}>
+                    Back to home
+                  </NavLink>
+                </NavDropdown>
+                <Form.Group controlId="appName">
+                  {
                 editNameField ? (
                   <Form.Control
                     type="button"
@@ -78,31 +115,43 @@ const AppEditor: React.FC = () => {
                       type="text"
                       defaultValue={query.setSelectAppName}
                       onChange={changeName}
+                      className={styles.nameFill}
                     />
                   )
               }
-          </Form.Group>
-        </Nav>
-        <Nav className="mr-auto">
-          <Button onClick={changeStatusBottom}>Hidden bot</Button>
-          <Button onClick={changeStatusRight}>Hidden right</Button>
-        </Nav>
-        <Nav>
-          <Button onClick={changeStatusBottom}>
-            <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
-              Preview
-            </NavLink>
-          </Button>
-        </Nav>
-      </Navbar>
-      <DndProvider backend={HTML5Backend}>
-        <Editor appId={id} show={showRight} />
-      </DndProvider>
-      {showBottom
-        ? (<Constructor id={id} />)
-        : null}
-    </div>
+                </Form.Group>
+              </Nav>
+              <Nav className="mr-auto">
+                <Button onClick={changeStatusBottom}>Hidden bot</Button>
+                <Button onClick={changeStatusRight}>Hidden right</Button>
+              </Nav>
+              <Nav>
+                <Button onClick={changeStatusBottom}>
+                  <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                    Preview
+                  </NavLink>
+                </Button>
+              </Nav>
+            </Navbar>
+            <DndProvider backend={HTML5Backend}>
+              <Editor appId={id} show={showRight} />
+            </DndProvider>
+            {showBottom
+              ? (<Constructor id={id} />)
+              : null}
+          </div>
+        )
+      }
+    </>
   );
 };
 
-export default AppEditor;
+const mapStateToProps = (rootState: IAppState) => ({
+  resources: rootState.resource.resources
+});
+
+const mapDispatchToProps = {
+  fetchResources: fetchResourceRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppEditor);
