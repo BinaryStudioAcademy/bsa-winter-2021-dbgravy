@@ -5,7 +5,6 @@ export interface ICreateQuery {
   code: string;
   appId: string;
   resourceId: string;
-  runAutomatically: boolean;
   showConfirm: boolean;
   triggers?: Array<ITrigger>;
 }

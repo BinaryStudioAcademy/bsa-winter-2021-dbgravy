@@ -15,7 +15,6 @@ import {
   runSelectQueryRoutine,
   previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
-  setNewRunRoutine,
   setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
@@ -44,7 +43,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   const [currentResource, setCurrentResource] = useState<string>('');
 
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
-    || query.selectQuery.runAutomatically !== query.setNewRun
     || query.selectQuery.showConfirm !== query.setNewConfirm
     || query.selectQuery.resourceId !== query.setNewResource?.id
   );
@@ -74,7 +72,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       data: {
         id: query.selectQuery.selectQueryId,
         code: query.setNewCode,
-        runAutomatically: query.setNewRun,
         showConfirm: query.setNewConfirm,
         name: query.selectQuery.selectQueryName,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
@@ -90,7 +87,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       data: {
         code: query.setNewCode,
         name: query.selectQuery.selectQueryName,
-        runAutomatically: query.setNewRun,
         showConfirm: query.setNewConfirm
       },
       id: query.selectQuery.selectQueryId,
@@ -104,7 +100,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       dispatch(saveSelectQueryRoutine.trigger({
         data: {
           code: query.setNewCode,
-          runAutomatically: query.setNewRun,
           showConfirm: query.setNewConfirm,
           triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
           resourceId: query.setNewResource?.id
@@ -113,17 +108,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         appId: id,
         resourceId: query.selectQuery.resourceId
       }));
-      const runTitle = query.setNewRun ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
       dispatch(setSelectQueryRoutine.success({
         id: query.selectQuery.selectQueryId,
         name: query.setNewName,
         code: query.setNewCode,
-        runAutomatically: query.setNewRun,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         resourceId: query.setNewResource?.id,
-        showConfirm: query.setNewConfirm,
-        runTitle
+        showConfirm: query.setNewConfirm
       }));
     }
   };
@@ -141,12 +132,10 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         id: query.selectQuery.selectQueryId,
         name: query.setNewName,
         code: query.selectQuery.selectQueryCode,
-        runAutomatically: query.selectQuery.runAutomatically,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         showConfirm: query.selectQuery.showConfirm,
         resourceId: query.selectQuery.resourceId,
-        isOpen: false,
-        runTitle: query.runAutomaticallyTitle
+        isOpen: false
       }));
       setEditNameField(true);
     } else {
@@ -164,7 +153,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         appId: id,
         resourceId: query.selectQuery.resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
-        runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
       }));
     }
@@ -185,19 +173,8 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         appId: id,
         resourceId,
         triggers: [],
-        runAutomatically: true,
         showConfirm: true
       }));
-    }
-  };
-  const changeRunFalse = () => {
-    if (query.setNewRun) {
-      dispatch(setNewRunRoutine.trigger({ status: false, title: 'Run query automatically when inputs change' }));
-    }
-  };
-  const changeRunTrue = () => {
-    if (!query.setNewRun) {
-      dispatch(setNewRunRoutine.trigger({ status: true, title: 'Run query only when manually triggered' }));
     }
   };
   const changeConfirm = () => {
@@ -210,7 +187,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   function changeCode(e: string) {
     dispatch(setNewCodeRoutine.trigger({ code: e }));
   }
-  function changeName(e:React.FormEvent) {
+  function changeName(e: React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
   }
@@ -305,12 +282,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             </Form.Group>
           </Form.Group>
           <Form.Group controlId="ControlTextarea">
-            <DropdownButton id="dropdown-change" title={query.runAutomaticallyTitle} className={style.dropMenuChange}>
-              <Dropdown.Item href="#" onClick={changeRunTrue}>Run query only when manually triggered</Dropdown.Item>
-              <Dropdown.Item href="#" onClick={changeRunFalse}>
-                Run query automatically when inputs change
-              </Dropdown.Item>
-            </DropdownButton>
             <Form.Label className={style.row} />
             <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>

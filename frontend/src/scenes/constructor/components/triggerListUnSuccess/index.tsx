@@ -33,7 +33,6 @@ const QueriesListForUnSuccessTriggers:FunctionComponent<IProps> = ({
                               name={query.name}
                               key={query.id + true}
                               code={query.code}
-                              runAutomatically={query.runAutomatically}
                               showConfirm={query.showConfirm}
                               triggers={query.triggers}
                             />
@@ -46,7 +45,6 @@ const QueriesListForUnSuccessTriggers:FunctionComponent<IProps> = ({
                             name={query.name}
                             key={query.id + true}
                             code={query.code}
-                            runAutomatically={query.runAutomatically}
                             showConfirm={query.showConfirm}
                             triggers={query.triggers}
                           />

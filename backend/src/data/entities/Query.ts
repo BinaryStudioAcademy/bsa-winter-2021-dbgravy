@@ -12,9 +12,6 @@ export class Query extends AbstractEntity {
   name: string;
 
   @Column()
-  runAutomatically: boolean;
-
-  @Column()
   code: string;
 
   @Column()
@@ -27,7 +24,7 @@ export class Query extends AbstractEntity {
   @Column()
   readonly appId: string;
 
-  @ManyToOne(() => App, app => app.queries,{
+  @ManyToOne(() => App, app => app.queries, {
     cascade: true,
     onDelete: 'CASCADE',
     primary: true

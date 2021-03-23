@@ -6,7 +6,6 @@ import {
   setNewCodeRoutine,
   setNewConfirmRoutine,
   setNewNameQueryRoutine,
-  setNewRunRoutine,
   setSelectQueryRoutine,
   setSuccessTriggersRoutine,
   setNewResourcesRoutine,
@@ -28,16 +27,13 @@ const initialState: IQueryState = {
     selectQueryName: '',
     selectQueryCode: '',
     selectQueryTriggers: [],
-    runAutomatically: false,
     showConfirm: false,
     resourceId: '',
     data: [],
     queryMessage: ''
   },
   setNewCode: '',
-  runAutomaticallyTitle: 'Run query automatically when inputs change',
   setNewName: '',
-  setNewRun: false,
   setNewConfirm: false,
   setNewSuccessTriggers: [],
   setNewUnSuccessTriggers: [],
@@ -65,7 +61,6 @@ const initialState: IQueryState = {
     queryCode: '',
     queryTriggers: [],
     resourceId: '',
-    runAutomatically: false,
     showConfirm: false
   },
   isLoading: false,
@@ -83,8 +78,6 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         queriesAppLength: action.payload.length
       };
     case openQueryRoutine.SUCCESS:
-      const runTitle = action.payload[0].runAutomatically ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
       const baseResource = state.resources.find(element => element.id === action.payload[0].resourceId);
       action.payload[0].triggers.forEach((element: ITrigger) => {
         if (element.success) {
@@ -104,19 +97,16 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryCode: action.payload[0].code,
           selectQueryTriggers: action.payload[0].triggers,
           showConfirm: action.payload[0].showConfirm,
-          runAutomatically: action.payload[0].runAutomatically,
           resourceId: action.payload[0].resourceId,
           data: [],
           queryMessage: ''
         },
         setNewCode: action.payload[0].code,
         setNewName: action.payload[0].name,
-        setNewRun: action.payload[0].runAutomatically,
         setNewResource: baseResource,
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers,
         setNewConfirm: action.payload[0].showConfirm,
-        runAutomaticallyTitle: runTitle,
         isLoading: false
       };
     case setSelectQueryRoutine.SUCCESS:
@@ -130,7 +120,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           UnSuccessTriggers = [...UnSuccessTriggers, element];
         }
       });
-      const { id, name, code, triggers, showConfirm, runAutomatically, resourceId } = action.payload;
+      const { id, name, code, triggers, showConfirm, resourceId } = action.payload;
       const baseSelectResource = state.resources.find(element => element.id === resourceId);
       return {
         ...state,
@@ -141,16 +131,13 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryTriggers: triggers,
           resourceId,
           showConfirm,
-          runAutomatically,
           queryMessage: '',
           data: []
         },
-        runAutomaticallyTitle: action.payload.runTitle,
         isOpen: action.payload.isOpen,
         setNewCode: code,
         setNewName: name,
         setNewConfirm: showConfirm,
-        setNewRun: runAutomatically,
         setNewResource: baseSelectResource,
         setNewSuccessTriggers: successTriggers,
         setNewUnSuccessTriggers: UnSuccessTriggers
@@ -171,12 +158,6 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
       return {
         ...state,
         setNewName: action.payload.name
-      };
-    case setNewRunRoutine.TRIGGER:
-      return {
-        ...state,
-        setNewRun: action.payload.status,
-        runAutomaticallyTitle: action.payload.title
       };
     case setNewConfirmRoutine.TRIGGER:
       return {
@@ -228,7 +209,6 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           queryCode: action.payload.code,
           queryTriggers: action.payload.triggers,
           showConfirm: action.payload.showConfirm,
-          runAutomatically: action.payload.runAutomatically,
           resourceId: action.payload.resourceId
         },
         isOpen: action.payload.isOpen,
