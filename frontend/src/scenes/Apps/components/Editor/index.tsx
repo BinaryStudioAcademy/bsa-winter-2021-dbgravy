@@ -10,13 +10,28 @@ const Editor: React.FC = memo(() => {
   const [active, setActive] = useState('insert');
   const [elements, setElements] = useState({});
   const [selected, setSelected] = useState<IDropItem | null>(null);
-  const addElement = async (element: IDropItem) => {
+  const addElement = (element: IDropItem) => {
     setElements({ ...elements, ...element });
     setActive('inspect');
   };
-
   const selectItem = (item: IDropItem) => {
     setSelected(item);
+  };
+
+  const editItem = (element: IDropItem, elementId: string, isEditingId: boolean) => {
+    const newElements: {[key: string]: IDropItem } = { ...elements };
+    newElements[elementId] = element;
+    if (isEditingId) {
+      delete newElements[element.id];
+    }
+    setElements({ ...newElements });
+  };
+
+  const deleteItem = (id: string) => {
+    const newElements: {[key: string]: IDropItem } = { ...elements };
+    delete newElements[id];
+    setElements({ ...newElements });
+    setSelected(null);
   };
 
   return (
@@ -45,7 +60,7 @@ const Editor: React.FC = memo(() => {
           <div className={styles.content}>
             {
               (active === 'inspect') && (
-                <Inspect selectedItem={selected} />
+                <Inspect selectedItem={selected} editItem={editItem} deleteItem={deleteItem} />
               )
             }
             {

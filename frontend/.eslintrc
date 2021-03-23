@@ -74,7 +74,8 @@
     "no-case-declarations": "off",
     "object-curly-newline": "off",
     "class-methods-use-this": "off",
-    "import/order": "off"
+    "import/order": "off",
+    "linebreak-style": "off"
   },
   "settings": {
     "import/resolver": {

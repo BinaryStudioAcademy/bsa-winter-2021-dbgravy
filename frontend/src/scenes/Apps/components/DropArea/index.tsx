@@ -24,14 +24,17 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
 
   const onSelect = (id: string) => {
     setSelectedItem(id);
-    selectItem(elements[id]);
+    if (id) {
+      selectItem({ ...elements[id], id });
+    } else {
+      selectItem(null);
+    }
   };
 
   useEffect(() => {
-    setItems({ ...items, ...elements });
+    setItems({ ...elements });
     const itemKeys = Object.keys(elements);
     onSelect(itemKeys[itemKeys.length - 1]);
-    selectItem(elements[itemKeys[itemKeys.length - 1]]);
   }, [elements]);
 
   const moveItem = useCallback(

@@ -5,6 +5,7 @@ import { ITable } from './ITable';
 type IComponent = IInputText | ITable | IButton;
 
 export interface IDropItem {
+  id: string;
   top: number,
   left: number,
   title: string,
