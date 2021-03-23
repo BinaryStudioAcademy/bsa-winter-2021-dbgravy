@@ -56,7 +56,7 @@ const Editor: React.FC = memo(() => {
                     itemTitle="Text Input"
                     itemDesc="Control other components or queries with text."
                     addElement={addElement}
-                    itemType="input"
+                    itemType="textInput"
                   />
                   <Item
                     itemIcon={faTable}

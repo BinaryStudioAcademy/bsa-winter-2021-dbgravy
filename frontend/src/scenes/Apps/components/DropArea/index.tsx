@@ -52,7 +52,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
 
   const [, drop] = useDrop(
     () => ({
-      accept: ['table', 'input', 'button'],
+      accept: ['table', 'textInput', 'button'],
       drop(item: IDragItem, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
         const clientOffset = monitor.getSourceClientOffset() as XYCoord;
@@ -61,16 +61,21 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
         const left = Math.round(item.left + delta.x);
         const top = Math.round(item.top + delta.y);
         moveItem(item.id, left, top);
+        const number = Object.entries(items)
+          .filter(([key, value]) => {
+            if (value.componentType === item.type) return true;
+            return false;
+          }).length;
         switch (item.type) {
-          case 'input':
-            setItemType('input');
-            return { key: `textinput${Object.keys(items).length + 1}`, left: l, top: t };
+          case 'textInput':
+            setItemType('textInput');
+            return { key: `textinput${number + 1}`, left: l, top: t };
           case 'table':
             setItemType('table');
-            return { key: `table${Object.keys(items).length + 1}`, left: l, top: t };
+            return { key: `table${number + 1}`, left: l, top: t };
           case 'button':
             setItemType('button');
-            return { key: `button${Object.keys(items).length + 1}`, left: l, top: t };
+            return { key: `button${number + 1}`, left: l, top: t };
           default:
             return undefined;
         }

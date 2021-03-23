@@ -28,7 +28,7 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
       if (dropResult) {
         const { key, left, top } = dropResult;
         switch (itemType) {
-          case 'input':
+          case 'textInput':
             addElement({
               [key]: {
                 top,
