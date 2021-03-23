@@ -54,7 +54,7 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
   return (
     <Modal show={showModal} onHide={handleClose}>
       <Modal.Header closeButton>
-        <div>Invite new member</div>
+        <Modal.Title>Invite new member</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {userChanges.isFailed && !isChange ? (<div className={styles.lf}>User not found</div>) : null}
@@ -68,19 +68,10 @@ const InviteModal: React.FC<IProps> = ({ showModal, clsName, setShowModal, handl
                 type="text"
                 name="email"
                 placeholder="name@example.com"
-                className="col-11"
+                className="col-12"
                 value={formik.values.email}
                 onChange={e => { formik.handleChange(e); setChange(true); }}
               />
-              <div
-                className={styles.clear}
-                onClick={() => formik.setValues({ ...formik.values, email: '' })}
-                onKeyDown={() => formik.setValues({ ...formik.values, email: '' })}
-                role="button"
-                tabIndex={0}
-              >
-                x
-              </div>
             </div>
           </Form.Group>
           <Form.Group controlId="role">
