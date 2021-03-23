@@ -20,6 +20,7 @@ import {
 import { IAppState } from '../../../common/models/store/IAppState';
 import { Status } from '../../../common/enums/UserStatus';
 import { Routine } from 'redux-saga-routines';
+import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
 function* watchFetchUsers() {
   yield takeEvery(fetchUsersRoutine.TRIGGER, fetchUsersList);
@@ -32,8 +33,9 @@ function* fetchUsersList() {
     const { id } = yield select(selectOrgId);
     const response: IUser[] = yield call(fetchUsers, id);
     yield put(fetchUsersRoutine.success(response));
-  } catch {
+  } catch (error) {
     yield put(fetchUsersRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -55,13 +57,15 @@ function* sendUserInvite() {
       yield put(inviteNewUserRoutine.success(response));
       yield put(modalShowRoutine.success());
     }
-  } catch {
+    successToastMessage('Invite send successfully');
+  } catch (error) {
     if (!userChanges.new) {
       yield put(reinviteUserRoutine.failure());
     } else {
       yield put(inviteNewUserRoutine.failure());
       yield put(modalShowRoutine.failure());
     }
+    errorToastMessage(error.msg);
   }
 }
 
@@ -76,8 +80,9 @@ function* toggleUserActivation() {
     const { id, status } = userChanges;
     const response: IUser = yield call(putUserChanges, { userId: id, status, organizationId });
     yield put(userActivationRoutine.success(response));
-  } catch {
+  } catch (error) {
     yield put(userActivationRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -85,8 +90,9 @@ function* checkInviteUserToOrganization({ payload }: Routine<any>): Routine<any>
   try {
     const response = yield call(checkInvite, payload);
     yield put(inviteUserToOrganizationRoutine.success(response));
-  } catch {
+  } catch (error) {
     yield put(inviteUserToOrganizationRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 
@@ -95,8 +101,9 @@ function* switchUserToOrganization({ payload }: Routine<any>): Routine<any> {
     const response = yield call(switchUser, payload);
     yield put(switchUserToOrganizationRoutine.success(response));
     yield put(inviteUserToOrganizationRoutine.failure());
-  } catch {
+  } catch (error) {
     yield put(switchUserToOrganizationRoutine.failure());
+    errorToastMessage(error.msg);
   }
 }
 

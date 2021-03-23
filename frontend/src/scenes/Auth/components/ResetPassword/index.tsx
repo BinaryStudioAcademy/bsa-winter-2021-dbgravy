@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Button, Form, InputGroup, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
@@ -10,7 +10,7 @@ import { Routes } from '../../../../common/enums/Routes';
 import resetPasswordSchema from '../../../../common/models/formik/resetPasswordSchema';
 import { THandleResetPassword } from '../../../../common/models/auth/THandleResetPassword';
 import { IResetPassword } from '../../../../common/models/auth/IResetPassword';
-
+import logo from '../../../../images/Logo.svg';
 import styles from './styles.module.scss';
 
 interface IProps {
@@ -49,6 +49,7 @@ const ResetPassword: FC<IProps> = ({ resetPassword, token }) => {
         }) => (
 
           <Form onSubmit={handleSubmit} className={styles.form}>
+            <Image src={logo} alt="db-gravy-logo" />
             <Form.Group>
               <h1 className={styles.title}>
                 Reset password
