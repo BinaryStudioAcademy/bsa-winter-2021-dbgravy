@@ -213,6 +213,7 @@ const CreateUpdateResource: React.FC<IProps> = (
                 <Button
                   variant="secondary"
                   type="submit"
+                  className={styles.createButton}
                   name="createResource"
                   disabled={isDisabledCreateBtn}
                   onClick={() => setBtnValue(ButtonEnum.create)}
