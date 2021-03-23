@@ -6,20 +6,27 @@ import style from '../../containers/style.module.scss';
 
 interface IProps {
     resourceList:Array<IResource>,
-    titleName:string|undefined
+    titleName:string|undefined,
+    onChangeResource: Function
 }
 
 const ResourceList:FunctionComponent<IProps> = ({
   resourceList,
+  onChangeResource,
   titleName
 }) => (
-  <DropdownButton id="dropdown-change" title={titleName} className={style.dropMenuChange}>
+  <DropdownButton
+    id="dropdown-change"
+    title={titleName}
+    className={style.dropMenuChange}
+  >
     {
             resourceList.map(resource => (
               <ResourceBlock
                 id={resource.id}
                 name={resource.name}
                 key={resource.id}
+                onChangeResource={onChangeResource}
               />
             ))
                 }

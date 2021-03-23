@@ -39,7 +39,7 @@ const Editor: React.FC<IEditorProps> = memo(({ appId, components, fetchComponent
   };
 
   return (
-    <div className="h-100" style={{ maxHeight: '50vh' }}>
+    <div style={{ height: '500px' }}>
       <div className="d-flex h-100 flex-wrap">
         <div className={`${styles.dropArea} dropArea`}>
           <DropArea
