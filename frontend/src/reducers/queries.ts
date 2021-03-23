@@ -131,7 +131,6 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         }
       });
       const { id, name, code, triggers, showConfirm, runAutomatically, resourceId } = action.payload;
-      console.log(showConfirm);
       const baseSelectResource = state.resources.find(element => element.id === resourceId);
       return {
         ...state,

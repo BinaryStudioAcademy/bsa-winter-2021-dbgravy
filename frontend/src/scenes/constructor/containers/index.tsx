@@ -195,7 +195,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     }
   };
   const changeConfirm = () => {
-    console.log('1');
     if (!query.setNewConfirm) {
       dispatch(setNewConfirmRoutine.trigger(true));
     } else {
