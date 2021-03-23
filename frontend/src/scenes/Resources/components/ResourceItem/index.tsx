@@ -37,7 +37,13 @@ const ResourceItem: React.FC<IProps> = ({
       <td>{resource.dbName}</td>
       <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
       <td>
-        <Button variant="dark" onClick={() => setDisplay(!display)}>...</Button>
+        <Button
+          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+          variant="outline-light"
+          onClick={() => setDisplay(!display)}
+        >
+          ...
+        </Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
             role="button"

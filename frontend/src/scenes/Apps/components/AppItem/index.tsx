@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
 import { IApps } from '../../../../common/models/apps/IApps';
 import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
@@ -47,8 +47,12 @@ const AppItem: React.FC<IProps> = ({
         </div>
       </div>
       <div>
-        <Button variant="dark" onClick={() => setDisplay(!display)}>
-          <FontAwesomeIcon icon={faCaretDown} color="white" />
+        <Button
+          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+          variant="outline-light"
+          onClick={() => setDisplay(!display)}
+        >
+          ...
         </Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
