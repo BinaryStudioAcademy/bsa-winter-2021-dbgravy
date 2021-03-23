@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
 import { IApps } from '../../../../common/models/apps/IApps';
 import Moment from 'react-moment';
 import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
@@ -47,28 +47,34 @@ const AppItem: React.FC<IProps> = ({
         </div>
       </div>
       <div>
-        <Button variant="dark" onClick={() => setDisplay(!display)}>
-          <FontAwesomeIcon icon={faCaretDown} color="white" />
+        <Button
+          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+          variant="outline-light"
+          onClick={() => setDisplay(!display)}
+        >
+          ...
         </Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
             onClick={() => onEdit()}
             role="button"
+            className={styles.action}
             onKeyPress={() => onEdit()}
             tabIndex={0}
           >
-            Edit
+            Rename
           </span>
           <span
             onClick={() => setShowDeleteModal(true)}
             role="button"
+            className={styles.delete}
             onKeyPress={() => deleteApp({ app })}
             tabIndex={0}
           >
             Delete
           </span>
-          <span role="button">
-            <Link to={`/app/editor/${app.id}`}>
+          <span role="button" className={styles.action}>
+            <Link to={`/app/editor/${app.id}`} className={styles['app-editor']}>
               App Editor
             </Link>
           </span>

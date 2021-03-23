@@ -106,12 +106,18 @@ function* watchFetchComponents() {
 }
 
 function* addComponent({ payload }: Routine<any>) {
+<<<<<<< HEAD
   yield console.log(payload);
+=======
+>>>>>>> 75052b33307dac5fd01dedc7cc56bd9c159821fc
   try {
     yield call(appService.addComponent, payload);
     yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {
+<<<<<<< HEAD
     console.log(error);
+=======
+>>>>>>> 75052b33307dac5fd01dedc7cc56bd9c159821fc
     yield put(addComponentRoutine.failure(error));
   }
 }

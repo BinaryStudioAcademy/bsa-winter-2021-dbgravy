@@ -37,7 +37,13 @@ const ResourceItem: React.FC<IProps> = ({
       <td>{resource.dbName}</td>
       <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
       <td>
-        <Button variant="dark" onClick={() => setDisplay(!display)}>...</Button>
+        <Button
+          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+          variant="outline-light"
+          onClick={() => setDisplay(!display)}
+        >
+          ...
+        </Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
             role="button"
@@ -48,6 +54,7 @@ const ResourceItem: React.FC<IProps> = ({
           <span
             onClick={() => setShowDeleteModal(true)}
             role="button"
+            className={styles.action}
             onKeyPress={() => setShowDeleteModal(true)}
             tabIndex={0}
           >

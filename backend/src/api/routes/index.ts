@@ -7,6 +7,7 @@ import resourceRoutes from './resourcesRoute';
 import userOrganizationRoute from './userOrganizationRoute';
 import organizationRoute from './organizationRoute';
 import queriesRouter from './queriesRoute';
+import editorRouter from './editorRouter';
 
 const routes = (app: Express) => {
   app.use('/api/users', userRoute);
@@ -17,6 +18,7 @@ const routes = (app: Express) => {
   app.use('/api/auth', authRoute);
   app.use('/api/organization', organizationRoute);
   app.use('/api/queries', queriesRouter);
+  app.use('/api/editor', editorRouter);
 };
 
 export default routes;
