@@ -3,7 +3,6 @@ import QueriesList from '../components/queriesList';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.scss';
 import { IAppState } from '../../../common/models/store/IAppState';
-import Loader from '../../../components/Loader';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
@@ -246,7 +245,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   };
 
   return (
-    <Loader isLoading={query.isLoading}>
+    <div>
       <Form className={style.wrapper} onClick={closeNameEditor}>
         <Form.Group controlId="queryLeftSide" className={style.LeftSide}>
           <Form.Group className={style.searchWrapper} controlId="exampleForm.ControlInput1">
@@ -387,7 +386,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isSubmit={handleSubmitConfirmModal}
       />
       <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
-    </Loader>
+    </div>
   );
 };
 
