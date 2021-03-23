@@ -325,14 +325,15 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             <Form.Label className={style.row} />
             <Form.Label className={style.row} />
             <div className={style.checkBoxWrapper}>
-              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <div
                 onClick={changeConfirm}
                 onKeyDown={changeConfirm}
                 role="button"
                 tabIndex={0}
                 className={style.Confirm}
-              />
+              >
+                .
+              </div>
               {
               !query.setNewConfirm ? (
                 <Form.Check
