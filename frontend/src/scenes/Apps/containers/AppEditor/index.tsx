@@ -12,9 +12,10 @@ import { IAppState } from '../../../../common/models/store/IAppState';
 import Header from '../../../../components/Header';
 import appStyles from '../../styles.module.scss';
 import { Link } from 'react-router-dom';
+import { IResource } from '../../../../common/models/resources/IResource';
 
 interface IProps {
-  resources: any,
+  resources: Array<IResource>,
   fetchResources: () => void
 }
 
