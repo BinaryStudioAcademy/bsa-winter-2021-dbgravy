@@ -3,7 +3,6 @@ import QueriesList from '../components/queriesList';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.scss';
 import { IAppState } from '../../../common/models/store/IAppState';
-import Loader from '../../../components/Loader';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
@@ -201,10 +200,10 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     }
   };
   const changeConfirm = () => {
-    if (query.setNewConfirm) {
-      dispatch(setNewConfirmRoutine.trigger(false));
-    } else {
+    if (!query.setNewConfirm) {
       dispatch(setNewConfirmRoutine.trigger(true));
+    } else {
+      dispatch(setNewConfirmRoutine.trigger(false));
     }
   };
   function changeCode(e: string) {
@@ -246,7 +245,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   };
 
   return (
-    <Loader isLoading={query.isLoading}>
+    <div>
       <Form className={style.wrapper} onClick={closeNameEditor}>
         <Form.Group controlId="queryLeftSide" className={style.LeftSide}>
           <Form.Group className={style.searchWrapper} controlId="exampleForm.ControlInput1">
@@ -324,27 +323,36 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
             <Form.Label className={style.row} />
             <Form.Label className={style.row} />
-            {
-              query.setNewConfirm ? (
+            <div className={style.checkBoxWrapper}>
+              <div
+                onClick={changeConfirm}
+                onKeyDown={changeConfirm}
+                role="button"
+                tabIndex={0}
+                className={style.Confirm}
+              >
+                .
+              </div>
+              {
+              !query.setNewConfirm ? (
                 <Form.Check
                   type="checkbox"
                   id="checkbox"
-                  label="Show a confirmation modal before running"
                   className={style.checkBox}
-                  onClick={changeConfirm}
-                  defaultChecked
+                  disabled
                 />
               )
                 : (
                   <Form.Check
                     type="checkbox"
-                    id="checkbox"
-                    label="Show a confirmation modal before running"
+                    id="checkbox2"
                     className={style.checkBox}
-                    onClick={changeConfirm}
+                    checked
                   />
                 )
             }
+              <span className={style.spanText}>Show a confirmation modal before running</span>
+            </div>
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
             <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
@@ -378,7 +386,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isSubmit={handleSubmitConfirmModal}
       />
       <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
-    </Loader>
+    </div>
   );
 };
 

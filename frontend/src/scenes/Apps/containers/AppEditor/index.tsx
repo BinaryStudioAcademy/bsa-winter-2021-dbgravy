@@ -6,6 +6,7 @@ import Editor from '../../components/Editor';
 import Constructor from '../../../constructor/containers';
 import { useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
+import logo from '../../../../images/Logo.svg';
 import { fetchResourceRoutine } from '../../../Resources/routines';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
@@ -13,7 +14,7 @@ import Header from '../../../../components/Header';
 import appStyles from '../../styles.module.scss';
 import { Link, NavLink } from 'react-router-dom';
 import { IResource } from '../../../../common/models/resources/IResource';
-import { Navbar, NavDropdown, Nav, Form, Button } from 'react-bootstrap';
+import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
 import { Routes } from '../../../../common/enums/Routes';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
 
@@ -88,10 +89,13 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
             tabIndex={0}
 
           >
-            <Navbar bg="light" expand="lg" className={styles.mainNav}>
+            <Navbar bg="white" expand="lg" className={styles.mainNav}>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-              <Nav className={`${styles.leftNav} mr-auto ml-5`}>
+              <Nav className={`${styles.leftNav} mr-auto`}>
+                <Col xs={6} md={4}>
+                  <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
+                </Col>
                 <NavDropdown title=" " id="basic-nav-dropdown" className={styles.dropButton}>
                   <NavLink to={Routes.Apps} activeStyle={{ color: '#000' }} className={styles.goToHome}>
                     Back to home
@@ -111,6 +115,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
                       type="text"
                       defaultValue={query.setSelectAppName}
                       onChange={changeName}
+                      className={styles.nameFill}
                     />
                   )
               }

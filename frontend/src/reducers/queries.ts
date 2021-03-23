@@ -68,7 +68,7 @@ const initialState: IQueryState = {
     runAutomatically: false,
     showConfirm: false
   },
-  isLoading: false,
+  isLoading: true,
   isResultLoading: true
 };
 
