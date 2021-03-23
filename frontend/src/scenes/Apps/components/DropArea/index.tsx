@@ -7,6 +7,7 @@ import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
 import { IInputText } from '../../../../common/models/editor/IInputText';
+import { IButton } from '../../../../common/models/editor/IButton';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
@@ -166,8 +167,12 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem }) => 
                   as="input"
                   type="button"
                   onClick={() => false}
-                  value="Submit"
-                  style={{ height: '100%', width: '100%' }}
+                  value={(component as IButton).text ? (component as IButton).text : 'Submit'}
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: (component as IButton).color ? (component as IButton).color : 'red'
+                  }}
                 />
               )
             }

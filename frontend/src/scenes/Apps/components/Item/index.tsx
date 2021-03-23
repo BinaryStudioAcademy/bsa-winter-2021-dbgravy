@@ -10,7 +10,6 @@ export interface IItemProps {
   itemTitle: string,
   itemDesc: string,
   itemType: string
-
 }
 
 interface IDropResult {

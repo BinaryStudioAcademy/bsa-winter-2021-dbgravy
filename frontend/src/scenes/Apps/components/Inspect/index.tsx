@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
+import {
+  addComponentRoutine
+} from '../../routines';
+import { connect } from 'react-redux';
+import { IAppState } from '../../../../common/models/store/IAppState';
 import { Form, Card, Button, InputGroup, FormControl, Dropdown } from 'react-bootstrap';
+import Select, { ValueType } from 'react-select';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
 import styles from './styles.module.scss';
+import { IQuery } from '../../../../common/models/apps/querys';
+import { IButton } from '../../../../common/models/editor/IButton';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
   editItem: Function,
-  deleteItem: Function
+  deleteItem: Function,
+  queries: IQuery[],
+  addComponent: Function
 }
 
-const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem }) => {
+type OptionType = {
+  value: string;
+  label: string;
+};
+
+const DropdownButton = styled(Dropdown.Toggle)`
+  :after {
+      display: none;
+  }
+`;
+
+const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, addComponent, queries }) => {
   const [componentNameId, setComponentNameId] = useState(selectedItem
     ? (selectedItem as IDropItem).id as string
     : '');
@@ -21,23 +42,48 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem }
   const [labelInputText, setLabelInputText] = useState('');
   const [placeholder, setPlaceholder] = useState('');
   const [defaultValueInputText, setDefaultValueInputText] = useState('');
-  const [textButton, setTextButton] = useState('');
-  const [colorButton, setColorButton] = useState('');
+  const [textButton, setTextButton] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IButton).text as string
+    : '');
+  const [colorButton, setColorButton] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IButton).color as string
+    : '');
 
-  const DropdownButton = styled(Dropdown.Toggle)`
-    :after {
-        display: none;
-    }
-  `;
+  const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
+  const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
 
-  const handleBlur = () => {
+  const handleEditNameId = () => {
     editItem(selectedItem, componentNameId, true);
     setToggleComponentNameId(false);
   };
 
+  const handleEdit = () => {
+    if (selectedItem && selectedItem.componentType === 'button') {
+      const newItem = { ...selectedItem, component: { text: textButton, color: colorButton } };
+      editItem(newItem, componentNameId);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    addComponent(selectedItem);
+  };
+
   useEffect(() => {
-    setComponentNameId((selectedItem as IDropItem).id);
+    if (selectedItem) {
+      setComponentNameId((selectedItem as IDropItem).id);
+      if (selectedItem && selectedItem.componentType === 'button') {
+        setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
+        setColorButton(((selectedItem as IDropItem).component as IButton).color as string);
+      }
+    }
   }, [selectedItem]);
+
+  const optionsTypeAction: OptionType[] = [
+    { value: 'Run a query', label: 'Run a query' }
+  ];
+
+  const optionsQueries: OptionType[] = [];
 
   return (
     <div style={{ width: '100%' }}>
@@ -59,7 +105,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem }
                 onChange={
                   ev => setComponentNameId(ev.target.value)
                 }
-                onBlur={handleBlur}
+                onBlur={handleEditNameId}
               />
               <Button>
                 <FontAwesomeIcon icon={faEllipsisV} />
@@ -125,19 +171,41 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem }
       }
       {
         (selectedItem && selectedItem.componentType === 'button') && (
-          <Form>
+          <Form onSubmit={e => handleSubmit(e)}>
             <Form.Label>Text</Form.Label>
             <Form.Control
               type="text"
               value={textButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTextButton(e.target.value)}
+              onBlur={() => handleEdit()}
             />
             <Form.Label>Color</Form.Label>
             <Form.Control
               type="text"
               value={colorButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setColorButton(e.target.value)}
+              onBlur={() => handleEdit()}
             />
+            <Form.Label>On click</Form.Label>
+            <Select
+              value={typeAction as ValueType<OptionType, boolean>}
+              onChange={option => setTypeAction(option)}
+              options={optionsTypeAction}
+            />
+            <div style={{ padding: '5px' }} />
+            <Select
+              value={query as ValueType<OptionType, boolean>}
+              onChange={option => setQuery(option)}
+              options={optionsQueries}
+            />
+            <div style={{ padding: '5px' }} />
+            <Button
+              variant="primary"
+              type="submit"
+              // disabled={!(typeAction && query)}
+            >
+              Save
+            </Button>
           </Form>
         )
       }
@@ -145,4 +213,12 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem }
   );
 };
 
-export default Inspect;
+const mapStateToProps = (state: IAppState) => ({
+  queries: state.app.qur.queriesApp
+});
+
+const mapDispatchToProps = {
+  addComponent: addComponentRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inspect);
