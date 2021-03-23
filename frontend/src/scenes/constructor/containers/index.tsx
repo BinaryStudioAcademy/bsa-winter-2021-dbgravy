@@ -41,6 +41,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
   const [showQuery, setShowQuery] = useState(false);
+  const [currentResource, setCurrentResource] = useState<string>('');
 
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
     || query.selectQuery.runAutomatically !== query.setNewRun
@@ -169,7 +170,12 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     }
   };
   const createQuery = () => {
-    if (isDataChange || !isTriggersChange) {
+    let { resourceId } = query.selectQuery;
+    if (query.queriesAppLength === 0) {
+      resourceId = currentResource;
+    }
+
+    if ((isDataChange || !isTriggersChange) && query.queriesAppLength !== 0) {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
     } else {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: false, isDuplicate: true }));
@@ -177,7 +183,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: '',
         appId: id,
-        resourceId: query.selectQuery.resourceId,
+        resourceId,
         triggers: [],
         runAutomatically: true,
         showConfirm: true
@@ -234,6 +240,11 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       setTimeout(() => setShowQuery(false), 1000);
     }
   }, [query.selectQuery.queryMessage]);
+
+  const changeResourceHandler = (resId: string) => {
+    setCurrentResource(resId);
+  };
+
   return (
     <Loader isLoading={query.isLoading}>
       <Form className={style.wrapper} onClick={closeNameEditor}>
@@ -303,7 +314,11 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             <Form.Label className={style.row} />
             <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
-              <ResourceList resourceList={query.resources} titleName={query.setNewResource?.name} />
+              <ResourceList
+                resourceList={query.resources}
+                titleName={query.setNewResource?.name}
+                onChangeResource={changeResourceHandler}
+              />
             </Form.Group>
             <Form.Label className={style.row} />
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />

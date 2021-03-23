@@ -41,7 +41,7 @@ const Editor: React.FC<IEditorProps> = memo(
     };
 
     return (
-      <div className="h-100" style={{ maxHeight: '50vh' }}>
+      <div className="h-100">
         <div className="d-flex h-100 flex-wrap">
           <div className={`${styles.dropArea} dropArea`}>
             <DropArea

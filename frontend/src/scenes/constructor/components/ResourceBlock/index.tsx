@@ -6,10 +6,11 @@ import { IAppState } from '../../../../common/models/store/IAppState';
 
 interface IProps {
     id:string
-    name:string
+    name:string,
+    onChangeResource: Function
 }
 
-const ResourceBlock:FunctionComponent<IProps> = ({ id, name }) => {
+const ResourceBlock:FunctionComponent<IProps> = ({ id, name, onChangeResource }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const selectQuery = (): any => {
@@ -17,6 +18,7 @@ const ResourceBlock:FunctionComponent<IProps> = ({ id, name }) => {
     if (id !== query.setNewResource?.id) {
       dispatch(takeResourcesTableAndColumns.trigger(query.resources.find(element => element.id === id)));
     }
+    onChangeResource(id);
   };
 
   return (
