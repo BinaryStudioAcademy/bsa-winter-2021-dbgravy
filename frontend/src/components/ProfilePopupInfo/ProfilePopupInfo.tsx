@@ -70,15 +70,19 @@ const ProfilePopupInfo: React.FC<IProps> = (
     }
 
     return (
-      <div className={styles.block}>
-        <span className={styles.primary}>
-          {organization?.name}
-        </span>
-        <span className={styles.secondary}>{organization?.role}</span>
-        <span>
-          <FontAwesomeIcon icon={faCog} color="grey" />
-          <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
-        </span>
+      <div>
+        <div className={styles['org-block']}>
+          <span className={styles.primary}>
+            {organization?.name}
+          </span>
+          <span className={styles.secondary}>{organization?.role}</span>
+        </div>
+        <div className={styles['options-wrp']}>
+          <span>
+            <FontAwesomeIcon icon={faCog} color="grey" />
+            <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
+          </span>
+        </div>
       </div>
     );
   };
@@ -109,25 +113,29 @@ const ProfilePopupInfo: React.FC<IProps> = (
     return (
       <div className={styles.container}>
         {isLoadFail()}
-        <div className={styles.block}>
-          <span
-            onClick={() => setShowCreator(true)}
-            role="button"
-            tabIndex={0}
-            onKeyPress={() => setShowCreator(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} color="grey" />
-            Create organization
-          </span>
-          <span
-            onClick={() => setShowSwitcher(true)}
-            role="button"
-            tabIndex={0}
-            onKeyPress={() => setShowSwitcher(true)}
-          >
-            <FontAwesomeIcon icon={faSyncAlt} color="grey" />
-            Switch Organization
-          </span>
+        <div className={styles['opt-block']}>
+          <div className={styles['options-wrp']}>
+            <span
+              onClick={() => setShowCreator(true)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => setShowCreator(true)}
+            >
+              <FontAwesomeIcon icon={faPlus} color="grey" />
+              Create organization
+            </span>
+          </div>
+          <div className={styles['options-wrp']}>
+            <span
+              onClick={() => setShowSwitcher(true)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => setShowSwitcher(true)}
+            >
+              <FontAwesomeIcon icon={faSyncAlt} color="grey" />
+              Switch Organization
+            </span>
+          </div>
         </div>
         <div className={[styles.block, styles.line].join(' ')}>
           <UserAttrButton
@@ -139,7 +147,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
             <span className={styles.link}>View profile</span>
           </div>
         </div>
-        <div className={styles.block}>
+        <div className={styles['options-wrp']}>
           <span
             onClick={() => logoutUser()}
             role="button"
