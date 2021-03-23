@@ -166,10 +166,13 @@ a.delete:hover{
 }
 .checkBoxWrapper{
   display: flex;
+  position: relative;
   flex-direction: row;
   align-items: center;
 }
 .Confirm{
+  position: absolute;
+  z-index: 2;
   margin-left: 20px;
   border: none!important;
   width: 23px;
@@ -180,8 +183,17 @@ a.delete:hover{
 }
 .spanText{
   margin-left: 20px;
-  padding-top: 5px ;
   font-size: 15px;
+}
+.checkBox input{
+  cursor: pointer!important;
+  position: static;
+  margin-left: 6px;
+  background-color: white!important;
+}
+.checkBox label{
+  height: 0;
+  width: 0;
 }
 .baseMargin{
   margin-left: 20px;
