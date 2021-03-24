@@ -15,7 +15,7 @@ const TableData:FunctionComponent<IProps> = ({
   const searchSelectQuery:IQuery|undefined = queryList.find(elem => elem.id === selectItem?.queryId);
   const dataName = searchSelectQuery?.data !== undefined ? Object.keys(searchSelectQuery?.data[0]) : ['name', 'age'];
   return (
-    <Table striped bordered hover size="sm" style={{ height: '100%', width: '100%' }}>
+    <Table striped bordered hover size="sm" style={{ height: '100%', width: '100%', overflow: 'auto' }}>
       <thead>
         <tr>
           {
