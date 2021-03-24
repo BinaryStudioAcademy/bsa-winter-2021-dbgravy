@@ -48,13 +48,20 @@
 }
 
 .form-control-search:focus {
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out;
 }
 
-.focused {
-  border-color: #000!important;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+// right here
+
+.form-control-search:focus + .input-group-search{
+  transition: border-color .15s ease-in-out;
+  outline: none;
+  border-color: black!important;
+  box-shadow: none!important;
 }
+
+// right here
+
 
 .card-element-nothing {
   border-style: dashed !important;
@@ -84,8 +91,4 @@ input:focus {
   outline: none;
   border-color: black!important;
   box-shadow: none!important;
-
-  +div {
-    border-color: black!important;
-  }
 }
