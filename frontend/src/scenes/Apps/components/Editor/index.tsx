@@ -6,26 +6,45 @@ import Inspect from '../Inspect';
 import { faGripLines, faTable, faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { connect } from 'react-redux';
-import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
+import {
+  fetchEditorComponentsRoutine,
+  addComponentRoutine,
+  updateComponentRoutine,
+  localUpdateComponentRoutine,
+  deleteComponentRoutine
+} from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
-import { IUpdateComponent } from '../../../../common/models/editor/IUpdateComponent';
 import { ComponentType } from '../../../../common/enums/ComponentType';
+
 interface IEditorProps {
   appId: string,
   components: {[key: string]: IDropItem },
   fetchComponents: (payload: { appId: string }) => void,
   addComponent: (payload: { appId: string, component: IDropItem }) => void,
-  updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void
-  show:boolean
+  updateComponent: (payload: { appId: string, component: IDropItem }) => void,
+  localUpdateComponent: (payload: { component: {id: string, left: number, top: number} }) => void,
+  deleteComponent: (payload: { appId: string, id: string }) => void,
+  show: boolean
 }
 const Editor: React.FC<IEditorProps> = memo(
-  ({ appId, components, fetchComponents, addComponent, updateComponent, show }) => {
+  ({
+    appId,
+    components,
+    fetchComponents,
+    addComponent,
+    updateComponent,
+    localUpdateComponent,
+    deleteComponent,
+    show
+  }) => {
     const [active, setActive] = useState<'inspect' | 'insert'>('insert');
-    const [elements, setElements] = useState({});
     const [selected, setSelected] = useState<IDropItem | null>(null);
 
+    useEffect(() => {
+      fetchComponents({ appId });
+    }, []);
+
     const addElement = (component: IDropItem) => {
-      setElements({ ...elements, ...component });
       addComponent({ appId, component });
       setActive('inspect');
     };
@@ -35,20 +54,16 @@ const Editor: React.FC<IEditorProps> = memo(
       setActive('inspect');
     };
 
-    const editItem = (component: IDropItem, elementId: string, isEditingId: boolean) => {
+    const editItem = (component: IDropItem) => {
       updateComponent({ appId, component });
-      const newElements: {[key: string]: IDropItem } = { ...elements };
-      newElements[elementId] = component;
-      if (isEditingId) {
-        delete newElements[component.id];
-      }
-      setElements({ ...newElements });
+    };
+
+    const localEditItem = (component: { id: string, left: number, top: number }) => {
+      // localUpdateComponent({ component });
     };
 
     const deleteItem = (id: string) => {
-      const newElements: {[key: string]: IDropItem } = { ...elements };
-      delete newElements[id];
-      setElements({ ...newElements });
+      deleteComponent({ appId, id });
       setSelected(null);
     };
 
@@ -56,58 +71,7 @@ const Editor: React.FC<IEditorProps> = memo(
       <div className="h-100" style={{ maxHeight: '50vh' }}>
         <div className="d-flex h-100 flex-wrap">
           <div className={`${styles.dropArea} dropArea`}>
-            <DropArea elements={elements} selectItem={selectItem} updateElement={editItem}/>
-          </div>
-          <div className={styles.sidebarWrp}>
-            <div className={styles.navbarTop}>
-              <button
-                type="button"
-                className={(active === 'inspect') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
-                onClick={() => setActive('inspect')}
-              >
-                Inspect
-              </button>
-              <button
-                type="button"
-                className={(active === 'insert') ? `${styles.navbarTopItem} ${styles.active}` : styles.navbarTopItem}
-                onClick={() => setActive('insert')}
-              >
-                Insert
-              </button>
-            </div>
-            <div className={styles.content}>
-              {
-                (active === 'inspect') && (
-                  <Inspect selectedItem={selected} editItem={editItem} deleteItem={deleteItem} />
-                )
-              }
-              {
-                (active === 'insert') && (
-                  <>
-                    <Item
-                      itemIcon={faGripLines}
-                      itemTitle="Text Input"
-                      itemDesc="Control other components or queries with text."
-                      addElement={addElement}
-                      itemType="textInput"
-                    />
-                    <Item
-                      itemIcon={faTable}
-                      itemTitle="Table"
-                      itemDesc="Display tabular data with pagination."
-                      addElement={addElement}
-                      itemType="table"
-                    />
-                    <Item
-                      itemIcon={faWindowMinimize}
-                      itemTitle="Button"
-                      itemDesc="Trigger actions like run queries."
-                      addElement={addElement}
-                      itemType="button"
-                    />
-                  </>
-                )
-              }
+            <DropArea elements={components} selectItem={selectItem} localUpdateElement={localEditItem} />
           </div>
           { show ? (
             <div className={styles.sidebarWrp}>
@@ -130,13 +94,18 @@ const Editor: React.FC<IEditorProps> = memo(
               <div className={styles.content}>
                 {
                   (active === 'inspect') && (
-                    <Inspect selectedItem={selected} />
+                    <Inspect
+                      selectedItem={selected}
+                      editComponent={editItem}
+                      deleteComponent={deleteItem}
+                    />
                   )
                 }
                 {
                   (active === 'insert') && (
                     <>
                       <Item
+                        appId={appId}
                         itemIcon={faGripLines}
                         itemTitle="Text Input"
                         itemDesc="Control other components or queries with text."
@@ -144,6 +113,7 @@ const Editor: React.FC<IEditorProps> = memo(
                         itemType={ComponentType.input}
                       />
                       <Item
+                        appId={appId}
                         itemIcon={faTable}
                         itemTitle="Table"
                         itemDesc="Display tabular data with pagination."
@@ -151,6 +121,7 @@ const Editor: React.FC<IEditorProps> = memo(
                         itemType={ComponentType.table}
                       />
                       <Item
+                        appId={appId}
                         itemIcon={faWindowMinimize}
                         itemTitle="Button"
                         itemDesc="Trigger actions like run queries."
@@ -170,6 +141,10 @@ const Editor: React.FC<IEditorProps> = memo(
   }
 );
 
+Editor.defaultProps = {
+  components: {}
+};
+
 const mapStateToProps = (rootState: IAppState) => ({
   components: rootState.app.editor.components
 });
@@ -177,7 +152,9 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
   fetchComponents: fetchEditorComponentsRoutine,
   addComponent: addComponentRoutine,
-  updateComponent: updateComponentRoutine
+  updateComponent: updateComponentRoutine,
+  localUpdateComponent: localUpdateComponentRoutine,
+  deleteComponent: deleteComponentRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

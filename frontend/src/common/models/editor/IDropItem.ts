@@ -7,6 +7,7 @@ type IComponent = IInputText | ITable | IButton;
 
 export interface IDropItem {
   id: string;
+  name: string;
   top: number,
   left: number,
   title: string,

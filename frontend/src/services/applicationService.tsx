@@ -1,6 +1,8 @@
 import api from '../common/helpers/apiHelper';
 import { IApps } from '../common/models/apps/IApps';
 import { IAddComponent } from '../common/models/editor/IAddComponent';
+import { IUpdateComponent } from '../common/models/editor/IUpdateComponent';
+import { IDeleteComponent } from '../common/models/editor/IDeleteComponent';
 import { IDropItem } from '../common/models/editor/IDropItem';
 
 export const addApp = (name: string) => api.post<IApps>('/api/applications', { name });
@@ -16,8 +18,12 @@ export const getComponents = (appId: string) => api.get<IDropItem[]>(`/api/edito
 export const addComponent = ({
   appId,
   component
-}: IAddComponent) => api.post<IDropItem>(`/api/editor/${appId}`, { component });
+}: IAddComponent) => api.post<IDropItem>(`/api/editor/${appId}`, component);
 
 export const updateComponent = ({
-  appId, component
-}: IAddComponent) => api.put<IDropItem>(`/api/editor/${appId}/${component.id}`, { component });
+  component
+}: IUpdateComponent) => api.put<IDropItem>(`/api/editor/${component.id}`, component);
+
+export const deleteComponent = ({
+  id
+}: IDeleteComponent) => api.delete<IDropItem>(`/api/editor/${id}`);

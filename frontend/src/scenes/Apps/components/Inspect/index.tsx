@@ -17,10 +17,9 @@ import { IButton } from '../../../../common/models/editor/IButton';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
-  editItem: Function,
-  deleteItem: Function,
-  queries: IQuery[],
-  addComponent: Function
+  editComponent: Function,
+  deleteComponent: Function,
+  queries: IQuery[]
 }
 
 type OptionType = {
@@ -34,9 +33,9 @@ const DropdownButton = styled(Dropdown.Toggle)`
   }
 `;
 
-const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, addComponent, queries }) => {
+const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteComponent, queries }) => {
   const [componentNameId, setComponentNameId] = useState(selectedItem
-    ? (selectedItem as IDropItem).id as string
+    ? (selectedItem as IDropItem).name as string
     : '');
   const [toggleComponentNameId, setToggleComponentNameId] = useState(false);
   const [labelInputText, setLabelInputText] = useState('');
@@ -53,25 +52,31 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, 
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
 
   const handleEditNameId = () => {
-    editItem(selectedItem, componentNameId, true);
     setToggleComponentNameId(false);
   };
 
   const handleEdit = () => {
     if (selectedItem && selectedItem.componentType === 'button') {
-      const newItem = { ...selectedItem, component: { text: textButton, color: colorButton } };
-      editItem(newItem, componentNameId);
+      const newItem = {
+        ...selectedItem,
+        name: componentNameId,
+        component: {
+          ...selectedItem.component,
+          text: textButton,
+          color: colorButton
+        } };
+      editComponent(newItem);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addComponent(selectedItem);
+    handleEdit();
   };
 
   useEffect(() => {
     if (selectedItem) {
-      setComponentNameId((selectedItem as IDropItem).id);
+      setComponentNameId((selectedItem as IDropItem).name);
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
         setColorButton(((selectedItem as IDropItem).component as IButton).color as string);
@@ -83,8 +88,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, 
     { value: 'Run a query', label: 'Run a query' }
   ];
 
-  const optionsQueries: OptionType[] = [];
-
+  const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
   return (
     <div style={{ width: '100%' }}>
       {
@@ -123,7 +127,10 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, 
                 <Dropdown.Menu>
                   <Dropdown.Header>Dropdown</Dropdown.Header>
                   <Dropdown.Divider />
-                  <Dropdown.Item eventKey="1" onClick={() => deleteItem(componentNameId)}>
+                  <Dropdown.Item
+                    eventKey="1"
+                    onClick={() => deleteComponent((selectedItem as IDropItem).id)}
+                  >
                     <span style={{ color: 'red' }}>Delete</span>
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -177,14 +184,12 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editItem, deleteItem, 
               type="text"
               value={textButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTextButton(e.target.value)}
-              onBlur={() => handleEdit()}
             />
             <Form.Label>Color</Form.Label>
             <Form.Control
               type="text"
               value={colorButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setColorButton(e.target.value)}
-              onBlur={() => handleEdit()}
             />
             <Form.Label>On click</Form.Label>
             <Select

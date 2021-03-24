@@ -9,7 +9,9 @@ import {
   showEditRoutine,
   fetchEditorComponentsRoutine,
   addComponentRoutine,
-  updateComponentRoutine
+  updateComponentRoutine,
+  localUpdateComponentRoutine,
+  deleteComponentRoutine
 } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -106,18 +108,10 @@ function* watchFetchComponents() {
 }
 
 function* addComponent({ payload }: Routine<any>) {
-<<<<<<< HEAD
-  yield console.log(payload);
-=======
->>>>>>> 75052b33307dac5fd01dedc7cc56bd9c159821fc
   try {
     yield call(appService.addComponent, payload);
     yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {
-<<<<<<< HEAD
-    console.log(error);
-=======
->>>>>>> 75052b33307dac5fd01dedc7cc56bd9c159821fc
     yield put(addComponentRoutine.failure(error));
   }
 }
@@ -139,6 +133,27 @@ function* watchUpdateComponent() {
   yield takeEvery(updateComponentRoutine.TRIGGER, updateComponent);
 }
 
+function* localUpdateComponent({ payload }: Routine<any>) {
+  yield put(localUpdateComponentRoutine.success({ component: payload.component }));
+}
+
+function* watchLocalUpdateComponent() {
+  yield takeEvery(localUpdateComponentRoutine.TRIGGER, localUpdateComponent);
+}
+
+function* deleteComponent({ payload }: Routine<any>) {
+  try {
+    yield call(appService.deleteComponent, payload);
+    yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
+  } catch (error) {
+    yield put(deleteComponentRoutine.failure(error));
+  }
+}
+
+function* watchDeleteComponent() {
+  yield takeEvery(deleteComponentRoutine.TRIGGER, deleteComponent);
+}
+
 export default function* appSaga() {
   yield all([
     watchAddApp(),
@@ -147,6 +162,8 @@ export default function* appSaga() {
     watchFetchSelectApp(),
     watchFetchComponents(),
     watchAddComponent(),
-    watchUpdateComponent()
+    watchUpdateComponent(),
+    watchLocalUpdateComponent(),
+    watchDeleteComponent()
   ]);
 }
