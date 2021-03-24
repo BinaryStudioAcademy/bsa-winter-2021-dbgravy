@@ -1,6 +1,9 @@
 export interface IInputText {
-  type: string,
+  label: string,
   placeholder: string,
   queryId?: string,
-  value?: string
+  value?: string,
+}
+export interface ITransportedInputText extends IInputText {
+  id: string;
 }

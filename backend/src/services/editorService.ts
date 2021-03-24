@@ -9,6 +9,9 @@ import { IButton, ITransportedButton } from '../common/models/editor/IButton';
 import { ComponentType } from '../common/enums/ComponentType';
 import { IComponentElement, IResponseComponent } from '../common/models/editor/IResponseComponent';
 import { HttpStatusCode } from '../common/constants/http';
+import { InputRepository } from '../data/repositories/inputRepository';
+import { IInputText } from '../common/models/editor/input/IInputText';
+import { ITransportedInputText } from '../../../frontend/src/common/models/editor/input/IInputText';
 
 export const checkComponentExistByNameId = async (appId: string, nameId: string): Promise<void> => {
   const component = await getCustomRepository(ComponentRepository)
@@ -45,6 +48,7 @@ export const getComponentsByAppId = async (appId: string): Promise<IResponseComp
 };
 
 export const getComponentById = async (id: string): Promise<IResponseComponent> => {
+  console.log(id);
   const component = await getCustomRepository(ComponentRepository).getComponentById(id);
   if (!component) {
     throw new CustomError('Component not found', HttpStatusCode.NOT_FOUND);
@@ -60,8 +64,8 @@ export const addComponent = async (
   await checkComponentExistByNameId(appId, name);
   const createdComponent = await getCustomRepository(ComponentRepository).addComponent({
     name,
-    top,
-    left,
+    top: Math.floor(top),
+    left: Math.floor(left),
     height,
     width,
     componentType,
@@ -70,6 +74,12 @@ export const addComponent = async (
   let createdComponentElement = {} as IComponentElement;
   switch (componentType) {
     case ComponentType.input:
+      createdComponentElement = await getCustomRepository(InputRepository).addInput({
+        label: (component.component as IInputText).label,
+        placeholder: (component.component as IInputText).placeholder,
+        queryId: (component.component as IInputText).queryId,
+        componentId: createdComponent.id
+      });
       break;
     case ComponentType.table:
       break;
@@ -92,6 +102,7 @@ export const updateComponent = async (
   componentData: ITranspostComponent
 ): Promise<IResponseComponent> => {
   await getComponentById(id);
+  console.log(componentData);
   const { name, top, left, height, width, component } = componentData;
   const editedComponent = await getCustomRepository(ComponentRepository).updateComponent(
     id, { name, top, left, height, width }
@@ -99,10 +110,19 @@ export const updateComponent = async (
   let editedComponentElement = {} as IComponentElement;
   switch (editedComponent.componentType) {
     case ComponentType.input:
+      console.log(component.id);
+      editedComponentElement = await getCustomRepository(InputRepository).updateInput(
+        (component as ITransportedInputText).id, {
+          label: (component as IInputText).label,
+          placeholder: (component.component as IInputText).placeholder,
+          queryId: (component as IInputText).queryId
+        }
+      );
       break;
     case ComponentType.table:
       break;
     case ComponentType.button:
+      console.log(component.id);
       editedComponentElement = await getCustomRepository(ButtonRepository).updateButton(
         (component as ITransportedButton).id, {
           text: (component as IButton).text,

@@ -63,8 +63,20 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
         name: componentNameId,
         component: {
           ...selectedItem.component,
-          text: textButton,
+          label: labelInputText,
           color: colorButton
+        }
+      };
+      editComponent(newItem);
+    } else if (selectedItem && selectedItem.componentType === 'textInput') {
+      console.log(selectedItem.component);
+      const newItem = {
+        ...selectedItem,
+        name: componentNameId,
+        component: {
+          ...selectedItem.component,
+          text: textButton,
+          placeholder
         }
       };
       editComponent(newItem);
@@ -143,7 +155,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
       {
         (selectedItem && selectedItem.componentType === 'textInput') && (
-          <Form>
+          <Form onSubmit={e => handleSubmit(e)}>
             <Form.Label>Label</Form.Label>
             <Form.Control
               type="text"
@@ -156,6 +168,18 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
+            <Select
+              value={typeAction as ValueType<OptionType, boolean>}
+              onChange={option => setTypeAction(option)}
+              options={optionsTypeAction}
+            />
+            <div style={{ padding: '5px' }} />
+            <Select
+              value={query as ValueType<OptionType, boolean>}
+              onChange={option => setQuery(option)}
+              options={optionsQueries}
+            />
+            <div style={{ padding: '5px' }} />
             <Button
               variant="primary"
               type="submit"

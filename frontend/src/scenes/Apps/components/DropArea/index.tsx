@@ -6,7 +6,7 @@ import { Button, Form, Table } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
-import { IInputText } from '../../../../common/models/editor/input/IInputText';
+// import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 import { IButton } from '../../../../common/models/editor/IButton';
 
@@ -129,7 +129,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
                     {name}
                   </Form.Label>
                   <Form.Control
-                    type={(component as IInputText).type}
                     name={key}
                     value={inputTextValue}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
