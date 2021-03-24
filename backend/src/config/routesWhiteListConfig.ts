@@ -4,5 +4,6 @@ export default [
   '/auth/token',
   /^\/user\/organization\/invite\/(?:([^/]+?))$/i,
   '/auth/forgot-pass',
-  '/auth/reset-pass'
+  '/auth/reset-pass',
+  /^\/editor\/(?:([^/]+?))$/i
 ];
