@@ -23,7 +23,9 @@ export class Component extends AbstractEntity {
   @Column()
   left: number;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   componentType: string;
 
   @RelationId((component: Component) => component.app)

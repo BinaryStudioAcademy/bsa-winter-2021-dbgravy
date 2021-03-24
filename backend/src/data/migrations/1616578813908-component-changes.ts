@@ -7,7 +7,7 @@ export class componentChanges1616578813908 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "button" DROP COLUMN "label"`);
         await queryRunner.query(`ALTER TABLE "button" ADD "text" character varying NOT NULL`);
         await queryRunner.query(`ALTER TABLE "button" ADD "color" character varying NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "component" ADD "componentType" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "component" ADD "componentType" character varying`);
         await queryRunner.query(`ALTER TABLE "button" DROP CONSTRAINT "FK_fa8be32cd83a323051f65a9a872"`);
         await queryRunner.query(`ALTER TABLE "button" ALTER COLUMN "queryId" DROP NOT NULL`);
         await queryRunner.query(`COMMENT ON COLUMN "button"."queryId" IS NULL`);
