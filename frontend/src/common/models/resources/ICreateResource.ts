@@ -5,7 +5,7 @@ export interface ICreateResource {
   name: string,
   type: ResourceTypeValue,
   host: string,
-  port: number,
+  port: number | '',
   dbName: string,
   dbUserName: string,
   dbPassword: string,

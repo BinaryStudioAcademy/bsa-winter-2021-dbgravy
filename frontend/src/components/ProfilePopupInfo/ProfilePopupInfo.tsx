@@ -137,14 +137,13 @@ const ProfilePopupInfo: React.FC<IProps> = (
             </span>
           </div>
         </div>
-        <div className={[styles.block, styles.line].join(' ')}>
+        <div className={[styles.block, styles.line].join(' ')} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
           <UserAttrButton
             firstName={user?.firstName || ''}
             lastName={user?.lastName || ''}
           />
           <div className={styles.block}>
             <span className={styles.primary}>{`${user?.firstName} ${user?.lastName}`}</span>
-            <span className={styles.link}>View profile</span>
           </div>
         </div>
         <div className={styles['options-wrp']}>

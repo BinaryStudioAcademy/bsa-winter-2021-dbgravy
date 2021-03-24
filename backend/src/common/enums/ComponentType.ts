@@ -1,5 +1,5 @@
 export enum ComponentType {
   table = 'table',
-  input = 'input',
+  input = 'textInput',
   button = 'button'
 }

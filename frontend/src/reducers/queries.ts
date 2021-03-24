@@ -63,7 +63,7 @@ const initialState: IQueryState = {
     resourceId: '',
     showConfirm: false
   },
-  isLoading: false,
+  isLoading: true,
   isResultLoading: true
 };
 

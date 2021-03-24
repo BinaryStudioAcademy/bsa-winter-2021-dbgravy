@@ -20,3 +20,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.close span {
+  font-size:1.5rem;
+}
+
+.modal {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-dialog {
+  width: 100%;
+}
+
+.dbg-button {
+  border: 1px solid rgb(199, 199, 199);
+  background: #FFF;
+  color: rgb(151, 151, 151);
+  font-size: 20px;
+  line-height: 1;
+  outline: none;
+  &:hover, &.dbg-active {
+    background: rgb(236, 245, 253);
+    color: rgb(74, 161, 237);
+    border-color: rgb(133, 193, 244);
+  }
+}
+
+.table td, .table th {
+   vertical-align: middle;
+ }

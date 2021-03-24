@@ -6,9 +6,14 @@ import Inspect from '../Inspect';
 import { faGripLines, faTable, faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { connect } from 'react-redux';
-import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
+import {
+  fetchEditorComponentsRoutine,
+  addComponentRoutine,
+  updateComponentRoutine,
+  localUpdateComponentRoutine,
+  deleteComponentRoutine
+} from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
-import { IUpdateComponent } from '../../../../common/models/editor/IUpdateComponent';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 
 interface IEditorProps {
@@ -16,40 +21,57 @@ interface IEditorProps {
   components: {[key: string]: IDropItem },
   fetchComponents: (payload: { appId: string }) => void,
   addComponent: (payload: { appId: string, component: IDropItem }) => void,
-  updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void
-  show:boolean
+  updateComponent: (payload: { appId: string, component: IDropItem }) => void,
+  localUpdateComponent: (payload: { component: {id: string, left: number, top: number} }) => void,
+  deleteComponent: (payload: { appId: string, id: string }) => void,
+  show: boolean
 }
-
 const Editor: React.FC<IEditorProps> = memo(
-  ({ appId, components, fetchComponents, addComponent, updateComponent, show }) => {
+  ({
+    appId,
+    components,
+    fetchComponents,
+    addComponent,
+    updateComponent,
+    localUpdateComponent,
+    deleteComponent,
+    show
+  }) => {
+    const [active, setActive] = useState<'inspect' | 'insert'>('insert');
+    const [selected, setSelected] = useState<IDropItem | null>(null);
+
     useEffect(() => {
       fetchComponents({ appId });
     }, []);
 
-    const [active, setActive] = useState<'inspect' | 'insert'>('insert');
-    const [selected, setSelected] = useState<IDropItem | null>(null);
     const addElement = (component: IDropItem) => {
       addComponent({ appId, component });
+      setActive('inspect');
     };
 
-    const updateElement = (component: IUpdateComponent) => {
-      updateComponent({ appId, component });
-    };
     const selectItem = (item: IDropItem) => {
       setSelected(item);
       setActive('inspect');
     };
 
+    const editItem = (component: IDropItem) => {
+      updateComponent({ appId, component });
+    };
+
+    const localEditItem = (component: { id: string, left: number, top: number }) => {
+      // localUpdateComponent({ component });
+    };
+
+    const deleteItem = (id: string) => {
+      deleteComponent({ appId, id });
+      setSelected(null);
+    };
+
     return (
-      <div className="h-100">
+      <div className="h-100" style={{ maxHeight: '50vh' }}>
         <div className="d-flex h-100 flex-wrap">
           <div className={`${styles.dropArea} dropArea`}>
-            <DropArea
-              elements={components}
-              selectItem={selectItem}
-              updateElement={updateElement}
-              appId={appId}
-            />
+            <DropArea elements={components} selectItem={selectItem} localUpdateElement={localEditItem} />
           </div>
           { show ? (
             <div className={styles.sidebarWrp}>
@@ -72,13 +94,18 @@ const Editor: React.FC<IEditorProps> = memo(
               <div className={styles.content}>
                 {
                   (active === 'inspect') && (
-                    <Inspect selectedItem={selected} />
+                    <Inspect
+                      selectedItem={selected}
+                      editComponent={editItem}
+                      deleteComponent={deleteItem}
+                    />
                   )
                 }
                 {
                   (active === 'insert') && (
                     <>
                       <Item
+                        appId={appId}
                         itemIcon={faGripLines}
                         itemTitle="Text Input"
                         itemDesc="Control other components or queries with text."
@@ -86,6 +113,7 @@ const Editor: React.FC<IEditorProps> = memo(
                         itemType={ComponentType.input}
                       />
                       <Item
+                        appId={appId}
                         itemIcon={faTable}
                         itemTitle="Table"
                         itemDesc="Display tabular data with pagination."
@@ -93,6 +121,7 @@ const Editor: React.FC<IEditorProps> = memo(
                         itemType={ComponentType.table}
                       />
                       <Item
+                        appId={appId}
                         itemIcon={faWindowMinimize}
                         itemTitle="Button"
                         itemDesc="Trigger actions like run queries."
@@ -123,7 +152,9 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
   fetchComponents: fetchEditorComponentsRoutine,
   addComponent: addComponentRoutine,
-  updateComponent: updateComponentRoutine
+  updateComponent: updateComponentRoutine,
+  localUpdateComponent: localUpdateComponentRoutine,
+  deleteComponent: deleteComponentRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

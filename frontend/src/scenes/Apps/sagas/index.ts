@@ -10,7 +10,9 @@ import {
   fetchEditorComponentsRoutine,
   addComponentRoutine,
   updateComponentRoutine,
-  addInputRoutine
+  addInputRoutine,
+  localUpdateComponentRoutine,
+  deleteComponentRoutine
 } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -146,6 +148,27 @@ function* watchUpdateComponent() {
   yield takeEvery(updateComponentRoutine.TRIGGER, updateComponent);
 }
 
+function* localUpdateComponent({ payload }: Routine<any>) {
+  yield put(localUpdateComponentRoutine.success({ component: payload.component }));
+}
+
+function* watchLocalUpdateComponent() {
+  yield takeEvery(localUpdateComponentRoutine.TRIGGER, localUpdateComponent);
+}
+
+function* deleteComponent({ payload }: Routine<any>) {
+  try {
+    yield call(appService.deleteComponent, payload);
+    yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
+  } catch (error) {
+    yield put(deleteComponentRoutine.failure(error));
+  }
+}
+
+function* watchDeleteComponent() {
+  yield takeEvery(deleteComponentRoutine.TRIGGER, deleteComponent);
+}
+
 export default function* appSaga() {
   yield all([
     watchAddApp(),
@@ -155,6 +178,8 @@ export default function* appSaga() {
     watchFetchComponents(),
     watchAddComponent(),
     watchUpdateComponent(),
-    watchAddInput()
+    watchAddInput(),
+    watchLocalUpdateComponent(),
+    watchDeleteComponent()
   ]);
 }
