@@ -19,3 +19,5 @@ export const addComponent = ({
 
 export const updateComponent = ({
   appId, component }: IAddComponent) => api.put<void>('/api/editor/', { appId, component });
+
+export const deleteComponent = (id: string) => api.delete<void>(`/api/editor/${id}`);
