@@ -192,7 +192,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       {
         (selectedItem && selectedItem.componentType === 'table') && (
           <Form>
-            <Form.Control as="textarea" rows={3} />
             <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
             <Button
               variant="primary"
