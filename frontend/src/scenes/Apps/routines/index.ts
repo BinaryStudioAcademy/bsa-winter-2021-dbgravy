@@ -10,5 +10,6 @@ export const fetchSelectAppRoutine = createRoutine('FETCH_SELECT_APP');
 export const setNewAppNameRoutine = createRoutine('SET_NEW_APP_NAME_APP');
 export const fetchEditorComponentsRoutine = createRoutine('EDITOR:FETCH_COMPONENTS');
 export const addComponentRoutine = createRoutine('EDITOR:ADD_COMPONENT');
+export const setNewInputValue = createRoutine('EDITOR:SET_INPUT_VALUE');
 export const addInputRoutine = createRoutine('EDITOR:ADD_INPUT');
 export const updateComponentRoutine = createRoutine('EDITOR:UPDATE_COMPONENT');
