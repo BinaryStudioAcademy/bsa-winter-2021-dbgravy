@@ -4,7 +4,7 @@ export class initMigrations1615122085278 implements MigrationInterface {
     name = 'initMigrations1615122085278'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "component" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying NOT NULL, "height" integer NOT NULL, "width" integer NOT NULL, "top" integer NOT NULL, "left" integer NOT NULL, "appId" uuid NOT NULL, CONSTRAINT "PK_c084eba2d3b157314de79135f09" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "component" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "name" character varying NOT NULL, "height" integer NOT NULL, "width" integer NOT NULL, "top" integer NOT NULL, "left" integer NOT NULL, "componentType" character varying NOT NULL, "appId" uuid NOT NULL, CONSTRAINT "PK_c084eba2d3b157314de79135f09" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "user_organization_role_enum" AS ENUM('admin', 'developer', 'viewer')`);
         await queryRunner.query(`CREATE TYPE "user_organization_status_enum" AS ENUM('pending', 'active', 'deactivated')`);
         await queryRunner.query(`CREATE TABLE "user_organization" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "role" "user_organization_role_enum" NOT NULL, "status" "user_organization_status_enum" NOT NULL, "userId" uuid NOT NULL, "organizationId" uuid NOT NULL, CONSTRAINT "PK_3e103cdf85b7d6cb620b4db0f0c" PRIMARY KEY ("id"))`);

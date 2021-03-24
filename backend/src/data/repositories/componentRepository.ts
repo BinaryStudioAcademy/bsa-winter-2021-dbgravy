@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Component } from '../entities/Component';
-import { ICreateComponent } from '../../common/models/components/ICreateComponent';
+import { ICreateComponent } from '../../common/models/editor/ICreateComponent';
 
 @EntityRepository(Component)
 export class ComponentRepository extends Repository<Component> {
@@ -22,7 +22,7 @@ export class ComponentRepository extends Repository<Component> {
     return this.findOne({ where: { name, appId } });
   }
 
-  async updateApp(id: string, data: Partial<ICreateComponent>): Promise<Component> {
+  async updateComponent(id: string, data: Partial<ICreateComponent>): Promise<Component> {
     await this.update(id, data);
     return this.getComponentById(id);
   }

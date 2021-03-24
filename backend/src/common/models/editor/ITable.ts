@@ -5,3 +5,6 @@ type Row = {
 export interface ITable {
   data: Row[]
 }
+export interface ITransportedTable extends ITable {
+  id: string;
+}
