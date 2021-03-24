@@ -9,7 +9,8 @@ import {
   showEditRoutine,
   fetchEditorComponentsRoutine,
   addComponentRoutine,
-  updateComponentRoutine
+  updateComponentRoutine,
+  deleteComponentRoutine
 } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -127,8 +128,22 @@ function* updateComponent({ payload }: Routine<any>) {
   }
 }
 
+function* deleteComponent({ payload }: Routine<any>) {
+  try {
+    yield call(appService.deleteComponent, payload);
+    yield put(deleteComponentRoutine.success(payload));
+    successToastMessage('Component deleted successfully');
+  } catch (error) {
+    errorToastMessage(error.msg);
+  }
+}
+
 function* watchUpdateComponent() {
   yield takeEvery(updateComponentRoutine.TRIGGER, updateComponent);
+}
+
+function* watchDeleteComponent() {
+  yield takeEvery(deleteComponentRoutine.TRIGGER, deleteComponent);
 }
 
 export default function* appSaga() {
@@ -139,6 +154,7 @@ export default function* appSaga() {
     watchFetchSelectApp(),
     watchFetchComponents(),
     watchAddComponent(),
-    watchUpdateComponent()
+    watchUpdateComponent(),
+    watchDeleteComponent()
   ]);
 }

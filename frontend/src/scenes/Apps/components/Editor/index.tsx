@@ -6,22 +6,29 @@ import Inspect from '../Inspect';
 import { faGripLines, faTable, faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { connect } from 'react-redux';
-import { fetchEditorComponentsRoutine, addComponentRoutine, updateComponentRoutine } from '../../routines';
+import {
+  addComponentRoutine,
+  deleteComponentRoutine,
+  fetchEditorComponentsRoutine,
+  updateComponentRoutine
+} from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { IUpdateComponent } from '../../../../common/models/editor/IUpdateComponent';
 import { ComponentType } from '../../../../common/enums/ComponentType';
+import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
 
 interface IEditorProps {
   appId: string,
   components: {[key: string]: IDropItem },
   fetchComponents: (payload: { appId: string }) => void,
   addComponent: (payload: { appId: string, component: IDropItem }) => void,
-  updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void
+  updateComponent: (payload: { appId: string, component: IUpdateComponent }) => void,
+  deleteComponent: IBindingCallback1<string>,
   show:boolean
 }
 
 const Editor: React.FC<IEditorProps> = memo(
-  ({ appId, components, fetchComponents, addComponent, updateComponent, show }) => {
+  ({ appId, components, fetchComponents, addComponent, updateComponent, deleteComponent, show }) => {
     useEffect(() => {
       fetchComponents({ appId });
     }, []);
@@ -72,7 +79,7 @@ const Editor: React.FC<IEditorProps> = memo(
               <div className={styles.content}>
                 {
                   (active === 'inspect') && (
-                    <Inspect selectedItem={selected} />
+                    <Inspect selectedItem={selected} deleteComponent={deleteComponent} />
                   )
                 }
                 {
@@ -123,7 +130,8 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
   fetchComponents: fetchEditorComponentsRoutine,
   addComponent: addComponentRoutine,
-  updateComponent: updateComponentRoutine
+  updateComponent: updateComponentRoutine,
+  deleteComponent: deleteComponentRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);
