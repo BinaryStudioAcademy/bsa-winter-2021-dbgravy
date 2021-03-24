@@ -4,3 +4,14 @@
   border: 1px dashed #cecece;
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.deleteButton {
+  width: 50%;
+}
+

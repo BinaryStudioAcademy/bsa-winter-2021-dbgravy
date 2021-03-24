@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import styles from './styles.module.scss';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IBindingCallback1 } from '../../../../common/models/callback/IBindingCallback1';
 
 export interface IInspectProps {
-  selectedItem: IDropItem | null
+  selectedItem: IDropItem | null,
+  deleteComponent: IBindingCallback1<string>
 }
 
-const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
+const Inspect: React.FC<IInspectProps> = ({ selectedItem, deleteComponent }) => {
   const [labelInputText, setLabelInputText] = useState('');
   const [placeholder, setPlaceholder] = useState('');
   const [defaultValueInputText, setDefaultValueInputText] = useState('');
   const [textButton, setTextButton] = useState('');
   const [colorButton, setColorButton] = useState('');
+
+  const handleDeletedComponent = ({ id }: IDropItem): void => {
+    deleteComponent(id);
+  };
+
   return (
     <div style={{ width: '100%' }}>
       {
@@ -75,6 +84,21 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setColorButton(e.target.value)}
             />
           </Form>
+        )
+      }
+      {
+        selectedItem
+        && (
+          <div className={styles.buttonContainer}>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className={styles.deleteButton}
+              onClick={() => handleDeletedComponent(selectedItem)}
+            >
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </Button>
+          </div>
         )
       }
     </div>
