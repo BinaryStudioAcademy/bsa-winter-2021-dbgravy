@@ -65,7 +65,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
     () => ({
       accept: ['table', 'textInput', 'button'],
       drop(item: IDragItem, monitor) {
-        console.log('item', item);
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
         const clientOffset = monitor.getSourceClientOffset() as XYCoord;
         const t = clientOffset.y;
