@@ -4,11 +4,14 @@ import { IInputText } from './IInputText';
 import { ITable } from './ITable';
 
 export interface IResponse {
+  id:string
   title: string,
   width: string,
   height: string,
   top: number,
   left: number,
   componentType: ComponentType,
-  component: IInputText | ITable | IButton;
+  table: ITable|null
+  button: IButton|null
+  input: IInputText|null
 }

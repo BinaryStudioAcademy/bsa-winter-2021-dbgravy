@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import styles from './styles.module.scss';
+import { IAppState } from '../../../../common/models/store/IAppState';
+import { IQuery } from '../../../../common/models/queries/IQuery';
+import QueriesList from '../queryList';
+import { connect } from 'react-redux';
+import { addTableInfoRoutine } from '../../routines';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null
+  queries: IQuery[],
+  addTableInfo: Function
 }
 
-const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
+const Inspect: React.FC<IInspectProps> = ({ selectedItem, addTableInfo, queries }) => {
   const [labelInputText, setLabelInputText] = useState('');
   const [placeholder, setPlaceholder] = useState('');
   const [defaultValueInputText, setDefaultValueInputText] = useState('');
   const [textButton, setTextButton] = useState('');
   const [colorButton, setColorButton] = useState('');
+  const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.table?.queryId);
+  console.log(selectedItem);
+  const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>(searchSelectQuery);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    switch (selectedItem?.componentType) {
+      case 'button':
+        addTableInfo(selectedItem);
+        break;
+      case 'table':
+        addTableInfo(selectedItem);
+        break;
+      default:
+        break;
+    }
+    // addComponent(selectedItem);
+  };
+  const changeSelectQuery = (id:string) => {
+    const newSelectQuery = queries.find(elem => elem.id === id);
+    setSelectedQuery(newSelectQuery);
+  };
   return (
     <div style={{ width: '100%' }}>
       {
@@ -56,6 +84,14 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
         (selectedItem && selectedItem.componentType === 'table') && (
           <Form>
             <Form.Control as="textarea" rows={3} />
+            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Save
+            </Button>
           </Form>
         )
       }
@@ -81,4 +117,14 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
   );
 };
 
-export default Inspect;
+const mapStateToProps = (state: IAppState) => ({
+  queries: state.app.qur.queriesApp
+});
+
+const mapDispatchToProps = {
+  addTableInfo: addTableInfoRoutine
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export default connect(mapStateToProps, mapDispatchToProps)(Inspect);

@@ -1,7 +1,5 @@
-type Row = {
-  [key: string]: string
-}
-
 export interface ITable {
-  data: Row[]
+  id:string
+  componentId:string
+  queryId:string
 }

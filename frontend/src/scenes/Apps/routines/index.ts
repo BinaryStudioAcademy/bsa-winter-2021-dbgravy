@@ -11,3 +11,4 @@ export const setNewAppNameRoutine = createRoutine('SET_NEW_APP_NAME_APP');
 export const fetchEditorComponentsRoutine = createRoutine('EDITOR:FETCH_COMPONENTS');
 export const addComponentRoutine = createRoutine('EDITOR:ADD_COMPONENT');
 export const updateComponentRoutine = createRoutine('EDITOR:UPDATE_COMPONENT');
+export const addTableInfoRoutine = createRoutine('ADD_TABLE_INFO');

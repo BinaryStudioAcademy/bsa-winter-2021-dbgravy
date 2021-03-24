@@ -5,8 +5,10 @@ import { IUpdateComponent } from '../../common/models/editor/IUpdateComponent';
 
 @EntityRepository(Component)
 export class ComponentRepository extends Repository<Component> {
-  getAllComponents(appId: string): Promise<Component[]> {
-    return this.find({ where: { appId } });
+  async getAllComponents(appId: string): Promise<Component[]> {
+    const response = await this.find({ where: { appId }, relations: ['table', 'button', 'input'] });
+    console.log(response);
+    return response;
   }
   addComponent(component: ICreateComponent): Promise<Component> {
     return this.create(component).save();

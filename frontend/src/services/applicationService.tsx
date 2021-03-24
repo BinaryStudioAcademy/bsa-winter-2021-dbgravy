@@ -2,6 +2,7 @@ import api from '../common/helpers/apiHelper';
 import { IApps } from '../common/models/apps/IApps';
 import { IAddComponent } from '../common/models/editor/IAddComponent';
 import { IDropItem } from '../common/models/editor/IDropItem';
+import { ITable } from '../common/models/editor/ITable';
 
 export const addApp = (name: string) => api.post<IApps>('/api/applications', { name });
 
@@ -19,3 +20,9 @@ export const addComponent = ({
 
 export const updateComponent = ({
   appId, component }: IAddComponent) => api.put<void>('/api/editor/', { appId, component });
+export const addTables = (
+  componentInfo: ITable
+) => {
+  console.log(componentInfo);
+  (api.post<IDropItem>('/api/editor/input', { componentInfo }));
+};

@@ -6,6 +6,7 @@ import { ITable } from './ITable';
 type IComponent = IInputText | ITable | IButton;
 
 export interface IDropItem {
+  id:string
   top: number,
   left: number,
   title: string,
@@ -13,4 +14,7 @@ export interface IDropItem {
   height:string
   componentType: ComponentType
   component: IComponent
+  table: ITable|null
+  button: IButton|null
+  input: IInputText|null
 }
