@@ -2,14 +2,6 @@
 
 import { getCustomRepository } from 'typeorm';
 import { ComponentRepository } from '../data/repositories/componentRepository';
-<<<<<<< HEAD
-import { formatResponse } from '../common/mappers/editor';
-import { IComponent } from '../common/models/editor/IComponent';
-import { IUpdateComponent } from '../common/models/editor/IUpdateComponent';
-import { IResponse } from '../common/models/editor/IResponse';
-import { IInputText } from '../common/models/editor/input/IInputText';
-import { InputRepository } from '../data/repositories/inputRepository';
-=======
 import { ButtonRepository } from '../data/repositories/buttonRepository';
 import { CustomError } from '../common/models/error/CustomError';
 import { ITranspostComponent } from '../common/models/editor/ITranspostComponent';
@@ -17,7 +9,6 @@ import { IButton, ITransportedButton } from '../common/models/editor/IButton';
 import { ComponentType } from '../common/enums/ComponentType';
 import { IComponentElement, IResponseComponent } from '../common/models/editor/IResponseComponent';
 import { HttpStatusCode } from '../common/constants/http';
->>>>>>> dev
 
 export const checkComponentExistByNameId = async (appId: string, nameId: string): Promise<void> => {
   const component = await getCustomRepository(ComponentRepository)
@@ -61,23 +52,6 @@ export const getComponentById = async (id: string): Promise<IResponseComponent> 
   return {} as IResponseComponent;
 };
 
-<<<<<<< HEAD
-export const addInput = async (input: IInputText): Promise<void> => {
-  const { label, placeholder, queryId, componentId } = input;
-  console.log(input);
-  await getCustomRepository(InputRepository).addInput(
-    {
-      label,
-      placeholder,
-      queryId,
-      componentId
-    }
-  );
-};
-
-export const updateComponent = async (component: IUpdateComponent): Promise<void> => {
-  await getCustomRepository(ComponentRepository).updateComponent(component);
-=======
 export const addComponent = async (
   appId: string,
   { component }: { component: ITranspostComponent }
@@ -111,7 +85,6 @@ export const addComponent = async (
       break;
   }
   return { ...createdComponent, componentType, component: createdComponentElement };
->>>>>>> dev
 };
 
 export const updateComponent = async (
