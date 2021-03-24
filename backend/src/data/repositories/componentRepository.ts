@@ -8,6 +8,11 @@ export class ComponentRepository extends Repository<Component> {
   getAllComponents(appId: string): Promise<Component[]> {
     return this.find({ where: { appId } });
   }
+
+  getComponentById(id: string): Promise<Component> {
+    return this.findOne(id);
+  }
+
   addComponent(component: ICreateComponent): Promise<Component> {
     return this.create(component).save();
   }
@@ -15,5 +20,10 @@ export class ComponentRepository extends Repository<Component> {
   async updateComponent(component: IUpdateComponent) {
     const { id } = component;
     await this.update(id, component);
+  }
+
+  async deleteComponent(id: string): Promise<Component> {
+    const component = await this.findOne(id);
+    return this.remove(component);
   }
 }

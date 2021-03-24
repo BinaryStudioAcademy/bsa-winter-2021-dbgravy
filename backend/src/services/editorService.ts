@@ -4,6 +4,8 @@ import { formatResponse } from '../common/mappers/editor';
 import { IComponent } from '../common/models/editor/IComponent';
 import { IUpdateComponent } from '../common/models/editor/IUpdateComponent';
 import { IResponse } from '../common/models/editor/IResponse';
+import { CustomError } from '../common/models/error/CustomError';
+import { HttpStatusCode } from '../common/constants/http';
 
 export const getComponents = async (appId: string): Promise<IResponse> => {
   const components = await getCustomRepository(ComponentRepository).getAllComponents(appId);
@@ -29,5 +31,13 @@ export const addComponent = async (appId: string, component: IComponent): Promis
 
 export const updateComponent = async (component: IUpdateComponent): Promise<void> => {
   await getCustomRepository(ComponentRepository).updateComponent(component);
+};
+
+export const deleteComponent = async (id: string): Promise<void> => {
+  const component = await getCustomRepository(ComponentRepository).getComponentById(id);
+  if (!component) {
+    throw new CustomError('Component not found', HttpStatusCode.NOT_FOUND);
+  }
+  await getCustomRepository(ComponentRepository).deleteComponent(id);
 };
 
