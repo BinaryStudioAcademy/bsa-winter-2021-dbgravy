@@ -51,17 +51,14 @@
   transition: border-color .15s ease-in-out;
 }
 
-// right here
-
-.form-control-search:focus + .input-group-search{
-  transition: border-color .15s ease-in-out;
-  outline: none;
-  border-color: black!important;
-  box-shadow: none!important;
+.form:focus-within {
+  .input-group-search {
+    transition: border-color .15s ease-in-out;
+    outline: none;
+    border-color: black!important;
+    box-shadow: none!important;
+  }
 }
-
-// right here
-
 
 .card-element-nothing {
   border-style: dashed !important;

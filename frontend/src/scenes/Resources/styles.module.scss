@@ -77,16 +77,20 @@
 .input-group-search {
   background-color: white !important;
   border: 1px solid #ced4da!important;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out;
 }
 
 .form-control-search:focus {
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out;
 }
 
-.focused {
-  border-color: #000!important;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+.form:focus-within {
+  .input-group-search {
+    transition: border-color .15s ease-in-out;
+    outline: none;
+    border-color: black!important;
+    box-shadow: none!important;
+  }
 }
 
 .form-control-search {
