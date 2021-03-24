@@ -43,7 +43,7 @@ const Resources: React.FC<IProps> = ({
         <div className={styles['main-block-wrp']}>
           <div className={styles['before-table']}>
             <h1>Resources</h1>
-            <Form inline>
+            <Form inline className={styles.form}>
               <InputGroup>
                 <InputGroup.Prepend>
                   <InputGroup.Text className={styles['input-group-search']}>
