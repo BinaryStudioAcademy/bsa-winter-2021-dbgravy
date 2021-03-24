@@ -10,11 +10,16 @@ export class Button extends AbstractEntity {
   readonly componentId: string;
 
   @RelationId((button: Button) => button.query)
-  @Column()
+  @Column({
+    nullable: true
+  })
   readonly queryId: string
 
   @Column()
-  label: string
+  text: string
+
+  @Column()
+  color: string
 
   @OneToOne(() => Component)
   @JoinColumn()

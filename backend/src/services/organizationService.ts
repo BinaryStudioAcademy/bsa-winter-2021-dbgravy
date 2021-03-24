@@ -5,24 +5,25 @@ import { OrganizationRepository } from '../data/repositories/organizationReposit
 import UserOrganizationRepository from '../data/repositories/userOrganizationRepository';
 import { ITransportedUser } from '../common/models/user/ITransportedUser';
 import { IOrganization } from '../common/models/organization/IOrganization';
+import { HttpStatusCode } from '../common/constants/http';
 
 export const createOrganization = async (data: ICreateOrganization): Promise<any> => {
   const { name, createdByUserId: userId } = data;
   const organization = await getCustomRepository(OrganizationRepository).getByName(name);
 
   if (organization) {
-    throw new CustomError('Organization already exist!', 400);
+    throw new CustomError('Organization already exist!', HttpStatusCode.BAD_REQUEST);
   }
   const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization(data);
   if (!newOrganization) {
-    throw new CustomError('Couldn\'t create new organization', 400);
+    throw new CustomError('Couldn\'t create new organization', HttpStatusCode.BAD_REQUEST);
   }
   const { id: organizationId } = newOrganization;
   const user2Organization = await getCustomRepository(UserOrganizationRepository)
     .addUserOrganizationOwner(userId, organizationId);
 
   if (!user2Organization) {
-    throw new CustomError('Failed', 400);
+    throw new CustomError('Failed', HttpStatusCode.BAD_REQUEST);
   }
   return { result: true };
 };

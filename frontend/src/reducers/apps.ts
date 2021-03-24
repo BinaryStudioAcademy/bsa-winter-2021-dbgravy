@@ -1,10 +1,19 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchAppRoutine, editAppRoutine, deleteAppRoutine, showEditRoutine } from '../scenes/Apps/routines';
+import {
+  fetchAppRoutine,
+  editAppRoutine,
+  deleteAppRoutine,
+  showEditRoutine,
+  setCurrentlyAppId, fetchSelectAppRoutine, setNewAppNameRoutine
+} from '../scenes/Apps/routines';
 import { IApps } from '../common/models/apps/IApps';
 
 export interface IAppsState {
   isLoading: boolean,
   apps: Array<IApps>;
+  currentlyApp: string;
+  setSelectAppName?:string;
+  setSelectApp?:IApps;
   editedApp?: {
     app?: IApps,
     name?: string,
@@ -20,6 +29,7 @@ export interface IAppsState {
 
 const initialState = {
   isLoading: true,
+  currentlyApp: '',
   apps: []
 };
 
@@ -30,6 +40,12 @@ export const application = (state: IAppsState = initialState, { type, payload }:
         ...state,
         apps: [...payload],
         isLoading: false
+      };
+    case fetchSelectAppRoutine.SUCCESS:
+      return {
+        ...state,
+        setSelectApp: payload,
+        setSelectAppName: payload.name
       };
     case editAppRoutine.TRIGGER:
       return {
@@ -94,6 +110,16 @@ export const application = (state: IAppsState = initialState, { type, payload }:
           isFailed: true,
           app: payload.app
         }
+      };
+    case setCurrentlyAppId.TRIGGER:
+      return {
+        ...state,
+        currentlyApp: payload
+      };
+    case setNewAppNameRoutine.TRIGGER:
+      return {
+        ...state,
+        setSelectAppName: payload.name
       };
     default:
       return state;

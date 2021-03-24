@@ -9,11 +9,16 @@ import Loader from '../Loader';
 import { IUserOrganization } from '../../common/models/user/IUserOrganization';
 import { Routes } from '../../common/enums/Routes';
 import { Link } from 'react-router-dom';
+import SwitchOrganization from '../SwitchOrganization/SwitchOrganization';
+import { IBindingCallback1 } from '../../common/models/callback/IBindingCallback1';
 
 interface IProps {
   user: IUser,
-  organization?: IUserOrganization
+  organization?: IUserOrganization,
+  organizations: IUserOrganization[];
   fetchOrganization: (user?: IUser) => void,
+  fetchUserOrganizations: () => void;
+  changeUserOrganization: IBindingCallback1<string>;
   createOrganization: (payload: { user?: IUser, newOrganization: { name: string } }) => void,
   fullfill: (payload: { user?: IUser }) => void,
   logout: () => void,
@@ -22,13 +27,25 @@ interface IProps {
 }
 
 const ProfilePopupInfo: React.FC<IProps> = (
-  { user, createOrganization, fetchOrganization, fullfill, logout, organization, isShow, setup }
+  { user,
+    createOrganization,
+    fetchOrganization,
+    fetchUserOrganizations,
+    changeUserOrganization,
+    fullfill,
+    logout,
+    organization,
+    organizations,
+    isShow,
+    setup }
 ) => {
   useEffect(() => {
     fetchOrganization(user);
+    fetchUserOrganizations();
   }, []);
 
   const [showCreator, setShowCreator] = useState(false);
+  const [showSwitcher, setShowSwitcher] = useState(false);
 
   const logoutUser = () => {
     logout();
@@ -38,7 +55,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     if (organization && organization.isLoading) {
       return (
         <div className={[styles.block, styles.loading].join(' ')}>
-          <Loader isLoading={organization.isLoading || false} isAbsolute={false} />
+          <Loader isLoading={organization.isLoading} isAbsolute={false} />
         </div>
       );
     }
@@ -53,15 +70,19 @@ const ProfilePopupInfo: React.FC<IProps> = (
     }
 
     return (
-      <div className={styles.block}>
-        <span className={styles.primary}>
-          {organization?.name}
-        </span>
-        <span className={styles.secondary}>{organization?.role}</span>
-        <span>
-          <FontAwesomeIcon icon={faCog} color="grey" />
-          <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
-        </span>
+      <div>
+        <div className={styles['org-block']}>
+          <span className={styles.primary}>
+            {organization?.name}
+          </span>
+          <span className={styles.secondary}>{organization?.role}</span>
+        </div>
+        <div className={styles['options-wrp']}>
+          <span>
+            <FontAwesomeIcon icon={faCog} color="grey" />
+            <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
+          </span>
+        </div>
       </div>
     );
   };
@@ -79,37 +100,53 @@ const ProfilePopupInfo: React.FC<IProps> = (
       );
     }
 
+    if (showSwitcher) {
+      return (
+        <SwitchOrganization
+          setShow={setShowSwitcher}
+          organizations={organizations}
+          changeUserOrganization={changeUserOrganization}
+        />
+      );
+    }
+
     return (
       <div className={styles.container}>
-        <div className={styles.hide}>
-          {isLoadFail()}
+        {isLoadFail()}
+        <div className={styles['opt-block']}>
+          <div className={styles['options-wrp']}>
+            <span
+              onClick={() => setShowCreator(true)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => setShowCreator(true)}
+            >
+              <FontAwesomeIcon icon={faPlus} color="grey" />
+              Create organization
+            </span>
+          </div>
+          <div className={styles['options-wrp']}>
+            <span
+              onClick={() => setShowSwitcher(true)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => setShowSwitcher(true)}
+            >
+              <FontAwesomeIcon icon={faSyncAlt} color="grey" />
+              Switch Organization
+            </span>
+          </div>
         </div>
-        <div className={styles.block}>
-          <span
-            onClick={() => setShowCreator(true)}
-            role="button"
-            tabIndex={0}
-            onKeyPress={() => setShowCreator(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} color="grey" />
-            Create organization
-          </span>
-          <span role="button">
-            <FontAwesomeIcon icon={faSyncAlt} color="grey" />
-            Switch Organization
-          </span>
-        </div>
-        <div className={[styles.block, styles.line].join(' ')}>
+        <div className={[styles.block, styles.line].join(' ')} style={{ paddingTop: '10px', paddingBottom: '10px' }}>
           <UserAttrButton
             firstName={user?.firstName || ''}
             lastName={user?.lastName || ''}
           />
           <div className={styles.block}>
             <span className={styles.primary}>{`${user?.firstName} ${user?.lastName}`}</span>
-            <span className={styles.link}>View profile</span>
           </div>
         </div>
-        <div className={styles.block}>
+        <div className={styles['options-wrp']}>
           <span
             onClick={() => logoutUser()}
             role="button"

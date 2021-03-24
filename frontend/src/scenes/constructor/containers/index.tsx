@@ -3,51 +3,114 @@ import QueriesList from '../components/queriesList';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.scss';
 import { IAppState } from '../../../common/models/store/IAppState';
-import Loader from '../../../components/Loader';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
-  setNewCodeRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
   fetchQueryRoutine,
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
+  runSelectQueryRoutine,
+  previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewRunRoutine,
-  setNewConfirmRoutine
+  setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
+import { fetchResourceRoutine } from '../../Resources/routines';
+import ResourceList from '../components/ResourceList';
+import QueryEditor from '../../../components/QueryCodeEditor';
+import Table from '../../../components/TableComponent';
+import ConfirmModal from '../components/ModalWindow/confirm';
+import QueryResult from '../components/ModalWindow/queryResult';
 
 interface IProps {
-  id:string
-  resourceId:string
+  id: string
 }
 
-const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
+const Constructor: React.FC<IProps> = ({ id }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
+
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
-  const isDataChange:boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
-      || query.selectQuery.runAutomatically !== query.setNewRun
-      || query.selectQuery.showConfirm !== query.setNewConfirm
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showQuery, setShowQuery] = useState(false);
+  const [currentResource, setCurrentResource] = useState<string>('');
+
+  const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
+    || query.selectQuery.runAutomatically !== query.setNewRun
+    || query.selectQuery.showConfirm !== query.setNewConfirm
+    || query.selectQuery.resourceId !== query.setNewResource?.id
   );
-  const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
+  const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
-  const saveCode = ():void => {
+
+  const handleCancelConfirmModal = () => {
+    setShowConfirm(false);
+  };
+  const handleSubmitConfirmModal = () => {
+    setShowConfirm(false);
+    runQuery();
+  };
+
+  const hadleRunButton = () => {
+    if (query.selectQuery.showConfirm) {
+      setShowConfirm(true);
+    } else {
+      runQuery();
+    }
+  };
+
+  const isEmptyData = query.selectQuery.data.length === 0;
+
+  const runQuery = (): void => {
+    dispatch(runSelectQueryRoutine.trigger({
+      data: {
+        id: query.selectQuery.selectQueryId,
+        code: query.setNewCode,
+        runAutomatically: query.setNewRun,
+        showConfirm: query.setNewConfirm,
+        name: query.selectQuery.selectQueryName,
+        triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+      },
+      appId: id,
+      resourceId: query.selectQuery.resourceId,
+      triggered: []
+    }));
+  };
+
+  const previewQuery = (): void => {
+    dispatch(previewSelectQueryRoutine.trigger({
+      data: {
+        code: query.setNewCode,
+        name: query.selectQuery.selectQueryName,
+        runAutomatically: query.setNewRun,
+        showConfirm: query.setNewConfirm
+      },
+      id: query.selectQuery.selectQueryId,
+      appId: id,
+      resourceId: query.selectQuery.resourceId
+    }));
+  };
+
+  const saveCode = (): void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(saveSelectQueryRoutine.trigger({
-        data: { code: query.setNewCode,
+        data: {
+          code: query.setNewCode,
           runAutomatically: query.setNewRun,
           showConfirm: query.setNewConfirm,
-          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]
+          triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
+          resourceId: query.setNewResource?.id
         },
         id: query.selectQuery.selectQueryId,
-        appId: id
+        appId: id,
+        resourceId: query.selectQuery.resourceId
       }));
       const runTitle = query.setNewRun ? 'Run query only when manually triggered'
         : 'Run query automatically when inputs change';
@@ -57,12 +120,13 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         code: query.setNewCode,
         runAutomatically: query.setNewRun,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
+        resourceId: query.setNewResource?.id,
         showConfirm: query.setNewConfirm,
         runTitle
       }));
     }
   };
-  const closeNameEditor = (e:React.FormEvent) => {
+  const closeNameEditor = (e: React.FormEvent) => {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     if (target.id === 'queryName') {
       setEditNameField(false);
@@ -79,6 +143,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         runAutomatically: query.selectQuery.runAutomatically,
         triggers: [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers],
         showConfirm: query.selectQuery.showConfirm,
+        resourceId: query.selectQuery.resourceId,
         isOpen: false,
         runTitle: query.runAutomaticallyTitle
       }));
@@ -87,7 +152,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
       setEditNameField(true);
     }
   };
-  const duplicateQuery = ():void => {
+  const duplicateQuery = (): void => {
     if (isDataChange || !isTriggersChange) {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
     } else {
@@ -96,7 +161,7 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         name: `query${query.queriesAppLength + 1}`,
         code: query.selectQuery.selectQueryCode,
         appId: id,
-        resourceId,
+        resourceId: query.selectQuery.resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
         runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
@@ -104,7 +169,12 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
     }
   };
   const createQuery = () => {
-    if (isDataChange || !isTriggersChange) {
+    let { resourceId } = query.selectQuery;
+    if (query.queriesAppLength === 0) {
+      resourceId = currentResource;
+    }
+
+    if ((isDataChange || !isTriggersChange) && query.queriesAppLength !== 0) {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: true, isDuplicate: true }));
     } else {
       dispatch(setWaiterQueryRoutine.trigger({ isOpen: false, isDuplicate: true }));
@@ -130,19 +200,18 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
     }
   };
   const changeConfirm = () => {
-    if (query.setNewConfirm) {
-      dispatch(setNewConfirmRoutine.trigger(false));
-    } else {
+    if (!query.setNewConfirm) {
       dispatch(setNewConfirmRoutine.trigger(true));
+    } else {
+      dispatch(setNewConfirmRoutine.trigger(false));
     }
   };
+  function changeCode(e: string) {
+    dispatch(setNewCodeRoutine.trigger({ code: e }));
+  }
   function changeName(e:React.FormEvent) {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     dispatch(setNewNameQueryRoutine.trigger({ name: target.value }));
-  }
-  function changeCode(e:React.FormEvent) {
-    const target: HTMLInputElement = e.target as HTMLInputElement;
-    dispatch(setNewCodeRoutine.trigger({ code: target.value }));
   }
   const deleteQuery = () => {
     dispatch(deleteSelectQueryRoutine.trigger({
@@ -151,10 +220,32 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
     }));
   };
   useEffect(() => {
-    dispatch(fetchQueryRoutine.trigger({ id }));
+    dispatch(fetchResourceRoutine.trigger());
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchQueryRoutine.trigger({ id }));
+  }, [query.resources]);
+
+  useEffect(() => {
+    if (!query.isLoading) {
+      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    }
+  }, [query.isLoading]);
+
+  useEffect(() => {
+    if (query.selectQuery.queryMessage.length !== 0) {
+      setShowQuery(true);
+      setTimeout(() => setShowQuery(false), 1000);
+    }
+  }, [query.selectQuery.queryMessage]);
+
+  const changeResourceHandler = (resId: string) => {
+    setCurrentResource(resId);
+  };
+
   return (
-    <Loader isLoading={query.isLoading}>
+    <div>
       <Form className={style.wrapper} onClick={closeNameEditor}>
         <Form.Group controlId="queryLeftSide" className={style.LeftSide}>
           <Form.Group className={style.searchWrapper} controlId="exampleForm.ControlInput1">
@@ -163,8 +254,8 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               placeholder="Search"
               className={style.searchInput}
               onChange={
-                    ev => setSearchValue(ev.target.value)
-                  }
+                ev => setSearchValue(ev.target.value)
+              }
               value={searchValue}
             />
             <DropdownButton id="dropdown-change" title="+ New" className={style.newBtn}>
@@ -182,28 +273,34 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
         <Form.Group controlId="queryRightSide" className={style.RightSide}>
           <Form.Group controlId="queryName" className={style.RightSideHeader}>
             {
-                editNameField ? (
+              editNameField ? (
+                <Form.Control
+                  type="button"
+                  defaultValue={query.setNewName}
+                  className={style.queryHeader}
+                />
+              )
+                : (
                   <Form.Control
-                    type="button"
+                    type="text"
                     defaultValue={query.setNewName}
+                    onChange={changeName}
                     className={style.queryHeader}
                   />
                 )
-                  : (
-                    <Form.Control
-                      type="text"
-                      defaultValue={query.setNewName}
-                      onChange={changeName}
-                      className={style.queryHeader}
-                    />
-                  )
-              }
+            }
             <Form.Group controlId="queryRightSide" className={style.RightBar}>
               <DropdownButton id="dropdown-basic-button" title="..." className={style.dropMenu}>
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Run" onClick={saveCode} />
+              <Form.Control type="button" value="Preview" onClick={previewQuery} />
+              {
+                isDataChange || !isTriggersChange ? (
+                  <Form.Control type="button" value="Save" onClick={saveCode} />
+                )
+                  : (<Form.Control type="button" value="Run" onClick={hadleRunButton} />)
+              }
             </Form.Group>
           </Form.Group>
           <Form.Group controlId="ControlTextarea">
@@ -214,35 +311,48 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               </Dropdown.Item>
             </DropdownButton>
             <Form.Label className={style.row} />
-            <Form.Control
-              as="textarea"
-              value={query.setNewCode}
-              rows={5}
-              onChange={changeCode}
-              className={style.codeEditor}
-            />
+            <Form.Group controlId="Resource" className={style.resource}>
+              <Form.Label className={style.resourceText}>Resource:</Form.Label>
+              <ResourceList
+                resourceList={query.resources}
+                titleName={query.setNewResource?.name}
+                onChangeResource={changeResourceHandler}
+              />
+            </Form.Group>
             <Form.Label className={style.row} />
-            {
-                query.setNewConfirm ? (
+            <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
+            <Form.Label className={style.row} />
+            <Form.Label className={style.row} />
+            <div className={style.checkBoxWrapper}>
+              <div
+                onClick={changeConfirm}
+                onKeyDown={changeConfirm}
+                role="button"
+                tabIndex={0}
+                className={style.Confirm}
+              >
+                .
+              </div>
+              {
+              !query.setNewConfirm ? (
+                <Form.Check
+                  type="checkbox"
+                  id="checkbox"
+                  className={style.checkBox}
+                  disabled
+                />
+              )
+                : (
                   <Form.Check
                     type="checkbox"
-                    id="checkbox"
-                    label="Show a confirmation modal before running"
+                    id="checkbox2"
                     className={style.checkBox}
-                    onClick={changeConfirm}
-                    defaultChecked
+                    checked
                   />
                 )
-                  : (
-                    <Form.Check
-                      type="checkbox"
-                      id="checkbox"
-                      label="Show a confirmation modal before running"
-                      className={style.checkBox}
-                      onClick={changeConfirm}
-                    />
-                  )
-              }
+            }
+              <span className={style.spanText}>Show a confirmation modal before running</span>
+            </div>
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
             <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
@@ -252,10 +362,31 @@ const Constructor:React.FC<IProps> = ({ id, resourceId }) => {
               triggerList={query.setNewUnSuccessTriggers}
             />
           </Form.Group>
+          {
+            !isEmptyData && (
+              <div style={{ padding: '20px' }}>
+                <Table
+                  key={query.isResultLoading.toString()}
+                  values={[...query.selectQuery.data]}
+                  columnWidth={300}
+                  rowHeight={70}
+                />
+              </div>
+            )
+          }
+          {
+            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
+          }
         </Form.Group>
       </Form>
-      <ModalWindow />
-    </Loader>
+      <ModalWindow id={id} />
+      <ConfirmModal
+        showConfirm={showConfirm}
+        isCancel={handleCancelConfirmModal}
+        isSubmit={handleSubmitConfirmModal}
+      />
+      <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const signUpPassword = Yup.string()
+export const signUpPassword = Yup.string()
   .min(8, 'Password must be at least 8 characters')
   .required('Password is required')
   .matches(
@@ -19,7 +19,7 @@ const signUpPassword = Yup.string()
 const signInPassword = Yup.string()
   .required('Password is required');
 
-const email = Yup.string()
+export const email = Yup.string()
   .email('Email is invalid')
   .required('Email is required');
 

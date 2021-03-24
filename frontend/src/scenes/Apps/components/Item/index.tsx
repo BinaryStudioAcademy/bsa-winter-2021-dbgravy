@@ -2,33 +2,114 @@ import React from 'react';
 import styles from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDrag } from 'react-dnd';
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { ComponentType } from '../../../../common/enums/ComponentType';
 
-const ItemTypes = {
-  Item: 'item'
-};
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface ItemProps {
-  itemIcon: any,
+export interface IItemProps {
+  itemIcon: IconDefinition,
+  appId: string,
   addElement: Function,
   itemTitle: string,
-  itemDesc: string
-
+  itemDesc: string,
+  itemType: ComponentType
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-interface DropResult {
-  name: string
+interface IDropResult {
+  name: string,
+  left: string,
+  top: string
 }
 
-export const Item: React.FC<ItemProps> = ({ itemIcon, itemTitle, itemDesc, addElement }) => {
+export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDesc, addElement, itemType }) => {
   const [, drag] = useDrag(() => ({
-    type: ItemTypes.Item,
-    item: { width: '54' },
+    type: itemType,
+    item: { type: itemType },
     end: (item, monitor) => {
-      const dropResult = monitor.getDropResult<DropResult>();
-      const { key, left, top }: any = dropResult;
-      addElement({ [key]: { top, left, title: 'Name', type: 'text', itemType: 'textInput' } });
+      const dropResult = monitor.getDropResult<IDropResult>();
+      if (dropResult) {
+        const { left, top, name } = dropResult;
+        switch (itemType) {
+          case ComponentType.input:
+            addElement({
+              appId,
+              component: {
+                top,
+                left,
+                name,
+                width: '300',
+                height: '60',
+                componentType: ComponentType.input,
+                component: {
+                  type: 'text',
+                  label: 'Name',
+                  defaultValue: '',
+                  placeholder: ''
+                }
+              }
+            });
+            break;
+          case ComponentType.table:
+            addElement({
+              appId,
+              component: {
+                top,
+                left,
+                name,
+                height: '400',
+                width: '600',
+                componentType: ComponentType.table,
+                component: {
+                  data: [{
+                    id: 1,
+                    name: 'Hanson Deck',
+                    email: 'hanson@deck.com',
+                    sales: 37
+                  }, {
+                    id: 2,
+                    name: 'Max Conversation',
+                    email: 'Max@conversation.com',
+                    sales: 424
+                  }, {
+                    id: 3,
+                    name: 'Jason Response',
+                    email: 'jason@response.com',
+                    sales: 55
+                  }, {
+                    id: 4,
+                    name: 'Sue Shei',
+                    email: 'sueshei@example.com',
+                    sales: 550
+                  }, {
+                    id: 5,
+                    name: 'Eric Widget',
+                    email: 'eric@widget.org',
+                    sales: 243
+                  }]
+                }
+              }
+            });
+            break;
+          case ComponentType.button:
+            addElement({
+              appId,
+              component: {
+                top,
+                left,
+                name,
+                height: '60',
+                width: '200',
+                componentType: ComponentType.button,
+                component: {
+                  text: 'Select',
+                  color: 'blue'
+                }
+              }
+            });
+            break;
+          default:
+            break;
+        }
+      }
     }
   }));
 
@@ -36,7 +117,6 @@ export const Item: React.FC<ItemProps> = ({ itemIcon, itemTitle, itemDesc, addEl
     <div
       className={styles.item}
       ref={drag}
-      // role="Item"
     >
       <span className={styles.itemIconWrp}>
         <FontAwesomeIcon icon={itemIcon} className={styles.itemIcon} />

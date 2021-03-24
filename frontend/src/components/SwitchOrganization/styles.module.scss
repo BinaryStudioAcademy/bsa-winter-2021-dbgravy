@@ -1,0 +1,51 @@
+.container {
+  width: 280px;
+  height: 350px;
+  max-height: 500px;
+  display: flex;
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  flex-direction: column;
+  color: rgb(83, 83, 83);
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+  border-radius: 3px;
+  background: #fff;
+  z-index: 1;
+}
+
+.head {
+  font-size: 17px;
+  color: #000;
+}
+
+.input {
+  border: 1px solid lightgray;
+  width: 80%;
+  height: 30px;
+  border-radius: 3px;
+  outline: lightgray;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.center {
+  align-items: center;
+  padding-top: 20px;
+}
+
+.center > div:first-child {
+  font-weight: 600;
+}
+
+.center > div:first-child > span {
+  margin-right: 20px;
+}
+
+.listContainer {
+  width: 80%;
+  overflow: auto;
+}
+.listGroupItem:hover {
+  background-color: #6c747e;
+}

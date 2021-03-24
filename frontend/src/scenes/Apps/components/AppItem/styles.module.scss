@@ -25,19 +25,57 @@
   display: none;
   flex-direction: column;
   background-color: #fff;
-  box-shadow: 1px 1px 9px -1px rgba(0,0,0,0.41);
+  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
   padding: 10px;
   border-radius: 5px;
   margin-top: 5px;
+
+  .action {
+    color: #2e2e2e;
+
+    &:focus,
+    &:active,
+    &:hover {
+      color: #000000;
+      text-decoration: underline;
+      outline: none;
+    }
+
+    .app-editor {
+      color: #2e2e2e;
+
+      &:focus,
+      &:active,
+      &:hover {
+        color: #000000;
+        text-decoration: underline;
+        outline: none;
+      }
+    }
+  }
+
+  .delete {
+    color: red;
+
+    &:focus,
+    &:active,
+    &:hover {
+      text-decoration: underline;
+      outline: none;
+    }
+  }
 
   span {
     cursor: pointer;
     margin-bottom: 3px;
     font-size: 15px;
 
-    .linklike:hover, .linklike:visited, .linklike:link, .linklike:active
-    {
-      color: #000;
+
+    .linklike:hover,
+    .linklike:visited,
+    .linklike:link,
+    .linklike:active {
+      color: red;
       text-decoration: none;
       border: none;
     }
@@ -52,4 +90,3 @@
 .none {
   display: flex;
 }
-

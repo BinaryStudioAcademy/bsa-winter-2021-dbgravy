@@ -43,4 +43,15 @@ export class UserRepository extends Repository<User> {
     await this.update(id, { currentOrganizationId });
     return this.getById(id);
   }
+
+  async editPassword(id: string, password: string): Promise<User> {
+    await this.update(
+      id,
+      { password }
+    );
+
+    const user = await this.findOne(id);
+
+    return user;
+  }
 }

@@ -6,12 +6,14 @@ import { Status } from '../../enums/UserStatus';
 import { IUser } from '../user/IUser';
 import { IQueryState } from '../query/IQueryState';
 import { IInviteToOrganization } from '../userOrganization/IInviteToOrganization';
+import { IEditorState } from '../editor/IEditorState';
 
 export interface IAppState {
   user: IUserState;
   app: {
     qur: IQueryState,
-    application: IAppsState
+    application: IAppsState,
+    editor: IEditorState,
   }
   resource: IResourcesState;
   settings: {

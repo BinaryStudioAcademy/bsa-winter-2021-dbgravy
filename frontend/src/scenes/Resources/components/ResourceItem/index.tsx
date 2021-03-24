@@ -6,6 +6,7 @@ import { Routes } from '../../../../common/enums/Routes';
 import { IResource } from '../../../../common/models/resources/IResource';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import styles from './styles.module.scss';
+import DeleteModal from '../DeleteModal/index';
 
 interface IProps {
   resource: IResource;
@@ -18,6 +19,17 @@ const ResourceItem: React.FC<IProps> = ({
 }) => {
   const [display, setDisplay] = useState(false);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleCancelModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleSubmitModal = () => {
+    setShowDeleteModal(false);
+    remove({ resource });
+  };
+
   return (
     <tr>
       <td>{resource.name}</td>
@@ -25,7 +37,13 @@ const ResourceItem: React.FC<IProps> = ({
       <td>{resource.dbName}</td>
       <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
       <td>
-        <Button variant="dark" onClick={() => setDisplay(!display)}>...</Button>
+        <Button
+          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+          variant="outline-light"
+          onClick={() => setDisplay(!display)}
+        >
+          ...
+        </Button>
         <div className={`${styles.child} ${display ? styles.none : ''}`}>
           <span
             role="button"
@@ -34,15 +52,21 @@ const ResourceItem: React.FC<IProps> = ({
             <Link to={`${Routes.ResourcesAddEdit}/${resource.id}`} className={styles.linklike}>Edit</Link>
           </span>
           <span
-            onClick={() => remove({ resource })}
+            onClick={() => setShowDeleteModal(true)}
             role="button"
-            onKeyPress={() => remove({ resource })}
+            className={styles.action}
+            onKeyPress={() => setShowDeleteModal(true)}
             tabIndex={0}
           >
             Delete
           </span>
         </div>
       </td>
+      <DeleteModal
+        show={showDeleteModal}
+        cancel={handleCancelModal}
+        submit={handleSubmitModal}
+      />
     </tr>
   );
 };
