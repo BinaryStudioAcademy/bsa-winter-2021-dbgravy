@@ -1,6 +1,30 @@
 .noSelect {
-  font-size: 14px;
-  padding: 20px;
-  border: 1px dashed #cecece;
+    font-size: 14px;
+    padding: 20px;
+    border: 1px dashed #cecece;
 }
 
+.elementInfoCard {
+    display: flex;
+    flex-direction: row !important;
+    min-width: 99%;
+    align-items: center;
+    text-align: left;
+    position: relative;
+    margin-bottom: 1rem !important;
+}
+
+.cardHeader {
+    width: 100%;
+    padding: 0.5rem !important;
+    padding-left: 0.75rem !important;
+    border: none!important;
+    background-color: white !important;
+    span {
+        font-size: 1rem !important;
+    }
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}

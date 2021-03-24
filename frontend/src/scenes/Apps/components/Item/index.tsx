@@ -7,11 +7,11 @@ import { ComponentType } from '../../../../common/enums/ComponentType';
 
 export interface IItemProps {
   itemIcon: IconDefinition,
+  appId: string,
   addElement: Function,
   itemTitle: string,
   itemDesc: string,
   itemType: ComponentType
-
 }
 
 interface IDropResult {
@@ -20,7 +20,7 @@ interface IDropResult {
   top: string
 }
 
-export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addElement, itemType }) => {
+export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDesc, addElement, itemType }) => {
   const [, drag] = useDrag(() => ({
     type: itemType,
     item: { type: itemType },
@@ -30,13 +30,14 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
         const { left, top, name } = dropResult;
         switch (itemType) {
           case ComponentType.input:
-            addElement(
-              {
+            addElement({
+              appId,
+              component: {
                 top,
                 left,
                 name,
-                width: '300px',
-                height: '60px',
+                width: '300',
+                height: '60',
                 componentType: ComponentType.input,
                 component: {
                   type: 'text',
@@ -45,16 +46,17 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
                   placeholder: ''
                 }
               }
-            );
+            });
             break;
           case ComponentType.table:
-            addElement(
-              {
+            addElement({
+              appId,
+              component: {
                 top,
                 left,
                 name,
-                height: '400px',
-                width: '600px',
+                height: '400',
+                width: '600',
                 componentType: ComponentType.table,
                 component: {
                   data: [{
@@ -85,23 +87,24 @@ export const Item: React.FC<IItemProps> = ({ itemIcon, itemTitle, itemDesc, addE
                   }]
                 }
               }
-            );
+            });
             break;
           case ComponentType.button:
-            addElement(
-              {
+            addElement({
+              appId,
+              component: {
                 top,
                 left,
                 name,
-                height: '60px',
-                width: '200px',
+                height: '60',
+                width: '200',
                 componentType: ComponentType.button,
                 component: {
-                  text: '',
-                  color: ''
+                  text: 'Select',
+                  color: 'blue'
                 }
               }
-            );
+            });
             break;
           default:
             break;
