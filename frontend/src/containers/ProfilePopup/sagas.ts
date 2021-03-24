@@ -18,6 +18,8 @@ import { removeToken } from '../../services/authService';
 import { clearStorage, getRefreshToken } from '../../common/helpers/storageHelper';
 import { Routine } from 'redux-saga-routines';
 import { errorToastMessage } from '../../common/helpers/toastMessageHelper';
+import { fetchAppRoutine } from '../../scenes/Apps/routines';
+import { fetchResourceRoutine } from '../../scenes/Resources/routines';
 
 function* watchFetchUserOrganization() {
   yield takeEvery(fetchOrgInfoRoutine.TRIGGER, fetchUserOrganization);
@@ -75,6 +77,8 @@ function* changeUserOrganization({ payload }: Routine<any>): Routine<any> {
   try {
     const response: IUserOrganization = yield call(changeCurrentUserOrganization, payload);
     yield put(changeUserOrganizationRoutine.success(response));
+    yield put(fetchAppRoutine.trigger());
+    yield put(fetchResourceRoutine.trigger());
   } catch (error) {
     yield put(changeUserOrganizationRoutine.failure());
     errorToastMessage(error.msg);

@@ -27,7 +27,7 @@ const initialState: IResourcesState = {
     type: ResourceTypeValue.PostgreSQL,
     name: '',
     host: '',
-    port: 0,
+    port: '',
     dbName: '',
     dbUserName: '',
     dbPassword: '',
