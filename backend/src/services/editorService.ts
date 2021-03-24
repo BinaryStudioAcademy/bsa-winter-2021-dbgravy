@@ -4,6 +4,8 @@ import { formatResponse } from '../common/mappers/editor';
 import { IComponent } from '../common/models/editor/IComponent';
 import { IUpdateComponent } from '../common/models/editor/IUpdateComponent';
 import { IResponse } from '../common/models/editor/IResponse';
+import { IInputText } from '../common/models/editor/input/IInputText';
+import { InputRepository } from '../data/repositories/inputRepository';
 
 export const getComponents = async (appId: string): Promise<IResponse> => {
   const components = await getCustomRepository(ComponentRepository).getAllComponents(appId);
@@ -23,6 +25,19 @@ export const addComponent = async (appId: string, component: IComponent): Promis
       left: Math.floor(left),
       top: Math.floor(top),
       appId
+    }
+  );
+};
+
+export const addInput = async (input: IInputText): Promise<void> => {
+  const { label, placeholder, queryId, componentId } = input;
+  console.log(input);
+  await getCustomRepository(InputRepository).addInput(
+    {
+      label,
+      placeholder,
+      queryId,
+      componentId
     }
   );
 };

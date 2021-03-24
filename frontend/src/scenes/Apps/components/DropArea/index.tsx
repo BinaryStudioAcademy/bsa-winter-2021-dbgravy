@@ -6,7 +6,7 @@ import { Button, Form, Table } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
-import { IInputText } from '../../../../common/models/editor/IInputText';
+import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 
 export interface IDropAreaProps {

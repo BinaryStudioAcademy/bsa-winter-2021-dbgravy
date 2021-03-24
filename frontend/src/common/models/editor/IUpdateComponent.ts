@@ -1,5 +1,5 @@
 import { IButton } from './IButton';
-import { IInputText } from './IInputText';
+import { IInputText } from './input/IInputText';
 import { ITable } from './ITable';
 import { ComponentType } from '../../enums/ComponentType';
 

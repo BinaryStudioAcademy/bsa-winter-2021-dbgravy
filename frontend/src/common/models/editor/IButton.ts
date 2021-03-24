@@ -1,4 +1,5 @@
 export interface IButton {
   text: string,
-  color: string
+  color: string,
+  queryId?: string
 }

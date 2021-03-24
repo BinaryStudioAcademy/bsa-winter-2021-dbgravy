@@ -9,7 +9,8 @@ import {
   showEditRoutine,
   fetchEditorComponentsRoutine,
   addComponentRoutine,
-  updateComponentRoutine
+  updateComponentRoutine,
+  addInputRoutine
 } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -94,7 +95,7 @@ function* watchAddApp() {
 
 function* fetchComponents({ payload }: Routine<any>) {
   try {
-    const components: {[key: string]: IDropItem} = yield call(appService.getComponents, payload.appId);
+    const components: { [key: string]: IDropItem } = yield call(appService.getComponents, payload.appId);
     yield put(fetchEditorComponentsRoutine.success(components));
   } catch (error) {
     yield put(fetchEditorComponentsRoutine.failure(error));
@@ -118,6 +119,20 @@ function* watchAddComponent() {
   yield takeEvery(addComponentRoutine.TRIGGER, addComponent);
 }
 
+function* addInput({ payload }: Routine<any>) {
+  try {
+    yield call(appService.addInput, payload);
+    // yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
+  } catch (error) {
+    console.log(error);
+    // yield put(addComponentRoutine.failure(error));
+  }
+}
+
+function* watchAddInput() {
+  yield takeEvery(addInputRoutine.TRIGGER, addInput);
+}
+
 function* updateComponent({ payload }: Routine<any>) {
   try {
     yield call(appService.updateComponent, payload);
@@ -139,6 +154,7 @@ export default function* appSaga() {
     watchFetchSelectApp(),
     watchFetchComponents(),
     watchAddComponent(),
-    watchUpdateComponent()
+    watchUpdateComponent(),
+    watchAddInput()
   ]);
 }

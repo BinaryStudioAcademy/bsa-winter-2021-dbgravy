@@ -1,18 +1,49 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import styles from './styles.module.scss';
+import { addInputRoutine } from '../../routines/index';
+import { connect } from 'react-redux';
+import QueriesList from '../QueriesList/index';
+import { IQuery } from '../../../../common/models/apps/querys';
+import { IAppState } from '../../../../common/models/store/IAppState';
 
 export interface IInspectProps {
-  selectedItem: IDropItem | null
+  selectedItem: IDropItem | null,
+  addInput: Function,
+  queries: IQuery[]
 }
 
-const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
+const Inspect: React.FC<IInspectProps> = ({ selectedItem, addInput, queries }) => {
+  const searchSelectQuery = queries.find(elem => elem.id === selectedItem?.component.queryId);
   const [labelInputText, setLabelInputText] = useState('');
   const [placeholder, setPlaceholder] = useState('');
-  const [defaultValueInputText, setDefaultValueInputText] = useState('');
   const [textButton, setTextButton] = useState('');
   const [colorButton, setColorButton] = useState('');
+  const [selectedQuery, setSelectedQuery] = useState<IQuery | undefined>(searchSelectQuery);
+  const changeSelectQuery = (id: string) => {
+    const newSelectQuery = queries.find(elem => elem.id === id);
+    setSelectedQuery(newSelectQuery);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(selectedItem?.component);
+    switch (selectedItem?.componentType) {
+      case 'input':
+        const input = {
+          label: labelInputText,
+          placeholder,
+          queryId: selectedQuery?.id,
+          componentId: '3cb98059-d01b-4bee-a67a-5fca4e248d69'
+        };
+        addInput(input);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div style={{ width: '100%' }}>
       {
@@ -24,31 +55,26 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
       }
       {
         (selectedItem && selectedItem.componentType === 'input') && (
-          <Form>
+          <Form onSubmit={e => handleSubmit(e)}>
             <Form.Label>Label</Form.Label>
             <Form.Control
               type="text"
               value={labelInputText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLabelInputText(e.target.value)}
             />
-            <Form.Label>Input type</Form.Label>
-            <Form.Control as="select">
-              <option>text</option>
-              <option>password</option>
-              <option>date</option>
-            </Form.Control>
-            <Form.Label>Default value</Form.Label>
-            <Form.Control
-              type="text"
-              value={defaultValueInputText}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultValueInputText(e.target.value)}
-            />
-            <Form.Label>Place holder</Form.Label>
+            <Form.Label>Placeholder</Form.Label>
             <Form.Control
               type="text"
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
+            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
+            <Button
+              variant="primary"
+              type="submit"
+            >
+              Save
+            </Button>
           </Form>
         )
       }
@@ -81,4 +107,12 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem }) => {
   );
 };
 
-export default Inspect;
+const mapStateToProps = (state: IAppState) => ({
+  queries: state.app.qur.queriesApp
+});
+
+const mapDispatchToProps = {
+  addInput: addInputRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inspect);
