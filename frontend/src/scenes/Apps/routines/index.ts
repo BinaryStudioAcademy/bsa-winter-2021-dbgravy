@@ -12,3 +12,5 @@ export const fetchEditorComponentsRoutine = createRoutine('EDITOR:FETCH_COMPONEN
 export const addComponentRoutine = createRoutine('EDITOR:ADD_COMPONENT');
 export const updateComponentRoutine = createRoutine('EDITOR:UPDATE_COMPONENT');
 export const addTableInfoRoutine = createRoutine('ADD_TABLE_INFO');
+export const localUpdateComponentRoutine = createRoutine('EDITOR:LOCAL_UPDATE_COMPONENT');
+export const deleteComponentRoutine = createRoutine('EDITOR:DELETE_COMPONENT');

@@ -1,5 +1,7 @@
 export interface ITable {
-  id:string
   componentId:string
-  queryId:string
+  queryId:string|null
+}
+export interface ITransportedTable extends ITable {
+  id: string;
 }

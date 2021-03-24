@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import QueryItem from '../queryBlock';
 import { DropdownButton } from 'react-bootstrap';
-import { IQuery } from '../../../../common/models/queries/IQuery';
+import { IQuery } from '../../../../common/models/apps/querys';
+import style from './styles.module.scss';
 
 interface IProps {
   queryList:Array<IQuery>
@@ -16,7 +17,7 @@ const QueriesList:FunctionComponent<IProps> = ({
 }) => {
   const titleQuery = selectedQuery?.name === undefined ? 'query' : selectedQuery.name;
   return (
-    <DropdownButton title={titleQuery}>
+    <DropdownButton title={titleQuery} className={style.queryList}>
       {
       queryList.map(query => (
         <QueryItem id={query.id} name={query.name} changeQuery={changeQuery} />

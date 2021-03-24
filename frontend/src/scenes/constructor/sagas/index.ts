@@ -33,7 +33,6 @@ function* fetchQuery({ payload }: Routine<any>) {
     yield put(openQueryRoutine.success(queries));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
-    errorToastMessage(e.message);
   }
 }
 
@@ -177,7 +176,6 @@ function* takeRecourseData({ payload }: Routine<any>) {
     yield put(takeResourcesTableAndColumns.success(tables));
   } catch (e) {
     yield put(errorRoutineQuery.failure(e.message));
-    errorToastMessage(e.message);
   }
 }
 

@@ -1,15 +1,5 @@
-import { IButton } from './IButton';
-import { IInputText } from './IInputText';
-import { ITable } from './ITable';
+import { ICreateComponent } from './ICreateComponent';
 
-type IComponentType = IInputText | ITable | IButton;
-
-export interface IComponent {
-  top: number,
-  left: number,
-  name: string,
-  width: string,
-  height:string
-  componentType: string,
-  component: IComponentType
+export interface IComponent extends ICreateComponent {
+  id: string;
 }

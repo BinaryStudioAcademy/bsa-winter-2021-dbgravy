@@ -1,5 +1,6 @@
 export interface IButton {
-  queryId:string,
+  id?: string;
   text: string,
   color: string
+  queryId:string
 }

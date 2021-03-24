@@ -9,7 +9,9 @@ import {
   showEditRoutine,
   fetchEditorComponentsRoutine,
   addComponentRoutine,
-  updateComponentRoutine, addTableInfoRoutine
+  updateComponentRoutine,
+  localUpdateComponentRoutine,
+  deleteComponentRoutine
 } from '../routines';
 import * as appService from '../../../services/applicationService';
 import { IAppState } from '../../../common/models/store/IAppState';
@@ -95,7 +97,6 @@ function* watchAddApp() {
 function* fetchComponents({ payload }: Routine<any>) {
   try {
     const components: {[key: string]: IDropItem} = yield call(appService.getComponents, payload.appId);
-    console.log(components);
     yield put(fetchEditorComponentsRoutine.success(components));
   } catch (error) {
     yield put(fetchEditorComponentsRoutine.failure(error));
@@ -132,19 +133,25 @@ function* watchUpdateComponent() {
   yield takeEvery(updateComponentRoutine.TRIGGER, updateComponent);
 }
 
-function* addTableInfo({ payload }: Routine<any>) {
+function* localUpdateComponent({ payload }: Routine<any>) {
+  yield put(localUpdateComponentRoutine.success({ component: payload.component }));
+}
+
+function* watchLocalUpdateComponent() {
+  yield takeEvery(localUpdateComponentRoutine.TRIGGER, localUpdateComponent);
+}
+
+function* deleteComponent({ payload }: Routine<any>) {
   try {
-    console.log(payload);
-    yield call(appService.addTables, payload);
-    // yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
+    yield call(appService.deleteComponent, payload);
+    yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {
-    console.log(error);
-    // yield put(addComponentRoutine.failure(error));
+    yield put(deleteComponentRoutine.failure(error));
   }
 }
 
-function* watchAddTableInfo() {
-  yield takeEvery(addTableInfoRoutine.TRIGGER, addTableInfo);
+function* watchDeleteComponent() {
+  yield takeEvery(deleteComponentRoutine.TRIGGER, deleteComponent);
 }
 
 export default function* appSaga() {
@@ -156,6 +163,7 @@ export default function* appSaga() {
     watchFetchComponents(),
     watchAddComponent(),
     watchUpdateComponent(),
-    watchAddTableInfo()
+    watchLocalUpdateComponent(),
+    watchDeleteComponent()
   ]);
 }

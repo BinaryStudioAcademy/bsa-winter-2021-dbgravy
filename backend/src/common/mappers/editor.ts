@@ -1,18 +1,10 @@
 import { ComponentType } from '../enums/ComponentType';
-import { IResponse } from '../models/editor/IResponse';
+import { IResponseComponent } from '../models/editor/IResponseComponent';
+import { IComponent } from '../models/editor/IComponent';
 
-interface IElement {
-  id: string,
-  name: string,
-  height: number,
-  width: number,
-  top: number,
-  left: number
-}
-
-export const formatResponse = (components: IElement[]) => {
-  let response = <IResponse>{};
-  components.forEach((element: IElement) => {
+export const formatResponse = (components: IComponent[]) => {
+  let response = <IResponseComponent>{};
+  components.forEach((element: IComponent) => {
     const {
       id,
       name,
