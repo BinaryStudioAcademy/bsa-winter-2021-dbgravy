@@ -27,12 +27,12 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, updat
 
   const onSelect = (id: string) => {
     setSelectedItem(id);
-    selectItem(elements[id]);
+    selectItem({ ...elements[id], id });
     setItemType(elements[id].componentType);
   };
 
   useEffect(() => {
-    setItems({ ...items, ...elements });
+    setItems({ ...elements });
   }, [elements]);
 
   useEffect(() => {
