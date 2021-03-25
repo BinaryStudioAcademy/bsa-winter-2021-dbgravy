@@ -273,7 +273,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
             <Button
               variant="primary"
               type="submit"
-            // disabled={!(typeAction && query)}
             >
               Save
             </Button>
