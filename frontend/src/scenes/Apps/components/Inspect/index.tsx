@@ -59,7 +59,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
   const [inputQuery, setInputQuery] = useState<null | string>(null);
   const [defaultInputQ, setDefaultInputQ] = useState<OptionType | undefined>(undefined);
-
+  console.log('typeAction', typeAction);
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
   const changeSelectQuery = (id:string) => {
     const newSelectQuery = queries.find(elem => elem.id === id);
@@ -266,9 +266,9 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={query as ValueType<OptionType, boolean>}
               onChange={option => setQuery(option)}
               options={optionsQueries}
+              isDisabled={!typeAction}
             />
             <div style={{ padding: '5px' }} />
-            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
             <Button
               variant="primary"
               type="submit"
