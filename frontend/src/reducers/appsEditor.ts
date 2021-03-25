@@ -3,11 +3,13 @@ import { IDropItem } from '../common/models/editor/IDropItem';
 import { IEditorState } from '../common/models/editor/IEditorState';
 import {
   fetchEditorComponentsRoutine,
-  localUpdateComponentRoutine
+  localUpdateComponentRoutine,
+  setNewInputValue
 } from '../scenes/Apps/routines';
 
 const initialState = {
-  components: {}
+  components: {},
+  locals: []
 };
 
 export const appsEditor = (state: IEditorState = initialState, { type, payload }: Routine<any>): IEditorState => {
@@ -16,6 +18,18 @@ export const appsEditor = (state: IEditorState = initialState, { type, payload }
       return {
         ...state,
         components: { ...payload }
+      };
+    case setNewInputValue.TRIGGER:
+      const local = [...state.locals];
+      const idx = local.findIndex(e => e.id === payload.id);
+      if (!idx || idx !== -1) {
+        local[idx].value = payload.value;
+      } else {
+        local.push({ id: payload.id, value: payload.value });
+      }
+      return {
+        ...state,
+        locals: [...local]
       };
     case localUpdateComponentRoutine.SUCCESS:
       return {
@@ -30,7 +44,7 @@ export const appsEditor = (state: IEditorState = initialState, { type, payload }
           return [key, newValue];
         })) as {
           [key: string]: IDropItem;
-      }
+        }
       };
     default:
       return state;

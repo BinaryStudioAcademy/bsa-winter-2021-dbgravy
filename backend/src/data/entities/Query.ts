@@ -12,9 +12,6 @@ export class Query extends AbstractEntity {
   name: string;
 
   @Column()
-  runAutomatically: boolean;
-
-  @Column()
   code: string;
 
   @Column()
