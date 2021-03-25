@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import styles from './styles.module.scss';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
+import { IInputText } from '../../../../common/models/editor/input/IInputText';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
@@ -39,9 +40,13 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     ? (selectedItem as IDropItem).name as string
     : '');
   const [toggleComponentNameId, setToggleComponentNameId] = useState(false);
-  const [labelInputText, setLabelInputText] = useState('');
-  const [placeholder, setPlaceholder] = useState('');
-  // const [defaultValueInputText, setDefaultValueInputText] = useState('');
+  const [labelInputText, setLabelInputText] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IInputText).label as string
+    : '');
+  const [placeholder, setPlaceholder] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IInputText).placeholder as string
+    : '');
+
   const [textButton, setTextButton] = useState(selectedItem
     ? ((selectedItem as IDropItem).component as IButton).text as string
     : '');
@@ -51,6 +56,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
 
   const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
+  const [inputQuery, setInputQuery] = useState<null | string>(null);
 
   const handleEditNameId = () => {
     setToggleComponentNameId(false);
@@ -69,11 +75,28 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       };
       editComponent(newItem);
     }
+    if (selectedItem && selectedItem.componentType === 'textInput') {
+      const item = {
+        ...selectedItem,
+        component: {
+          ...selectedItem.component,
+          label: labelInputText,
+          placeholder,
+          queryId: inputQuery
+        }
+      };
+      editComponent(item);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleEdit();
+  };
+
+  const selectOne = () => {
+    const c = queries.find(e => e.id === selectedItem?.component.queryId);
+    return c ? { value: c.id, label: c.name } : undefined;
   };
 
   useEffect(() => {
@@ -82,6 +105,10 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
         setColorButton(((selectedItem as IDropItem).component as IButton).color as string);
+      }
+      if (selectedItem && selectedItem.componentType === 'textInput') {
+        setPlaceholder(((selectedItem as IDropItem).component as IInputText).placeholder as string);
+        setLabelInputText(((selectedItem as IDropItem).component as IInputText).label as string);
       }
     }
   }, [selectedItem]);
@@ -143,7 +170,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
       {
         (selectedItem && selectedItem.componentType === 'textInput') && (
-          <Form>
+          <Form onSubmit={e => handleSubmit(e)}>
             <Form.Label>Label</Form.Label>
             <Form.Control
               type="text"
@@ -156,6 +183,14 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
+            <Form.Label>Run query</Form.Label>
+            <Select
+              defaultValue={selectOne()}
+              options={queries.map(q => ({ value: q.id, label: q.name }))}
+              isClearable
+              onChange={e => setInputQuery(e?.value || null)}
+            />
+            <div style={{ padding: '5px' }} />
             <Button
               variant="primary"
               type="submit"

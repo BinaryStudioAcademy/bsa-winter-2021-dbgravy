@@ -2,13 +2,14 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
 import update from 'immutability-helper';
 import DropAreaItem from '../DropAreaItem';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
 import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 import { IButton } from '../../../../common/models/editor/IButton';
+import InputComponent from '../InputComponent';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
@@ -23,7 +24,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
 
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
-  const [inputTextValue, setInputTextValue] = useState('');
+  // const [inputTextValue, setInputTextValue] = useState('');
 
   const onSelect = (id: string) => {
     setSelectedItem(id);
@@ -122,19 +123,20 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                <Form style={{ display: 'flex', position: 'relative' }}>
-                  <Form.Label
-                    style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
-                  >
-                    {name}
-                  </Form.Label>
-                  <Form.Control
-                    type={(component as IInputText).type}
-                    name={key}
-                    value={inputTextValue}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
-                  />
-                </Form>
+                // <Form style={{ display: 'flex', position: 'relative' }}>
+                //   <Form.Label
+                //     style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
+                //   >
+                //     {(component as IInputText).label}
+                //   </Form.Label>
+                //   <Form.Control
+                //     placeholder={(component as IInputText).placeholder}
+                //     name={key}
+                //     value={inputTextValue}
+                //     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
+                //   />
+                // </Form>
+                <InputComponent component={component as IInputText} id={key} />
               )
             }
             {

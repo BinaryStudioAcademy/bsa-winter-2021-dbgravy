@@ -1,39 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import {
   setNewInputValue
 } from '../../routines';
-// import { queries } from '../../../../reducers/queries';
 
 interface IProps {
-  input: IInputText,
-  name: string
+  component: IInputText,
+  id: string,
+  setInputValue: Function
 }
 const AppItem: React.FC<IProps> = ({
-  input,
-  name
+  component,
+  id,
+  setInputValue
 }) => {
-  const dispatch = useDispatch();
-  const [value, setValue] = useState(input.value);
+  const [inputTextValue, setInputTextValue] = useState('');
 
   useEffect(() => {
-    const timeOutId = setTimeout(() => startQuery(input.queryId), 1000);
+    const timeOutId = setTimeout(() => saveInput(component.queryId), 1000);
     return () => clearTimeout(timeOutId);
-  }, [value]);
+  }, [inputTextValue]);
 
-  const startQuery = (queryId: string | undefined) => {
+  useEffect(() => {
+    setInputTextValue(component.localValue || '');
+  }, [component]);
+
+  const saveInput = (queryId?: string) => {
     if (queryId) {
+      console.log(component.queryId);
+
       // const query = //
       //   runQuery(query);
-    } else {
-      dispatch(setNewInputValue.trigger({ name, value }));
     }
-  };
-
-  const handleChangeValue = (text: string) => {
-    setValue(text);
+    setInputValue({ key: id, value: inputTextValue });
   };
 
   return (
@@ -41,16 +42,21 @@ const AppItem: React.FC<IProps> = ({
       <Form.Label
         style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
       >
-        {/* {title} */}
+        {(component as IInputText).label}
+        {id}
       </Form.Label>
       <Form.Control
-        // type={(component as IInputText).type}
-        // name={key}
-        // value={inputTextValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeValue(e.target.value)}
+        placeholder={(component as IInputText).placeholder}
+        name={id}
+        value={inputTextValue}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
       />
     </Form>
   );
 };
 
-export default AppItem;
+const mapDispatchToProps = ({
+  setInputValue: setNewInputValue
+});
+
+export default connect(null, mapDispatchToProps)(AppItem);

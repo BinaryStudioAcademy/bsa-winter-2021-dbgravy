@@ -1,4 +1,4 @@
-export interface ICteateInput {
+export interface ICreateInput {
   label: string,
   placeholder: string,
   queryId?: string,

@@ -19,7 +19,7 @@ export const getComponents = (appId: string) => api.get<IDropItem[]>(`/api/edito
 export const addComponent = ({
   appId,
   component
-}: IAddComponent) => api.post<IDropItem>(`/api/editor/${appId}`, component);
+}: IAddComponent) => api.post<IDropItem>('/api/editor', { appId, component });
 
 export const addInput = (
   input: IAddInput
