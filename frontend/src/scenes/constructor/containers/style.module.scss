@@ -1,209 +1,237 @@
-.wrapper{
-  display: flex;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid #d9d9d9;
-  height: 400px;
-  flex-direction: row;
-}
-.LeftSide{
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid #d9d9d9;
-  width: 320px;
-}
-.RightSide{
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  overflow: scroll;
-}
-.RightSideHeader{
-  display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid #d9d9d9;
-}
-.searchWrapper{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  height: 48px;
-  border-bottom: 1px solid #d9d9d9;
-  flex-shrink: 0;
-  flex-grow: 0;
-}
-.resource{
-  display: flex;
-  margin-left: 20px;
-  flex-direction: row;
-  align-content: center;
-}
-.resourceText{
-  display: flex;
-  flex-direction: row;
-  margin: 0!important;
-  width: 100px;
-  text-align: center;
-  align-content: center;
-}
-.searchInput{
-  box-sizing: border-box;
-  font-variant: tabular-nums;
-  list-style: none;
-  font-feature-settings: "tnum";
-  position: relative;
-  display: inline-block;
-  margin-left: 5px;
-  height: 28px;
-  padding: 4px 11px;
-  color: rgba(0,0,0,.65);
-  font-size: 12px;
-  line-height: 1.5;
-  background-color: #fff;
-  background-image: none;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  transition: all .3s;
-}
-.newBtn button{
-  font-family: var(--sans-serif);
-  height: 2rem;
-  border-radius: 4px;
-  border: none;
-  font-size: var(--font-size-10);
-  line-height: var(--line-height-20);
-  font-weight: 600;
-  transition: all .15s ease-in-out;
-  cursor: pointer;
-  white-space: nowrap;
-  user-select: none;
-  touch-action: manipulation;
-  box-shadow: none;
-  display: -ms-inline-flexbox;
-  margin-left: 15px;
-  display: inline-flex;
-  -ms-flex-align: center;
-  align-items: center;
-  text-shadow: none;
-  text-align: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  min-width: 0;
-  background-color: var(--faint-blue)!important;
-  text-transform: none;
-  color: blue!important;
-  padding: 0!important;
-  margin-right: 16px;
-  width: 80px;
-}
-.RightSideHeader{
-  display: grid;
-  height: 48px;
-  background-color: #fff;
-  position: relative;
-  padding: 0 20px;
-  box-shadow: inset 0 -1px 0 0 var(--washed-gray);
-  grid-template-columns: 6fr 2fr;
-  grid-gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-}
-.queryHeader{
-  width: 100%!important;
-  border: none!important;
-  min-height: 28px;
-  margin-right: 30px;
-}
-.RightBar{
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0!important;
-  width: 50%;
-}
-.codeEditor{
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.ShowingAll{
-  font-size: 14px;
-  margin-left: 20px;
-  color: #6a6a6a;
-}
-.row{
-  width: 100%;
-  margin-left: 20px;
-  margin-right: 20px;
-  height: 4px;
-  border-bottom: 1px solid #d9d9d9;
+.wrapper {
+    display: flex;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #d9d9d9;
+    height: 400px;
+    flex-direction: row;
 }
 
-.dropMenu{
-  margin-right: 15px;
-}
-.dropMenu button,.dropMenuChange button{
-  background-color:white;
-  border-color: #d9d9d9;
-  color: black;
-}
-.dropMenu button::after,.dropMenuChange button::after{
-  content: none;
-}
-a.delete{
-  color: red;
-}
-a.delete:hover{
-  color: red;
+.LeftSide {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #d9d9d9;
+    width: 320px;
 }
 
-.dropMenuChange button{
-  width: 400px;
-  margin-left: 20px;
-  margin-right: 20px;
-  background-color:#d9d9d9;
-  border-color: black;
-  color: black;
+.RightSide {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
-.checkBoxWrapper{
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  align-items: center;
+
+.RightSideHeader {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #d9d9d9;
 }
-.Confirm{
-  position: absolute;
-  z-index: 2;
-  font-size: 0;
-  margin-left: 20px;
-  border: none!important;
-  width: 23px;
-  height: 20px;
+
+.searchWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    height: 48px;
+    border-bottom: 1px solid #d9d9d9;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
-.Confirm:focus{
-  outline: none;
+
+.resource {
+    display: flex;
+    margin-left: 20px;
+    flex-direction: row;
+    align-content: center;
 }
-.spanText{
-  margin-left: 20px;
-  font-size: 15px;
+
+.resourceText {
+    display: flex;
+    flex-direction: row;
+    margin: 0!important;
+    width: 100px;
+    text-align: center;
+    align-content: center;
 }
-.checkBox input{
-  cursor: pointer!important;
-  position: static;
-  margin-left: 6px;
-  background-color: white!important;
+
+.searchInput {
+    box-sizing: border-box;
+    font-variant: tabular-nums;
+    list-style: none;
+    font-feature-settings: "tnum";
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    height: 28px;
+    padding: 4px 11px;
+    color: rgba(0, 0, 0, .65);
+    font-size: 12px;
+    line-height: 1.5;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    transition: all .3s;
 }
-.checkBox label{
-  height: 0;
-  width: 0;
+
+.newBtn button {
+    font-family: var(--sans-serif);
+    height: 2rem;
+    border-radius: 4px;
+    border: none;
+    font-size: var(--font-size-10);
+    line-height: var(--line-height-20);
+    font-weight: 600;
+    transition: all .15s ease-in-out;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    touch-action: manipulation;
+    box-shadow: none;
+    display: -ms-inline-flexbox;
+    margin-left: 15px;
+    display: inline-flex;
+    -ms-flex-align: center;
+    align-items: center;
+    text-shadow: none;
+    text-align: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-width: 0;
+    background-color: var(--faint-blue)!important;
+    text-transform: none;
+    color: blue!important;
+    padding: 0!important;
+    margin-right: 16px;
+    width: 80px;
 }
-.baseMargin{
-  margin-left: 20px;
-  margin-bottom: 5px;
+
+.RightSideHeader {
+    display: grid;
+    height: 48px;
+    background-color: #fff;
+    position: relative;
+    padding: 0 20px;
+    box-shadow: inset 0 -1px 0 0 var(--washed-gray);
+    grid-template-columns: 6fr 2fr;
+    grid-gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.queryHeader {
+    width: 100%!important;
+    border: none!important;
+    min-height: 28px;
+    margin-right: 30px;
+}
+
+.RightBar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0!important;
+    width: 50%;
+}
+
+.codeEditor {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.ShowingAll {
+    font-size: 14px;
+    margin-left: 20px;
+    color: #6a6a6a;
+}
+
+.row {
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    height: 4px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.dropMenu {
+    margin-right: 15px;
+}
+
+.dropMenu button,
+.dropMenuChange button {
+    background-color: white;
+    border-color: #d9d9d9;
+    color: black;
+}
+
+.dropMenu button::after,
+.dropMenuChange button::after {
+    content: none;
+}
+
+a.delete {
+    color: red;
+}
+
+a.delete:hover {
+    color: red;
+}
+
+.dropMenuChange button {
+    width: 400px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: #d9d9d9;
+    border-color: black;
+    color: black;
+}
+
+.checkBoxWrapper {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Confirm {
+    position: absolute;
+    z-index: 2;
+    font-size: 0;
+    margin-left: 20px;
+    border: none!important;
+    width: 23px;
+    height: 20px;
+}
+
+.Confirm:focus {
+    outline: none;
+}
+
+.spanText {
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.checkBox input {
+    cursor: pointer!important;
+    position: static;
+    margin-left: 6px;
+    background-color: white!important;
+}
+
+.checkBox label {
+    height: 0;
+    width: 0;
+}
+
+.baseMargin {
+    margin-left: 20px;
+    margin-bottom: 5px;
 }
 
 .table-wrp {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 400px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 400px;
 }

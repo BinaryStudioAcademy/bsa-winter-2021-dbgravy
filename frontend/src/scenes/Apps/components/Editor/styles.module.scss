@@ -1,72 +1,123 @@
 .sidebarWrp {
-  border: 1px solid #cecece;
-  margin-left: auto;
-  flex: 0 0 350px;
-  padding: 10px;
+    border: 1px solid #cecece;
+    margin-left: auto;
+    flex: 0 0 300px;
+    padding: 10px;
 }
+
 .navbarTop {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .navbarTopItem {
-  text-align: center;
-  height: 50px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #ccc;
-  margin:0 10px;
-  border: none;
-  background: none;
-  padding: 5px 20px;
+    text-align: center;
+    height: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ccc;
+    margin: 0 10px;
+    border: none;
+    background: none;
+    padding: 5px 20px;
 }
 
 .active {
-  color: #333;
+    color: #333;
 }
 
 .content {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .item {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  flex: 1 1 100%;
-  margin: 10px 0;
-  height: 54px;
-  overflow: hidden;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex: 1 1 100%;
+    margin: 10px 0;
+    height: 54px;
+    overflow: hidden;
 }
 
 .itemIconWrp {
-  display: block;
-  flex:0 0 50px;
-  height: 50px;
-  margin:0 10px;
+    display: block;
+    flex: 0 0 50px;
+    height: 50px;
+    margin: 0 10px;
 }
 
 .itemIcon {
-  font-size: 50px;
+    font-size: 50px;
 }
 
 .itemLabel {
-  font-weight: bold;
-  color: #111;
+    font-weight: bold;
+    color: #111;
 }
 
 .itemDesc {
-  font-size: 14px;
-  line-height: 1.1;
+    font-size: 14px;
+    line-height: 1.1;
+}
+
+.editorBody {
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    height: calc(100% - 50px);
+}
+
+.splitPane {
+    display: flex;
+    flex: 1 1 0%;
+    height: 100%;
+    position: initial;
+    outline: none;
+    overflow: hidden;
+    user-select: text;
+    flex-direction: row;
+    left: 0px;
+    right: 0px;
+}
+
+.paneVerticalLeft {
+    flex: 1 1 0%;
+    position: relative;
+    outline: none;
+}
+
+.paneHorizontal {
+    display: flex;
+    flex: 1 1 0%;
+    height: 100%;
+    position: absolute;
+    outline: none;
+    overflow: hidden;
+    user-select: text;
+    bottom: 0px;
+    flex-direction: column;
+    min-height: 100%;
+    top: 0px;
+    width: 100%;
+}
+
+.paneVerticalRight {
+    z-index: 800;
+    flex: 0 0 auto;
+    position: relative;
+    outline: none;
+    width: 300px;
 }
 
 .dropArea {
-  flex: 1 1 30%;
-  background-color: #cecece;
-  position: relative;
-  overflow: auto;
-  min-height: 400px;
+    flex: 1 1 30%;
+    background-color: #cecece;
+    position: relative;
+    min-height: 400px;
+    max-height: 100vh;
+    overflow-x: hidden;
 }
