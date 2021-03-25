@@ -8,6 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .navbarTopItem {
@@ -35,22 +36,26 @@
 .item {
   display: flex;
   align-items: center;
+
   cursor: pointer;
   flex: 1 1 100%;
-  margin: 10px 0;
-  height: 54px;
-  overflow: hidden;
+  margin: 20px 0;
 }
 
 .itemIconWrp {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex:0 0 50px;
   height: 50px;
-  margin:0 10px;
+  width: 50px;
+  margin:0 20px;
+  background-color: #e7e7e7;
+  border-radius: 5px;
 }
 
 .itemIcon {
-  font-size: 50px;
+  font-size: 30px;
 }
 
 .itemLabel {
@@ -59,8 +64,11 @@
 }
 
 .itemDesc {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.1;
+  color: #616161;
+  margin-top: 3px;
+  margin-bottom: 5px;
 }
 
 .dropArea {
@@ -68,4 +76,11 @@
   background-color: #cecece;
   position: relative;
   overflow: hidden;
+}
+
+.itemDescWrp {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
