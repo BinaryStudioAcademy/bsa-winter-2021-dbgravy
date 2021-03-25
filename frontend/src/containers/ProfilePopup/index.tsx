@@ -4,7 +4,8 @@ import {
   createOrganizationRoutine,
   fetchOrgInfoRoutine,
   fetchUserOrganizationsRoutine,
-  changeUserOrganizationRoutine } from './routines';
+  changeUserOrganizationRoutine
+} from './routines';
 import UserAttrButton from '../../components/UserAttrButton/UserAttrButton';
 import ProfilePopupInfo from '../../components/ProfilePopupInfo/ProfilePopupInfo';
 import { connect } from 'react-redux';
@@ -40,6 +41,10 @@ const ProfilePopup: React.FC<IProps> = (
     setup }
 ) => {
   const [showDetails, setShowDetails] = useState(true);
+  const createOrg = (info: any) => {
+    createOrganization(info);
+    setShowDetails(true);
+  };
 
   return (
     <div className={styles.infoContainer}>
@@ -56,7 +61,7 @@ const ProfilePopup: React.FC<IProps> = (
         fetchOrganization={fetchOrganization}
         fetchUserOrganizations={fetchUserOrganizations}
         changeUserOrganization={changeUserOrganization}
-        createOrganization={createOrganization}
+        createOrganization={createOrg}
         fullfill={fullfill}
         logout={logout}
         setup={setup}

@@ -46,7 +46,7 @@ const SwitchOrganization: React.FC<IProps> = ({ organizations, changeUserOrganiz
       />
       <Loader isLoading={!organizations.length}>
         <div className={styles.listContainer}>
-          <ListGroup>
+          <ListGroup key={organizations.length}>
             {
               organizations
                 .map(organization => (

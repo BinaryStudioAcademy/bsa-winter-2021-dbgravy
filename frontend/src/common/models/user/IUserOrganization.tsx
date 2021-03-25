@@ -11,6 +11,5 @@ export interface IUserOrganization {
 export interface IUserNewOrganization {
   name: string;
   isLoading?: boolean;
-  isFailed?: boolean;
-  isSuccess?: boolean;
+  isDone?: boolean;
 }
