@@ -20,7 +20,7 @@ const QueriesList:FunctionComponent<IProps> = ({
     <DropdownButton title={titleQuery} className={style.queryList}>
       {
       queryList.map(query => (
-        <QueryItem id={query.id} name={query.name} changeQuery={changeQuery} />
+        <QueryItem id={query.id} name={query.name} changeQuery={changeQuery} key={query.id} />
       ))
     }
     </DropdownButton>

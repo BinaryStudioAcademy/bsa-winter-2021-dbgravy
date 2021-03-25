@@ -29,11 +29,11 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
   const [inputTextValue, setInputTextValue] = useState('');
-
   const onSelect = (id: string) => {
     setSelectedItem(id);
     if (id) {
       selectItem({ ...elements[id] });
+      setItemType(elements[id].componentType);
     } else {
       selectItem(null);
     }
