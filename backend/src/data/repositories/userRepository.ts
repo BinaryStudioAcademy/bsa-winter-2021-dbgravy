@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { IRegisterUser } from '../../common/models/user/IRegisterUser';
 import { IUpdateUser } from '../../common/models/user/IUpdateUser';
 import { User } from '../entities/User';
+import { IInviteUser } from '../../common/models/user/IInviteUser';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -13,15 +14,21 @@ export class UserRepository extends Repository<User> {
     const createdUser = await this.save(newUser);
     return createdUser;
   }
+  async createInviteUser(inviteUser: IInviteUser): Promise<User> {
+    const createdInviteUser = await this.save(inviteUser);
+    return createdInviteUser;
+  }
 
   async updateUser(user: User): Promise<void> {
     const { id } = user;
     await this.update(id, user);
   }
 
-  async updateUserFields(data: IUpdateUser): Promise<void> {
+  async updateUserFields(data: IUpdateUser): Promise<User> {
     const { id } = data;
     await this.update(id, data);
+    const updatedUser = await this.getById(id);
+    return updatedUser;
   }
 
   async getAll(): Promise<User[]> {

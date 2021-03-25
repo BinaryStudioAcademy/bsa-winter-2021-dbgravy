@@ -3,7 +3,7 @@ import { IButton } from './IButton';
 import { IInputText } from './IInputText';
 import { ITable } from './ITable';
 
-type IComponent = IInputText | ITable | IButton;
+export type IComponent = IInputText | ITable | IButton;
 
 export interface IDropItem {
   id: string;

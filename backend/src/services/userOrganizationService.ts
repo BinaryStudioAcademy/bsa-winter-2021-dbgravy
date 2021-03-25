@@ -37,7 +37,11 @@ export const getUserOrganizations = async ({ id }: ITransportedUser): Promise<IO
 };
 
 export const createUserOrganization = async (data: ICreateUserOrganization): Promise<IUserOrganizationResponse> => {
-  const user = await getCustomRepository(UserRepository).getByEmail(data.email);
+  const { email, organizationId: currentOrganizationId } = data;
+  const userRepository = getCustomRepository(UserRepository);
+  const user = await userRepository.getByEmail(data.email)
+    ? await userRepository.getByEmail(data.email)
+    : await userRepository.createInviteUser({ email, currentOrganizationId });
   const res = await getCustomRepository(UserOrganizationRepository).addUserOrganization(user.id, data);
   const { name } = await getCustomRepository(OrganizationRepository).getById(data.organizationId);
   const inviteToken = createInviteToOrganizationToken({

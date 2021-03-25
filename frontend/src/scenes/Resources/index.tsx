@@ -14,22 +14,19 @@ import { Routes } from '../../common/enums/Routes';
 import { Link } from 'react-router-dom';
 import { isAccess } from '../../common/helpers/permissionHelper';
 import { Roles } from '../../common/enums/UserRoles';
-import { IUser } from '../../common/models/user/IUser';
 
 interface IProps {
   resources: IResource[],
   isLoading: boolean,
   fetchResources: () => void,
   remove: (obj: { resource: IResource }) => void,
-  user: IUser;
 }
 
 const Resources: React.FC<IProps> = ({
   resources,
   isLoading,
   fetchResources,
-  remove,
-  user
+  remove
 }) => {
   const [access, setAccess] = useState<boolean>(false);
 
@@ -55,7 +52,7 @@ const Resources: React.FC<IProps> = ({
         <div className={styles['main-block-wrp']}>
           <div className={styles['before-table']}>
             <h1>Resources</h1>
-            <Form inline>
+            <Form inline className={styles.form}>
               <InputGroup>
                 <InputGroup.Prepend>
                   <InputGroup.Text className={styles['input-group-search']}>

@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faAngleDoubleDown,
+  faAngleDoubleUp,
+  faAngleDoubleLeft,
+  faAngleDoubleRight
+} from '@fortawesome/free-solid-svg-icons';
 import styles from './styles.module.scss';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Editor from '../../components/Editor';
-import Constructor from '../../../constructor/containers';
 import { useHistory, useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import logo from '../../../../images/Logo.svg';
@@ -89,12 +95,11 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
           </div>
         ) : (
           <div
-            className={(!showBottom) ? 'h-100' : ''}
+            className={`h-100 ${styles.appWrap}`}
             onClick={closeNameEditor}
             onKeyDown={closeNameEditor}
             role="button"
             tabIndex={0}
-
           >
             <Navbar bg="white" expand="lg" className={styles.mainNav}>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -108,7 +113,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
                     Back to home
                   </NavLink>
                 </NavDropdown>
-                <Form.Group controlId="appName">
+                <Form.Group controlId="appName" className={styles.appName}>
                   {
                 editNameField ? (
                   <Form.Control
@@ -129,8 +134,21 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
                 </Form.Group>
               </Nav>
               <Nav className="mr-auto">
-                <Button onClick={changeStatusBottom}>Hidden bot</Button>
-                <Button onClick={changeStatusRight}>Hidden right</Button>
+                <FontAwesomeIcon
+                  icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                  color={showRight ? '#808080' : '#D3D3D3'}
+                  onClick={changeStatusRight}
+                  size="2x"
+                  className={styles.angleDouble}
+                />
+                <div style={{ padding: '5px' }} />
+                <FontAwesomeIcon
+                  icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                  color={showBottom ? '#808080' : '#D3D3D3'}
+                  onClick={changeStatusBottom}
+                  size="2x"
+                  className={styles.angleDouble}
+                />
               </Nav>
               <Nav>
                 <Button onClick={changeStatusBottom}>
@@ -141,11 +159,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
               </Nav>
             </Navbar>
             <DndProvider backend={HTML5Backend}>
-              <Editor appId={id} show={showRight} />
+              <Editor appId={id} show={showRight} showBottom={showBottom} />
             </DndProvider>
-            {showBottom
-              ? (<Constructor id={id} />)
-              : null}
           </div>
         )
       }

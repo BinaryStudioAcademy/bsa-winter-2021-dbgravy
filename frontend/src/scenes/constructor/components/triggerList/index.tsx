@@ -35,7 +35,6 @@ const QueriesListForTriggers:FunctionComponent<IProps> = ({
                               name={query.name}
                               key={query.id + status}
                               code={query.code}
-                              runAutomatically={query.runAutomatically}
                               showConfirm={query.showConfirm}
                               triggers={query.triggers}
                             />
@@ -48,7 +47,6 @@ const QueriesListForTriggers:FunctionComponent<IProps> = ({
                             name={query.name}
                             key={query.id + status}
                             code={query.code}
-                            runAutomatically={query.runAutomatically}
                             showConfirm={query.showConfirm}
                             triggers={query.triggers}
                           />

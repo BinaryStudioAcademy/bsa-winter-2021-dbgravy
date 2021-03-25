@@ -13,7 +13,7 @@ export class Table extends AbstractEntity {
   @Column()
   readonly queryId: string
 
-  @OneToOne(() => Component)
+  @OneToOne(() => Component, { onDelete: 'CASCADE' })
   @JoinColumn()
   public component: Component;
 
