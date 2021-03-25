@@ -137,7 +137,6 @@ export const deleteComponent = async (id: string): Promise<IResponseComponent> =
   await getComponentById(id);
   const component = await getCustomRepository(ComponentRepository).getComponentById(id);
   let deletedComponentElement = {} as IComponentElement;
-  console.log(component.componentType);
   switch (component.componentType) {
     case ComponentType.input:
       break;
