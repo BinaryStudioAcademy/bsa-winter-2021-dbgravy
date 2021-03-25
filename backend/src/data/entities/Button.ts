@@ -21,7 +21,7 @@ export class Button extends AbstractEntity {
   @Column()
   color: string
 
-  @OneToOne(() => Component)
+  @OneToOne(() => Component, { onDelete: 'CASCADE' })
   @JoinColumn()
   public component: Component;
 

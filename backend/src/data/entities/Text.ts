@@ -11,7 +11,7 @@ export class Text extends AbstractEntity {
   @Column()
   value: string
 
-  @OneToOne(() => Component)
+  @OneToOne(() => Component, { onDelete: 'CASCADE' })
   @JoinColumn()
   public component: Component;
 }
