@@ -13,28 +13,49 @@ const TableData:FunctionComponent<IProps> = ({
   selectItem
 }) => {
   const searchSelectQuery:IQuery|undefined = queryList.find(elem => elem.id === selectItem?.queryId);
-  const dataName = searchSelectQuery?.data !== undefined ? Object.keys(searchSelectQuery?.data[0]) : ['name', 'age'];
+  const dataName = searchSelectQuery?.data !== undefined ? Object.keys(searchSelectQuery?.data[0])
+    : ['#', 'FirstName', 'LastName', 'UserName'];
   return (
     <Table striped bordered hover size="sm" style={{ height: '100%', width: '100%' }}>
       <thead>
         <tr>
           {
-            dataName.map(name => <th>{name}</th>)
-          }
+          dataName.map(name => <th key={name}>{name}</th>)
+        }
         </tr>
       </thead>
-      <tbody>
-        {
-          searchSelectQuery?.data
-            ? searchSelectQuery?.data.map((elem:{[key:string]:string|number}) => (
-              <tr>
+      {
+        searchSelectQuery?.data
+          ? searchSelectQuery?.data.map((elem: { [key: string]: string | number }) => (
+            <tbody>
+              <tr key={Date.now()}>
                 {
-              (Object.values(elem)).map(item => <td>{item}</td>)
-            }
+                (Object.values(elem)).map(item => <td key={item}>{item}</td>)
+              }
               </tr>
-            )) : null
+            </tbody>
+          )) : (
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td colSpan={2}>Larry the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          )
       }
-      </tbody>
     </Table>
   );
 };
