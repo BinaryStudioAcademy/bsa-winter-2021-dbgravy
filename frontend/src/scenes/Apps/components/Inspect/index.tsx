@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  addComponentRoutine,
-  addInputRoutine
+  addComponentRoutine
 } from '../../routines';
 import { connect } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
@@ -59,6 +58,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
   const [inputQuery, setInputQuery] = useState<null | string>(null);
+  const [defaultInputQ, setDefaultInputQ] = useState<OptionType | undefined>(undefined);
 
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
   const changeSelectQuery = (id:string) => {
@@ -117,6 +117,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     return c ? { value: c.id, label: c.name } : undefined;
   };
 
+  const handleChange = (e: OptionType | null) => {
+    setDefaultInputQ(e || undefined);
+    setInputQuery(e?.value || null);
+  };
+
   useEffect(() => {
     if (selectedItem) {
       const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.component?.queryId);
@@ -129,6 +134,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       if (selectedItem && selectedItem.componentType === 'textInput') {
         setPlaceholder(((selectedItem as IDropItem).component as IInputText).placeholder as string);
         setLabelInputText(((selectedItem as IDropItem).component as IInputText).label as string);
+        setDefaultInputQ(selectOne());
       }
     }
   }, [selectedItem, queries]);
@@ -206,10 +212,10 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
             />
             <Form.Label>Run query</Form.Label>
             <Select
-              defaultValue={selectOne()}
+              value={defaultInputQ}
               options={queries.map(q => ({ value: q.id, label: q.name }))}
               isClearable
-              onChange={e => setInputQuery(e?.value || null)}
+              onChange={e => handleChange(e)}
             />
             <div style={{ padding: '5px' }} />
             <Button
@@ -283,7 +289,6 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-  addInput: addInputRoutine,
   addComponent: addComponentRoutine
 };
 

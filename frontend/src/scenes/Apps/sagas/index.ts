@@ -10,7 +10,6 @@ import {
   fetchEditorComponentsRoutine,
   addComponentRoutine,
   updateComponentRoutine,
-  // addInputRoutine,
   localUpdateComponentRoutine,
   deleteComponentRoutine
 } from '../routines';
@@ -121,20 +120,6 @@ function* watchAddComponent() {
   yield takeEvery(addComponentRoutine.TRIGGER, addComponent);
 }
 
-// function* addInput({ payload }: Routine<any>) {
-//   try {
-//     yield call(appService.addInput, payload);
-//     // yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
-//   } catch (error) {
-//     console.log(error);
-//     // yield put(addComponentRoutine.failure(error));
-//   }
-// }
-
-// function* watchAddInput() {
-//   yield takeEvery(addInputRoutine.TRIGGER, addInput);
-// }
-
 function* updateComponent({ payload }: Routine<any>) {
   try {
     yield call(appService.updateComponent, payload);
@@ -178,7 +163,6 @@ export default function* appSaga() {
     watchFetchComponents(),
     watchAddComponent(),
     watchUpdateComponent(),
-    // watchAddInput(),
     watchLocalUpdateComponent(),
     watchDeleteComponent()
   ]);

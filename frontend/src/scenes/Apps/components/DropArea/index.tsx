@@ -9,7 +9,7 @@ import { IDragItem } from '../../../../common/models/editor/IDragItem';
 import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 import { IButton } from '../../../../common/models/editor/IButton';
-import InputComponent from '../InputComponent';
+import InputComponent from '../../containers/InputComponent';
 import TableData from '../tableDATA';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { useSelector } from 'react-redux';
@@ -104,7 +104,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   return (
     <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '100vh' }}>
       {Object.keys(items).map((key: string) => {
-        const { left, top, name, componentType, width, height, component } = items[key];
+        const { left, top, name, componentType, width, height, component, id } = items[key];
         return (
           <DropAreaItem
             key={key}
@@ -126,7 +126,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                <InputComponent component={component as IInputText} id={key} />
+                <InputComponent component={component as IInputText} id={id} />
               )
             }
             {

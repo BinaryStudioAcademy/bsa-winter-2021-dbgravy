@@ -1,7 +1,6 @@
 import { Routine } from 'redux-saga-routines';
 import { IDropItem } from '../common/models/editor/IDropItem';
 import { IEditorState } from '../common/models/editor/IEditorState';
-import { IInputText } from '../common/models/editor/input/IInputText';
 import {
   fetchEditorComponentsRoutine,
   localUpdateComponentRoutine,
@@ -9,7 +8,8 @@ import {
 } from '../scenes/Apps/routines';
 
 const initialState = {
-  components: {}
+  components: {},
+  locals: []
 };
 
 export const appsEditor = (state: IEditorState = initialState, { type, payload }: Routine<any>): IEditorState => {
@@ -20,14 +20,16 @@ export const appsEditor = (state: IEditorState = initialState, { type, payload }
         components: { ...payload }
       };
     case setNewInputValue.TRIGGER:
-      const fComponent = state.components[payload.key];
-      (fComponent.component as IInputText).localValue = payload.value;
+      const local = [...state.locals];
+      const idx = local.findIndex(e => e.id === payload.id);
+      if (!idx || idx !== -1) {
+        local[idx].value = payload.value;
+      } else {
+        local.push({ id: payload.id, value: payload.value });
+      }
       return {
         ...state,
-        components: {
-          ...state.components,
-          [payload.key]: fComponent
-        }
+        locals: [...local]
       };
     case localUpdateComponentRoutine.SUCCESS:
       return {

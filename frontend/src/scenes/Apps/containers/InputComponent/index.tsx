@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { ILocal } from '../../../../common/models/editor/ILocal';
 import { IInputText } from '../../../../common/models/editor/input/IInputText';
+import { IQuery } from '../../../../common/models/queries/IQuery';
+import { IAppState } from '../../../../common/models/store/IAppState';
+import { runSelectQueryRoutine } from '../../../constructor/routines';
 import {
   setNewInputValue
 } from '../../routines';
@@ -9,12 +13,18 @@ import {
 interface IProps {
   component: IInputText,
   id: string,
-  setInputValue: Function
+  setInputValue: (obj: { id: string, value: string }) => void,
+  runQuery: (o: any) => void,
+  queries: Array<IQuery | any>,
+  locals: ILocal[]
 }
 const AppItem: React.FC<IProps> = ({
   component,
   id,
-  setInputValue
+  setInputValue,
+  runQuery,
+  queries,
+  locals
 }) => {
   const [inputTextValue, setInputTextValue] = useState('');
 
@@ -24,17 +34,25 @@ const AppItem: React.FC<IProps> = ({
   }, [inputTextValue]);
 
   useEffect(() => {
-    setInputTextValue(component.localValue || '');
+    setInputTextValue(locals.find(e => e.id === id)?.value || '');
   }, [component]);
 
   const saveInput = (queryId?: string) => {
     if (queryId) {
-      console.log(component.queryId);
+      const queryData = (queries as IQuery[]).find(e => e.id === queryId);
+      const { id: qId, code, showConfirm, name, triggers, appId, resourceId } = queryData as IQuery & { triggers: [] };
 
-      // const query = //
-      //   runQuery(query);
+      const value = {
+        data: {
+          id: qId, code, showConfirm, name, triggers
+        },
+        appId,
+        resourceId,
+        triggered: []
+      };
+      runQuery(value);
     }
-    setInputValue({ key: id, value: inputTextValue });
+    setInputValue({ id, value: inputTextValue });
   };
 
   return (
@@ -43,7 +61,6 @@ const AppItem: React.FC<IProps> = ({
         style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
       >
         {(component as IInputText).label}
-        {id}
       </Form.Label>
       <Form.Control
         placeholder={(component as IInputText).placeholder}
@@ -55,8 +72,14 @@ const AppItem: React.FC<IProps> = ({
   );
 };
 
-const mapDispatchToProps = ({
-  setInputValue: setNewInputValue
+const mapStateToProps = (state: IAppState) => ({
+  queries: state.app.qur.queriesApp,
+  locals: state.app.editor.locals
 });
 
-export default connect(null, mapDispatchToProps)(AppItem);
+const mapDispatchToProps = ({
+  setInputValue: setNewInputValue,
+  runQuery: runSelectQueryRoutine
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppItem);
