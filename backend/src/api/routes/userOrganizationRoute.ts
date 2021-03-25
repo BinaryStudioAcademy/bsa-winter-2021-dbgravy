@@ -12,7 +12,7 @@ router
     run(req => UOService.getUserOrganizations(req.user as ITransportedUser)))
   .get('/:organizationId', permissionMiddleware([Role.ADMIN]),
     run(req => UOService.getUsers(req.params.organizationId)))
-  .get('/invite/:inviteToken', permissionMiddleware([Role.ADMIN]),
+  .get('/invite/:inviteToken',
     run(req => UOService.checkInviteUser(req.params.inviteToken)))
   .post('/', permissionMiddleware([Role.ADMIN]),
     run(req => UOService.createUserOrganization(req.body)))

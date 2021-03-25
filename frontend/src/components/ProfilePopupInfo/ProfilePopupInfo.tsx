@@ -11,6 +11,7 @@ import { Routes } from '../../common/enums/Routes';
 import { Link } from 'react-router-dom';
 import SwitchOrganization from '../SwitchOrganization/SwitchOrganization';
 import { IBindingCallback1 } from '../../common/models/callback/IBindingCallback1';
+import { Roles } from '../../common/enums/UserRoles';
 
 interface IProps {
   user: IUser,
@@ -75,14 +76,20 @@ const ProfilePopupInfo: React.FC<IProps> = (
           <span className={styles.primary}>
             {organization?.name}
           </span>
-          <span className={styles.secondary}>{organization?.role}</span>
-        </div>
-        <div className={styles['options-wrp']}>
-          <span>
-            <FontAwesomeIcon icon={faCog} color="grey" />
-            <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
+          <span className={styles.secondary}>
+            {organization?.role}
           </span>
         </div>
+        {
+          (organization?.role === Roles.Admin) && (
+            <div className={styles['options-wrp']}>
+              <span>
+                <FontAwesomeIcon icon={faCog} color="grey" />
+                <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
+              </span>
+            </div>
+          )
+        }
       </div>
     );
   };

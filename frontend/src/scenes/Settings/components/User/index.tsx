@@ -4,6 +4,7 @@ import { Roles } from '../../../../common/enums/UserRoles';
 import styles from '../styles.module.scss';
 import Loader from '../../../../components/Loader';
 import { IUserEdit } from '../../../../common/models/user/IUserEdit';
+import { IUser } from '../../../../common/models/user/IUser';
 
 interface IProps {
   id: string
@@ -17,11 +18,12 @@ interface IProps {
   userChanges: IUserEdit,
   resendInvite: (obj: { id: string, email: string, role?: Roles }) => void,
   activateUser: (obj: { id: string, status: Status }) => void,
+  currentUser:IUser
 }
 
 const User: React.FC<IProps> = ({
   id, firstName, lastName, email, role, status,
-  action, clsName, resendInvite, activateUser, userChanges }) => {
+  action, clsName, resendInvite, activateUser, userChanges, currentUser }) => {
   const firstLetter = (s: string) => s[0];
   const toCapital = (string: string) => `${string[0].toUpperCase()}${string.slice(1)}`;
 
@@ -43,16 +45,30 @@ const User: React.FC<IProps> = ({
   const renderAction = () => (userChanges.id === id && userChanges.isLoading
     ? <Loader isLoading={userChanges.isLoading} isAbsolute={false} />
     : (
-      <span
-        className={styles.action}
-        onClick={onClick}
-        onKeyPress={onClick}
-        role="button"
-        tabIndex={0}
-      >
-        {action}
-        {userChanges.id === id && userChanges.isFailed ? <span className={styles.failed}>!</span> : null}
-      </span>
+      <>
+        {
+        (id !== currentUser.id) ? (
+          <span
+            className={styles.action}
+            onClick={onClick}
+            onKeyPress={onClick}
+            role="button"
+            tabIndex={0}
+          >
+            {action}
+            {userChanges.id === id && userChanges.isFailed ? <span className={styles.failed}>!</span> : null}
+          </span>
+        ) : (
+          <>
+            {
+              (currentUser.id === id) && (
+                <span />
+              )
+            }
+          </>
+        )
+      }
+      </>
     )
   );
 

@@ -15,7 +15,8 @@ import { Role } from '../../common/enums/Role';
 const router = Router();
 
 router
-  .get('/:id', run(req => getResourceById(req.params.id)))
+  .get('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),
+    run(req => getResourceById(req.params.id)))
   .put('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),
     run(req => updateResource(req.params.id, req.body.resource)))
   .get('/', run(req => getResources(req.user as ITransportedUser)))

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Role } from '../../common/enums/Role';
 import { CustomError } from '../../common/models/error/CustomError';
 import { User } from '../../data/entities/User';
-import { OrganizationStatus } from '../../common/enums/OrganizationStatus'
+import { OrganizationStatus } from '../../common/enums/OrganizationStatus';
 
 export default (roles: Role[]) => async (req: Request, _res: Response, next: NextFunction) => {
   const { userOrganizations } = <User>req.user;

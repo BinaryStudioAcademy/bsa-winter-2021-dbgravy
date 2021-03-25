@@ -55,6 +55,10 @@ export const createUserOrganization = async (data: ICreateUserOrganization): Pro
 };
 
 export const updateUserOrganization = async (data: IUpdateUserOrganization): Promise<IUserOrganizationResponse> => {
+  const user = await getCustomRepository(UserRepository).getById(data.userId);
+  if (user.organizations.length > 0 && data.userId === user.organizations[0].createdByUserId) {
+    throw new CustomError('This user is the owner of the organization', HttpStatusCode.BAD_REQUEST);
+  }
   const res = await getCustomRepository(UserOrganizationRepository).updateUserOrganization(data);
   return formatResponse(res);
 };

@@ -67,8 +67,9 @@ export const user = (
         id,
         firstName,
         lastName,
-        organizationId,
-        email
+        currentOrganizationId,
+        email,
+        userOrganizations
       } = payload;
       return {
         ...state,
@@ -76,8 +77,10 @@ export const user = (
           id,
           firstName,
           lastName,
-          organizationId,
-          email
+          organizationId: currentOrganizationId,
+          email,
+          role: userOrganizations[0].role,
+          status: userOrganizations[0].status
         },
         isLoading: false,
         isAuthorized: Boolean(payload?.id)
