@@ -271,7 +271,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Preview" onClick={previewQuery} />
+              <Form.Control type="button" value="Preview" onClick={previewQuery} className="mr-3" />
               {
                 isDataChange || !isTriggersChange ? (
                   <Form.Control type="button" value="Save" onClick={saveCode} />
