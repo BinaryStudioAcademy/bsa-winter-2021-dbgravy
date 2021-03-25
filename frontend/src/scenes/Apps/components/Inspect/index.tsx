@@ -146,7 +146,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', padding: '15px' }}>
       {
         (!selectedItem) && (
           <div className={styles.noSelect}>
