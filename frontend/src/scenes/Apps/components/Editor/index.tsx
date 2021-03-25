@@ -80,7 +80,11 @@ const Editor: React.FC<IEditorProps> = memo(
                   <DropArea elements={components} selectItem={selectItem} localUpdateElement={localEditItem} />
                 </div>
                 {showBottom
-                  ? (<Constructor id={appId} />)
+                  ? (
+                    <div className={styles.constructorArea}>
+                      <Constructor id={appId} />
+                    </div>
+                  )
                   : null}
               </div>
             </div>
