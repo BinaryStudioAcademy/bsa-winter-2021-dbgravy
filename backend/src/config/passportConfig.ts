@@ -50,7 +50,7 @@ passport.use(
       try {
         const userRepository = getCustomRepository(UserRepository);
         const userByEmail: User = await userRepository.getByEmail(email);
-        if (userByEmail) {
+        if (userByEmail && !currentOrganizationId) {
           throw new CustomError('Email is already taken.', 401, ErrorCode.UserAlreadyExists);
         }
         return currentOrganizationId

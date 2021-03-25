@@ -84,11 +84,16 @@ export const register = async (organizationName: string, user: IRegisterUser): P
   }
   const userRepository = getCustomRepository(UserRepository);
   const { password, ...userData } = user;
+  const { id } = userData.currentOrganizationId
+    ? await userRepository.getByEmail(userData.email)
+    : { id: '' };
   const newUser: IRegisterUser = {
     ...userData,
     password: await encrypt(password)
   };
-  const savedUser: User = await userRepository.createUser(newUser);
+  const savedUser: User = userData.currentOrganizationId
+    ? await userRepository.updateUserFields({ ...newUser, id })
+    : await userRepository.createUser(newUser);
 
   const addNewOrganization = async (name: string, createdUser: User): Promise<User> => {
     const newOrganization = await getCustomRepository(OrganizationRepository).createOrganization({

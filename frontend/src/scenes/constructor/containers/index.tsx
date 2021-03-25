@@ -222,7 +222,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   };
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Form className={style.wrapper} onClick={closeNameEditor}>
         <Form.Group controlId="queryLeftSide" className={style.LeftSide}>
           <Form.Group className={style.searchWrapper} controlId="exampleForm.ControlInput1">

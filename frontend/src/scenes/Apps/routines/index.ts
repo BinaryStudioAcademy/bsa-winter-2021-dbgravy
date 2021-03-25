@@ -13,5 +13,6 @@ export const addComponentRoutine = createRoutine('EDITOR:ADD_COMPONENT');
 export const setNewInputValue = createRoutine('EDITOR:SET_INPUT_VALUE');
 export const addInputRoutine = createRoutine('EDITOR:ADD_INPUT');
 export const updateComponentRoutine = createRoutine('EDITOR:UPDATE_COMPONENT');
+export const addTableInfoRoutine = createRoutine('ADD_TABLE_INFO');
 export const localUpdateComponentRoutine = createRoutine('EDITOR:LOCAL_UPDATE_COMPONENT');
 export const deleteComponentRoutine = createRoutine('EDITOR:DELETE_COMPONENT');

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
 import update from 'immutability-helper';
 import DropAreaItem from '../DropAreaItem';
-import { Button, Table } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
@@ -10,21 +10,25 @@ import { IInputText } from '../../../../common/models/editor/input/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 import { IButton } from '../../../../common/models/editor/IButton';
 import InputComponent from '../InputComponent';
+import TableData from '../tableDATA';
+import { IQuery } from '../../../../common/models/apps/querys';
+import { useSelector } from 'react-redux';
+import { IAppState } from '../../../../common/models/store/IAppState';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
   selectItem: Function;
-  localUpdateElement: Function
+  localUpdateElement: Function;
 }
 
 export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, localUpdateElement }) => {
+  const queries: Array<IQuery> = useSelector((state: IAppState) => state.app.qur.queriesApp);
   const [items, setItems] = useState<{
     [key: string]: IDropItem
   }>(elements);
 
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
-  // const [inputTextValue, setInputTextValue] = useState('');
 
   const onSelect = (id: string) => {
     setSelectedItem(id);
@@ -40,7 +44,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
     const itemKeys = Object.keys(elements);
     onSelect(itemKeys[itemKeys.length - 1]);
   }, [elements]);
-
   const moveItem = useCallback(
     (id: string, left: number, top: number) => {
       if (id) {
@@ -99,7 +102,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   );
 
   return (
-    <div ref={drop} className="DropArea" style={{ height: '100%' }}>
+    <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '100vh' }}>
       {Object.keys(items).map((key: string) => {
         const { left, top, name, componentType, width, height, component } = items[key];
         return (
@@ -123,53 +126,12 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                // <Form style={{ display: 'flex', position: 'relative' }}>
-                //   <Form.Label
-                //     style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
-                //   >
-                //     {(component as IInputText).label}
-                //   </Form.Label>
-                //   <Form.Control
-                //     placeholder={(component as IInputText).placeholder}
-                //     name={key}
-                //     value={inputTextValue}
-                //     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
-                //   />
-                // </Form>
                 <InputComponent component={component as IInputText} id={key} />
               )
             }
             {
               (componentType === ComponentType.table) && (
-                <Table striped bordered hover size="sm" style={{ height: '100%', width: '100%' }}>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Username</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td colSpan={2}>Larry the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
-                  </tbody>
-                </Table>
+                <TableData selectItem={component} queryList={queries} />
               )
             }
             {
