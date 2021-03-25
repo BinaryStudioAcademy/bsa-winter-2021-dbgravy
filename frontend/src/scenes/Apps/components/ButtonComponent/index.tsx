@@ -42,7 +42,7 @@ const ButtonComponent:FunctionComponent<IProps> = ({
       style={{
         height: '100%',
         width: '100%',
-        backgroundColor: (component as IButton).color ? (component as IButton).color : 'red'
+        backgroundColor: (component as IButton).color ? (component as IButton).color : 'blue'
       }}
     />
   );
