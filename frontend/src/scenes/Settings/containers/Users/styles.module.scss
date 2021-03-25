@@ -44,6 +44,14 @@
 
 .tabHead {
   color: #bbb;
+
+  span {
+    font-size: 20px;
+  }
+
+  span:first-child {
+    padding-left: 12px;
+  }
 }
 
 .tabHead:hover {

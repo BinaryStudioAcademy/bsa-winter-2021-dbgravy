@@ -6,7 +6,6 @@ export interface IQuery {
     code?:string,
     appId:string,
     resourceId:string,
-    runAutomatically?:boolean,
     showConfirm?:boolean;
     triggers:Array<ITrigger>|[],
     data?: any

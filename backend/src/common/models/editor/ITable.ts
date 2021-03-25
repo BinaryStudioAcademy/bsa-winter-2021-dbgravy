@@ -1,9 +1,6 @@
-type Row = {
-  [key: string]: string
-}
-
 export interface ITable {
-  data: Row[]
+  componentId:string
+  queryId:string|null
 }
 export interface ITransportedTable extends ITable {
   id: string;

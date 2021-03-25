@@ -3,5 +3,6 @@ type Row = {
 }
 
 export interface ITable {
+  queryId:string
   data: Row[]
 }

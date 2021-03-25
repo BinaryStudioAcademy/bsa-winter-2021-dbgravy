@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { IUser } from '../../common/models/user/IUser';
 import Loader from '../Loader';
+import { Button } from 'react-bootstrap';
 
 interface IProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>,
@@ -51,7 +52,7 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
           role="button"
           tabIndex={0}
         >
-          <FontAwesomeIcon icon={faArrowLeft} size="sm" />
+          <FontAwesomeIcon icon={faArrowLeft} size="lg" />
         </span>
         <span className={styles.head}>Create an organization</span>
       </div>
@@ -65,14 +66,7 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
       {user?.newOrganization?.isLoading
         ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
       <div className={styles.btnsContainer}>
-        <div
-          onClick={onSend}
-          onKeyPress={onSend}
-          role="button"
-          tabIndex={0}
-        >
-          Create
-        </div>
+        <Button onClick={onSend}>Create</Button>
       </div>
     </div>
   );

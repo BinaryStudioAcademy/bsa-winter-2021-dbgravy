@@ -24,7 +24,6 @@ const QueriesList:FunctionComponent<IProps> = ({
                     key={query.id}
                     resourceId={query.resourceId}
                     code={query.code}
-                    runAutomatically={query.runAutomatically}
                     showConfirm={query.showConfirm}
                     triggers={query.triggers}
                   />
