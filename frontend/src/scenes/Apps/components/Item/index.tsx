@@ -40,7 +40,6 @@ export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDes
                 height: '60',
                 componentType: ComponentType.input,
                 component: {
-                  type: 'text',
                   label: 'Name',
                   defaultValue: '',
                   placeholder: ''

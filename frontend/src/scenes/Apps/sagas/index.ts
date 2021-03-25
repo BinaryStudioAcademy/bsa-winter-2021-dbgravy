@@ -96,7 +96,7 @@ function* watchAddApp() {
 
 function* fetchComponents({ payload }: Routine<any>) {
   try {
-    const components: {[key: string]: IDropItem} = yield call(appService.getComponents, payload.appId);
+    const components: { [key: string]: IDropItem } = yield call(appService.getComponents, payload.appId);
     yield put(fetchEditorComponentsRoutine.success(components));
   } catch (error) {
     yield put(fetchEditorComponentsRoutine.failure(error));

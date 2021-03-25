@@ -23,8 +23,6 @@ const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
   }));
   const handleCloseNext = ():void => {
     if (!query.isDuplicate) {
-      const runTitle:string = query.waitingQuery.runAutomatically ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
       if (query.waitingQuery.resourceId !== query.setNewResource?.id) {
         dispatch(
           takeResourcesTableAndColumns.trigger(
@@ -36,25 +34,19 @@ const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
         id: query.waitingQuery.queryId,
         name: query.waitingQuery.queryName,
         code: query.waitingQuery.queryCode,
-        runAutomatically: query.waitingQuery.runAutomatically,
         showConfirm: query.waitingQuery.showConfirm,
         triggers: query.waitingQuery.queryTriggers,
         resourceId: query.waitingQuery.resourceId,
-        runTitle,
         isOpen: false
       }));
     } else {
-      const runTitle:string = query.selectQuery.runAutomatically ? 'Run query only when manually triggered'
-        : 'Run query automatically when inputs change';
       dispatch(setSelectQueryRoutine.success({
         id: query.selectQuery.selectQueryId,
         name: query.selectQuery.selectQueryName,
         code: query.selectQuery.selectQueryCode,
-        runAutomatically: query.selectQuery.runAutomatically,
         triggers: query.selectQuery.selectQueryTriggers,
         resourceId: query.selectQuery.resourceId,
-        showConfirm: query.selectQuery.showConfirm,
-        runTitle
+        showConfirm: query.selectQuery.showConfirm
       }));
       dispatch(duplicateSelectQueryRoutine.trigger({
         name: `query${query.queriesAppLength}`,
@@ -62,7 +54,6 @@ const ModalWindow:FunctionComponent<IProps> = ({ id }) => {
         appId: id,
         resourceId: query.selectQuery.resourceId,
         triggers: query.selectQuery.selectQueryTriggers,
-        runAutomatically: query.selectQuery.runAutomatically,
         showConfirm: query.selectQuery.showConfirm
       }));
     }

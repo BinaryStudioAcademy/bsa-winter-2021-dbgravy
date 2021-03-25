@@ -5,7 +5,7 @@ import { IUpdateQuery } from '../common/models/query/IUpdateQuery';
 import { IDeleteQuery } from '../common/models/query/IDeleteQuery';
 import { IRunQuery } from '../common/models/query/IRunQuery';
 
-export const addQuery = async ({ name, code, appId, resourceId, showConfirm, runAutomatically,
+export const addQuery = async ({ name, code, appId, resourceId, showConfirm,
   triggers }: ICreateQuery) => {
   const body = {
     name,
@@ -13,7 +13,6 @@ export const addQuery = async ({ name, code, appId, resourceId, showConfirm, run
     appId,
     resourceId,
     showConfirm,
-    runAutomatically,
     triggers
   };
   const response = await api.post<IQuery>('/api/queries', body);
