@@ -45,8 +45,8 @@ const Routing: React.FC<IProps> = ({
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
         <PrivateRoute exact path={Routes.AppEditor} component={AppEditor} />
         <PrivateRoute path={Routes.Settings} component={Settings} />
-        <Route path={Routes.Invite} component={Home} />
         <Route path={Routes.Preview} component={Preview} />
+        <Route path={Routes.Invite} component={Home} />
         <PublicRoute path="*" component={NotFound} />
       </Switch>
     </Loader>
