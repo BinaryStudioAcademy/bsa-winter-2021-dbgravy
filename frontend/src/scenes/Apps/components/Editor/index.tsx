@@ -62,7 +62,7 @@ const Editor: React.FC<IEditorProps> = memo(
     };
 
     const localEditItem = (component: { id: string, left: number, top: number }) => {
-      // localUpdateComponent({ component });
+    // localUpdateComponent({ component });
     };
 
     const deleteItem = (id: string) => {

@@ -44,7 +44,7 @@ export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
   return (
     <div
       ref={drag}
-      style={{ ...style, left, top, height, width }}
+      style={{ ...style, left, top, height, width, overflow: 'auto' }}
       role="presentation"
       onClick={() => onSelect(id)}
       className={(selectedItem === id) ? `${styles.active}` : ''}

@@ -14,7 +14,7 @@ export class Input extends AbstractEntity {
   @Column()
   placeholder: string
 
-  @OneToOne(() => Component)
+  @OneToOne(() => Component, { onDelete: 'CASCADE' })
   @JoinColumn()
   public component: Component;
 }
