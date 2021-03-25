@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ILocal } from '../../../../common/models/editor/ILocal';
-import { IInputText } from '../../../../common/models/editor/input/IInputText';
+import { IInputText } from '../../../../common/models/editor/IInputText';
 import { IQuery } from '../../../../common/models/queries/IQuery';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { runSelectQueryRoutine } from '../../../constructor/routines';

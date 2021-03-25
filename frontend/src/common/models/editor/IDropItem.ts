@@ -1,6 +1,6 @@
 import { ComponentType } from '../../enums/ComponentType';
 import { IButton } from './IButton';
-import { IInputText } from './input/IInputText';
+import { IInputText } from './IInputText';
 import { ITable } from './ITable';
 
 export type IComponent = IInputText | ITable | IButton;

@@ -14,7 +14,7 @@ import styles from './styles.module.scss';
 import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
-import { IInputText } from '../../../../common/models/editor/input/IInputText';
+import { IInputText } from '../../../../common/models/editor/IInputText';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
@@ -79,17 +79,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           queryId: selectedQuery?.id,
           text: textButton,
           color: colorButton
-        }
-      };
-      editComponent(newItem);
-    } else if (selectedItem && selectedItem.componentType === 'textInput') {
-      const newItem = {
-        ...selectedItem,
-        name: componentNameId,
-        component: {
-          ...selectedItem.component,
-          text: textButton,
-          placeholder
         }
       };
       editComponent(newItem);
