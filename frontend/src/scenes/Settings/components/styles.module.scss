@@ -70,14 +70,9 @@
   color: #9f9f9f;
 }
 
-.userRole {
-  color: #b3b3b3;
+.userval {
   font-size: 18px;
-}
-
-.userStatus {
-  color: #6a6a6a;
-  font-size: 18px;
+  color: #6a6a6a; 
 }
 
 .clear {
@@ -90,6 +85,7 @@
   color: #5392f1;
   user-select: none;
   cursor: pointer;
+  font-size: 18px;
 }
 
 .failed {
