@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ILocal } from '../../../../common/models/editor/ILocal';
@@ -27,10 +27,16 @@ const AppItem: React.FC<IProps> = ({
   locals
 }) => {
   const [inputTextValue, setInputTextValue] = useState('');
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    const timeOutId = setTimeout(() => saveInput(component.queryId), 1000);
-    return () => clearTimeout(timeOutId);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      const timeOutId = setTimeout(() => saveInput(component.queryId), 1000);
+      return () => clearTimeout(timeOutId);
+    }
+    return () => false;
   }, [inputTextValue]);
 
   useEffect(() => {
