@@ -123,6 +123,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           toggleComponentNameId ? (
             <InputGroup className="mb-3">
               <FormControl
+                autoFocus
                 value={componentNameId}
                 type="text"
                 placeholder="Component name"
@@ -141,12 +142,10 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
                 <span>{componentNameId}</span>
               </Card.Header>
               <Dropdown>
-                <DropdownButton variant="success" id="dropdown-basic">
+                <DropdownButton variant="primary" id="dropdown-basic">
                   <FontAwesomeIcon icon={faEllipsisV} />
                 </DropdownButton>
                 <Dropdown.Menu>
-                  <Dropdown.Header>Dropdown</Dropdown.Header>
-                  <Dropdown.Divider />
                   <Dropdown.Item
                     eventKey="1"
                     onClick={() => deleteComponent((selectedItem as IDropItem).id)}
