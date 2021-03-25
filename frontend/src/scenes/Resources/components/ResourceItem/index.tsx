@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/esm/Button';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import { Routes } from '../../../../common/enums/Routes';
@@ -7,6 +6,15 @@ import { IResource } from '../../../../common/models/resources/IResource';
 import { CalendarEnum } from '../../enums/CalendarEnum';
 import styles from './styles.module.scss';
 import DeleteModal from '../DeleteModal/index';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import styled from 'styled-components';
+
+const Drop = styled(DropdownButton)`
+  .dropdown-toggle::after {
+    border: none;
+    margin: 0
+  }
+`;
 
 interface IProps {
   resource: IResource;
@@ -17,8 +25,6 @@ const ResourceItem: React.FC<IProps> = ({
   resource,
   remove
 }) => {
-  const [display, setDisplay] = useState(false);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleCancelModal = () => {
@@ -37,30 +43,21 @@ const ResourceItem: React.FC<IProps> = ({
       <td>{resource.dbName}</td>
       <td><Moment calendar={CalendarEnum}>{resource.createdAt}</Moment></td>
       <td>
-        <Button
-          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
-          variant="outline-light"
-          onClick={() => setDisplay(!display)}
+        <Drop
+          title="..."
+          variant="outline-grey"
+          className={['dbg-button', styles.dd].join(' ')}
         >
-          ...
-        </Button>
-        <div className={`${styles.child} ${display ? styles.none : ''}`}>
-          <span
-            role="button"
-            tabIndex={0}
-          >
+          <Dropdown.Item as="button">
             <Link to={`${Routes.ResourcesAddEdit}/${resource.id}`} className={styles.linklike}>Edit</Link>
-          </span>
-          <span
+          </Dropdown.Item>
+          <Dropdown.Item
+            as="button"
             onClick={() => setShowDeleteModal(true)}
-            role="button"
-            className={styles.action}
-            onKeyPress={() => setShowDeleteModal(true)}
-            tabIndex={0}
           >
-            Delete
-          </span>
-        </div>
+            <span className={styles.action}>Delete</span>
+          </Dropdown.Item>
+        </Drop>
       </td>
       <DeleteModal
         show={showDeleteModal}
