@@ -122,6 +122,7 @@ function* watchAddComponent() {
 
 function* updateComponent({ payload }: Routine<any>) {
   try {
+    console.log(payload);
     yield call(appService.updateComponent, payload);
     yield put(fetchEditorComponentsRoutine.trigger({ appId: payload.appId }));
   } catch (error) {

@@ -82,6 +82,17 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
         }
       };
       editComponent(newItem);
+    } else if (selectedItem && selectedItem.componentType === 'textInput') {
+      const newItem = {
+        ...selectedItem,
+        name: componentNameId,
+        component: {
+          ...selectedItem.component,
+          text: textButton,
+          placeholder
+        }
+      };
+      editComponent(newItem);
     }
     if (selectedItem && selectedItem.componentType === 'textInput') {
       const item = {
