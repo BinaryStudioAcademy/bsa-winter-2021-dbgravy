@@ -35,7 +35,11 @@ export class UserRepository extends Repository<User> {
   }
 
   async getById(id: string): Promise<User> {
-    const user: User = await this.findOne({ id });
+    const user: User = await this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganizations',
+        'userOrganizations.organizationId = user.currentOrganizationId AND userOrganizations.userId = user.id')
+      .where('user.id = :id', { id })
+      .getOne();
     return user;
   }
 
