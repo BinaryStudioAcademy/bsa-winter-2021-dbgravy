@@ -10,7 +10,6 @@ import styles from './styles.module.scss';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Editor from '../../components/Editor';
-// import Constructor from '../../../constructor/containers';
 import { useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import logo from '../../../../images/Logo.svg';
