@@ -10,8 +10,8 @@ import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-
 import styles from './styles.module.scss';
+import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
 
@@ -42,15 +42,21 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const [placeholder, setPlaceholder] = useState('');
   const [defaultValueInputText, setDefaultValueInputText] = useState('');
   const [textButton, setTextButton] = useState(selectedItem
-    ? ((selectedItem as IDropItem).component as IButton).text as string
+    ? ((selectedItem as IDropItem).component as IButton)
+    && ((selectedItem as IDropItem).component as IButton).text as string
     : '');
   const [colorButton, setColorButton] = useState(selectedItem
-    ? ((selectedItem as IDropItem).component as IButton).color as string
+    ? ((selectedItem as IDropItem).component as IButton)
+    && ((selectedItem as IDropItem).component as IButton).color as string
     : '');
 
   const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
-
+  const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
+  const changeSelectQuery = (id:string) => {
+    const newSelectQuery = queries.find(elem => elem.id === id);
+    setSelectedQuery(newSelectQuery);
+  };
   const handleEditNameId = () => {
     setToggleComponentNameId(false);
   };
@@ -62,8 +68,19 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
         name: componentNameId,
         component: {
           ...selectedItem.component,
+          queryId: selectedQuery?.id,
           text: textButton,
           color: colorButton
+        } };
+      editComponent(newItem);
+    }
+    if (selectedItem && selectedItem.componentType === 'table') {
+      const newItem = {
+        ...selectedItem,
+        name: componentNameId,
+        component: {
+          ...selectedItem.component,
+          queryId: selectedQuery?.id
         } };
       editComponent(newItem);
     }
@@ -76,19 +93,22 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
 
   useEffect(() => {
     if (selectedItem) {
+      const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.component?.queryId);
+      setSelectedQuery(searchSelectQuery);
       setComponentNameId((selectedItem as IDropItem).name);
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
         setColorButton(((selectedItem as IDropItem).component as IButton).color as string);
       }
     }
-  }, [selectedItem]);
+  }, [selectedItem, queries]);
 
   const optionsTypeAction: OptionType[] = [
     { value: 'Run a query', label: 'Run a query' }
   ];
 
   const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
+
   return (
     <div style={{ width: '100%' }}>
       {
@@ -172,7 +192,14 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       {
         (selectedItem && selectedItem.componentType === 'table') && (
           <Form>
-            <Form.Control as="textarea" rows={3} />
+            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Save
+            </Button>
           </Form>
         )
       }
@@ -204,6 +231,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               options={optionsQueries}
             />
             <div style={{ padding: '5px' }} />
+            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
             <Button
               variant="primary"
               type="submit"

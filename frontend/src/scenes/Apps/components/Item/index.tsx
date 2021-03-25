@@ -59,32 +59,7 @@ export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDes
                 width: '600',
                 componentType: ComponentType.table,
                 component: {
-                  data: [{
-                    id: 1,
-                    name: 'Hanson Deck',
-                    email: 'hanson@deck.com',
-                    sales: 37
-                  }, {
-                    id: 2,
-                    name: 'Max Conversation',
-                    email: 'Max@conversation.com',
-                    sales: 424
-                  }, {
-                    id: 3,
-                    name: 'Jason Response',
-                    email: 'jason@response.com',
-                    sales: 55
-                  }, {
-                    id: 4,
-                    name: 'Sue Shei',
-                    email: 'sueshei@example.com',
-                    sales: 550
-                  }, {
-                    id: 5,
-                    name: 'Eric Widget',
-                    email: 'eric@widget.org',
-                    sales: 243
-                  }]
+                  queryId: null
                 }
               }
             });

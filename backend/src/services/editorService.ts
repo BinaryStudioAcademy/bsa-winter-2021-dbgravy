@@ -9,6 +9,8 @@ import { IButton, ITransportedButton } from '../common/models/editor/IButton';
 import { ComponentType } from '../common/enums/ComponentType';
 import { IComponentElement, IResponseComponent } from '../common/models/editor/IResponseComponent';
 import { HttpStatusCode } from '../common/constants/http';
+import { TableRepository } from '../data/repositories/tableRepository';
+import { ITable, ITransportedTable } from '../common/models/editor/ITable';
 
 export const checkComponentExistByNameId = async (appId: string, nameId: string): Promise<void> => {
   const component = await getCustomRepository(ComponentRepository)
@@ -32,6 +34,7 @@ export const getComponentsByAppId = async (appId: string): Promise<IResponseComp
       case ComponentType.input:
         break;
       case ComponentType.table:
+        componentElement = await getCustomRepository(TableRepository).getTableByComponentId(id);
         break;
       case ComponentType.button:
         componentElement = await getCustomRepository(ButtonRepository).getButtonByComponentId(id);
@@ -60,8 +63,8 @@ export const addComponent = async (
   await checkComponentExistByNameId(appId, name);
   const createdComponent = await getCustomRepository(ComponentRepository).addComponent({
     name,
-    top,
-    left,
+    top: Math.floor(top),
+    left: Math.floor(left),
     height,
     width,
     componentType,
@@ -72,6 +75,10 @@ export const addComponent = async (
     case ComponentType.input:
       break;
     case ComponentType.table:
+      createdComponentElement = await getCustomRepository(TableRepository).addTable({
+        queryId: (component.component as ITable).queryId,
+        componentId: createdComponent.id
+      });
       break;
     case ComponentType.button:
       createdComponentElement = await getCustomRepository(ButtonRepository).addButton({
@@ -94,13 +101,18 @@ export const updateComponent = async (
   await getComponentById(id);
   const { name, top, left, height, width, component } = componentData;
   const editedComponent = await getCustomRepository(ComponentRepository).updateComponent(
-    id, { name, top, left, height, width }
+    id, { name, top: Math.floor(top), left: Math.floor(left), height, width }
   );
   let editedComponentElement = {} as IComponentElement;
   switch (editedComponent.componentType) {
     case ComponentType.input:
       break;
     case ComponentType.table:
+      editedComponentElement = await getCustomRepository(TableRepository).updateTable(
+        (component as ITransportedTable).id, {
+          queryId: (component as IButton).queryId
+        }
+      );
       break;
     case ComponentType.button:
       editedComponentElement = await getCustomRepository(ButtonRepository).updateButton(
@@ -129,6 +141,7 @@ export const deleteComponent = async (id: string): Promise<IResponseComponent> =
     case ComponentType.input:
       break;
     case ComponentType.table:
+      deletedComponentElement = await getCustomRepository(TableRepository).deleteTable(component.id);
       break;
     case ComponentType.button:
       deletedComponentElement = await getCustomRepository(ButtonRepository).deleteButton(component.id);
