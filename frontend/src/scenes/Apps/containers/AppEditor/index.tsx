@@ -26,10 +26,11 @@ import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../
 
 interface IProps {
   resources: Array<IResource>,
-  fetchResources: () => void
+  fetchResources: () => void,
+  isPreview?: boolean
 }
 
-const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
+const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) => {
   const { id }: IFetchParams = useParams();
   useEffect(() => {
     fetchResources();
@@ -126,33 +127,41 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
               }
                 </Form.Group>
               </Nav>
-              <Nav className="mr-auto">
-                <FontAwesomeIcon
-                  icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
-                  color={showRight ? '#808080' : '#D3D3D3'}
-                  onClick={changeStatusRight}
-                  size="2x"
-                  className={styles.angleDouble}
-                />
-                <div style={{ padding: '5px' }} />
-                <FontAwesomeIcon
-                  icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
-                  color={showBottom ? '#808080' : '#D3D3D3'}
-                  onClick={changeStatusBottom}
-                  size="2x"
-                  className={styles.angleDouble}
-                />
-              </Nav>
+              {!isPreview ? (
+                <Nav className="mr-auto">
+                  <FontAwesomeIcon
+                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                    color={showRight ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusRight}
+                    size="2x"
+                    className={styles.angleDouble}
+                  />
+                  <div style={{ padding: '5px' }} />
+                  <FontAwesomeIcon
+                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                    color={showBottom ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusBottom}
+                    size="2x"
+                    className={styles.angleDouble}
+                  />
+                </Nav>
+              ) : null}
               <Nav>
                 <Button onClick={changeStatusBottom}>
-                  <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
-                    Preview
-                  </NavLink>
+                  {!isPreview ? (
+                    <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                      Preview
+                    </NavLink>
+                  ) : (
+                    <NavLink to={`/app/editor/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                      Edit
+                    </NavLink>
+                  )}
                 </Button>
               </Nav>
             </Navbar>
             <DndProvider backend={HTML5Backend}>
-              <Editor appId={id} show={showRight} showBottom={showBottom} />
+              <Editor appId={id} show={isPreview ? false : showRight} showBottom={isPreview ? false : showBottom} />
             </DndProvider>
           </div>
         )
