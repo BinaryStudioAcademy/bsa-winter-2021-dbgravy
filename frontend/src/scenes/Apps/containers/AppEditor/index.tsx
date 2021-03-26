@@ -26,7 +26,7 @@ import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../
 
 interface IProps {
   resources: Array<IResource>,
-  fetchResources: () => void
+  fetchResources: () => void,
 }
 
 const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
@@ -34,6 +34,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
   useEffect(() => {
     fetchResources();
   }, []);
+
   const query = useSelector((state: IAppState) => state.app.application);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
@@ -162,7 +163,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  resources: rootState.resource.resources
+  resources: rootState.resource.resources,
+  user: rootState.user.user
 });
 
 const mapDispatchToProps = {

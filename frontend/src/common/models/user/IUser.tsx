@@ -8,5 +8,5 @@ export interface IUser {
   lastName: string;
   organizationId?: string;
   role: Roles;
-  status: Status
+  status: Status;
 }
