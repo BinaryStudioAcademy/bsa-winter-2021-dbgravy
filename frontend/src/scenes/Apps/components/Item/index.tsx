@@ -54,8 +54,8 @@ export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDes
                 top,
                 left,
                 name,
-                height: '400',
-                width: '600',
+                height: '450',
+                width: '700',
                 componentType: ComponentType.table,
                 component: {
                   queryId: null

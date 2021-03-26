@@ -22,8 +22,8 @@ import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
 import QueryEditor from '../../../components/QueryCodeEditor';
-import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
+import TableComponent from '../../../components/TableComponent';
 
 interface IProps {
   id: string
@@ -293,24 +293,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               >
                 .
               </div>
-              {
-              !query.setNewConfirm ? (
-                <Form.Check
-                  type="checkbox"
-                  id="checkbox"
-                  className={style.checkBox}
-                  disabled
-                />
-              )
-                : (
-                  <Form.Check
-                    type="checkbox"
-                    id="checkbox2"
-                    className={style.checkBox}
-                    checked
-                  />
-                )
-            }
+              <Form.Check
+                type="checkbox"
+                id="checkbox"
+                className={style.checkBox}
+                checked={query.setNewConfirm}
+                onChange={changeConfirm}
+              />
               <span className={style.spanText}>Show a confirmation modal before running</span>
             </div>
             <Form.Label className={style.row} />
@@ -330,8 +319,8 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           {
             !isEmptyData && (
-              <div style={{ padding: '20px' }}>
-                <Table
+              <div style={{ padding: '20px', flex: '1 1 100%' }}>
+                <TableComponent
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
                   columnWidth={300}

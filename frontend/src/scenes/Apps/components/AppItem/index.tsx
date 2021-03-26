@@ -40,7 +40,9 @@ const AppItem: React.FC<IProps> = ({
       <div className={styles['app-main-info']}>
         <FontAwesomeIcon icon={faBriefcase} />
         <div className={styles['main-info']}>
-          <span>{app.name}</span>
+          <Link to={`/app/preview/${app.id}`}>
+            <span>{app.name}</span>
+          </Link>
           <span className="text-secondary">
             Created&ensp;
             <Moment calendar={CalendarEnum}>{app.createdAt}</Moment>
