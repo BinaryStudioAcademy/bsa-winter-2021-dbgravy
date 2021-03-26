@@ -39,8 +39,20 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
     }
   };
   useEffect(() => {
-    setItems({ ...elements });
-    const itemKeys = Object.keys(elements);
+    const elems: IDropItem[] = Object.keys(elements).map(i => {
+      const element = { ...elements[i] };
+      element.width = (element.componentType === ComponentType.table && element.width === 0) ? 'auto' : element.width;
+      element.height = (element.componentType === ComponentType.table && element.height === 0)
+        ? 'auto' : element.height;
+      return element;
+    });
+    const els: {[key: string]: IDropItem
+    } = elems.reduce((acc: any, item: any, index) => {
+      acc[index] = item;
+      return acc;
+    }, {});
+    setItems({ ...els });
+    const itemKeys = Object.keys(els);
     onSelect(itemKeys[itemKeys.length - 1]);
   }, [elements]);
   const moveItem = useCallback(

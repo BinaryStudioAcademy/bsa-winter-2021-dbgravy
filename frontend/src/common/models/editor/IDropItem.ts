@@ -11,8 +11,8 @@ export interface IDropItem {
   top: number,
   left: number,
   title: string,
-  width: string,
-  height:string
+  width: string | number,
+  height:string | number,
   componentType: ComponentType
   component: IComponent
 }
