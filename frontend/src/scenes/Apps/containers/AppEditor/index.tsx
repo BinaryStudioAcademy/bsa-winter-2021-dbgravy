@@ -97,7 +97,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
             <Navbar bg="white" expand="lg" className={styles.mainNav}>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-              <Nav className={`${styles.leftNav} mr-auto`}>
+              <Nav className={`${styles.leftNav} ${styles.mrAuto}`}>
                 <Col xs={6} md={4}>
                   <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
                 </Col>
@@ -126,24 +126,27 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
               }
                 </Form.Group>
               </Nav>
-              <Nav className="mr-auto">
-                <FontAwesomeIcon
-                  icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
-                  color={showRight ? '#808080' : '#D3D3D3'}
-                  onClick={changeStatusRight}
-                  size="2x"
-                  className={styles.angleDouble}
-                />
-                <div style={{ padding: '5px' }} />
-                <FontAwesomeIcon
-                  icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
-                  color={showBottom ? '#808080' : '#D3D3D3'}
-                  onClick={changeStatusBottom}
-                  size="2x"
-                  className={styles.angleDouble}
-                />
-              </Nav>
               <Nav>
+                <div className={styles.angleDouble}>
+                  <FontAwesomeIcon
+                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                    color={showRight ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusRight}
+                    size="lg"
+                    className={styles.angleDoubleFirst}
+                  />
+                </div>
+                <div className={styles.angleDouble}>
+                  <FontAwesomeIcon
+                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                    color={showBottom ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusBottom}
+                    size="lg"
+                    className={styles.angleDoubleSecond}
+                  />
+                </div>
+              </Nav>
+              <Nav className="ml-auto">
                 <Button onClick={changeStatusBottom}>
                   <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
                     Preview
