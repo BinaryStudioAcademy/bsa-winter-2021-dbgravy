@@ -11,10 +11,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import styles from './styles.module.scss';
-import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
 import { IInputText } from '../../../../common/models/editor/IInputText';
+import { IOptionType } from '../../../../common/models/editor/IOption';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
@@ -22,11 +22,6 @@ export interface IInspectProps {
   deleteComponent: Function,
   queries: IQuery[]
 }
-
-type OptionType = {
-  value: string;
-  label: string;
-};
 
 const DropdownButton = styled(Dropdown.Toggle)`
   :after {
@@ -55,16 +50,9 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     && ((selectedItem as IDropItem).component as IButton).color as string
     : '');
 
-  const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
-  const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
-  const [inputQuery, setInputQuery] = useState<null | string>(null);
-  const [defaultInputQ, setDefaultInputQ] = useState<OptionType | undefined>(undefined);
+  const [query, setQuery] = useState<ValueType<IOptionType, boolean>>();
 
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
-  const changeSelectQuery = (id:string) => {
-    const newSelectQuery = queries.find(elem => elem.id === id);
-    setSelectedQuery(newSelectQuery);
-  };
   const handleEditNameId = () => {
     setToggleComponentNameId(false);
   };
@@ -90,7 +78,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           ...selectedItem.component,
           label: labelInputText,
           placeholder,
-          queryId: inputQuery
+          queryId: selectedQuery?.id
         }
       };
       editComponent(item);
@@ -102,7 +90,8 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
         component: {
           ...selectedItem.component,
           queryId: selectedQuery?.id
-        } };
+        }
+      };
       editComponent(newItem);
     }
   };
@@ -112,20 +101,13 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     handleEdit();
   };
 
-  const selectOne = () => {
-    const c = queries.find(e => e.id === selectedItem?.component.queryId);
-    return c ? { value: c.id, label: c.name } : undefined;
-  };
-
-  const handleChange = (e: OptionType | null) => {
-    setDefaultInputQ(e || undefined);
-    setInputQuery(e?.value || null);
-  };
-
   useEffect(() => {
     if (selectedItem) {
       const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.component?.queryId);
       setSelectedQuery(searchSelectQuery);
+      if (searchSelectQuery) {
+        setQuery({ value: (searchSelectQuery as IQuery).id, label: (searchSelectQuery as IQuery).name });
+      }
       setComponentNameId((selectedItem as IDropItem).name);
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
@@ -134,16 +116,16 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       if (selectedItem && selectedItem.componentType === 'textInput') {
         setPlaceholder(((selectedItem as IDropItem).component as IInputText).placeholder as string);
         setLabelInputText(((selectedItem as IDropItem).component as IInputText).label as string);
-        setDefaultInputQ(selectOne());
       }
     }
   }, [selectedItem, queries]);
 
-  const optionsTypeAction: OptionType[] = [
-    { value: 'Run a query', label: 'Run a query' }
-  ];
-
-  const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
+  const optionsQueries: IOptionType[] = queries.map(({ id, name }) => ({ value: id, label: (name as string) }));
+  const handleSetQuery = (option: IOptionType) => {
+    setQuery(option);
+    const searchSelectQuery = queries.find(elem => elem.id === option.value);
+    setSelectedQuery(searchSelectQuery as IQuery);
+  };
 
   return (
     <div style={{ width: '100%', padding: '15px' }}>
@@ -209,12 +191,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
-            <Form.Label>Run query</Form.Label>
+            <Form.Label>Run query on change</Form.Label>
             <Select
-              value={defaultInputQ}
-              options={queries.map(q => ({ value: q.id, label: q.name }))}
-              isClearable
-              onChange={e => handleChange(e)}
+              value={query as ValueType<IOptionType, boolean>}
+              onChange={option => handleSetQuery(option as IOptionType)}
+              options={optionsQueries}
             />
             <div style={{ padding: '5px' }} />
             <Button
@@ -228,12 +209,17 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
       {
         (selectedItem && selectedItem.componentType === 'table') && (
-          <Form>
-            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
+          <Form onSubmit={e => handleSubmit(e)}>
+            <Form.Label>Query data</Form.Label>
+            <Select
+              value={query as ValueType<IOptionType, boolean>}
+              onChange={option => handleSetQuery(option as IOptionType)}
+              options={optionsQueries}
+            />
+            <div style={{ padding: '5px' }} />
             <Button
               variant="primary"
               type="submit"
-              onClick={handleSubmit}
             >
               Save
             </Button>
@@ -255,20 +241,13 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={colorButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setColorButton(e.target.value)}
             />
-            <Form.Label>On click</Form.Label>
+            <Form.Label>Run query on click</Form.Label>
             <Select
-              value={typeAction as ValueType<OptionType, boolean>}
-              onChange={option => setTypeAction(option)}
-              options={optionsTypeAction}
-            />
-            <div style={{ padding: '5px' }} />
-            <Select
-              value={query as ValueType<OptionType, boolean>}
-              onChange={option => setQuery(option)}
+              value={query as ValueType<IOptionType, boolean>}
+              onChange={option => handleSetQuery(option as IOptionType)}
               options={optionsQueries}
             />
             <div style={{ padding: '5px' }} />
-            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
             <Button
               variant="primary"
               type="submit"

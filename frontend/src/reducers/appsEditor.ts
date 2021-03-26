@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   components: {},
-  locals: []
+  locals: {}
 };
 
 export const appsEditor = (state: IEditorState = initialState, { type, payload }: Routine<any>): IEditorState => {
@@ -18,16 +18,16 @@ export const appsEditor = (state: IEditorState = initialState, { type, payload }
         components: { ...payload }
       };
     case setNewInputValue.TRIGGER:
-      const local = [...state.locals];
-      const idx = local.findIndex(e => e.id === payload.id);
-      if (!idx || idx !== -1) {
-        local[idx].value = payload.value;
-      } else {
-        local.push({ id: payload.id, value: payload.value });
-      }
+      const local = {
+        ...state.locals
+      };
+      local[payload.name] = {
+        id: payload.id,
+        value: payload.value
+      };
       return {
         ...state,
-        locals: [...local]
+        locals: { ...local }
       };
     default:
       return state;

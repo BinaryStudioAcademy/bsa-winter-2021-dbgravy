@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getAccessToken } from '../../common/helpers/storageHelper';
 import { Redirect, Switch, Route } from 'react-router-dom';
@@ -17,6 +17,8 @@ import Home from '../Home/index';
 import NotFound from '../../scenes/NotFound/components/NotFound';
 import AppEditor from '../../scenes/Apps/containers/AppEditor/index';
 import Preview from '../../scenes/Apps/containers/Preview';
+import { Roles } from '../../common/enums/UserRoles';
+import { isAccess } from '../../common/helpers/permissionHelper';
 
 interface IProps {
   isLoading: boolean;
@@ -30,12 +32,19 @@ const Routing: React.FC<IProps> = ({
   fetchUser
 }) => {
   const hasToken = Boolean(getAccessToken());
+  const [isAdmin, setIsAdmin] = useState<boolean>(true);
+  const [hasAccess, setHasAccess] = useState<boolean>(true);
   useEffect(() => {
     if (hasToken && !isAuthorized && !isLoading) {
       fetchUser();
     }
   }, [hasToken, isAuthorized, isLoading]);
-
+  useEffect(() => {
+    if (isAuthorized) {
+      setIsAdmin(isAccess([Roles.Admin]));
+      setHasAccess(isAccess([Roles.Admin, Roles.Developer]));
+    }
+  }, [isAuthorized]);
   return (
     <Loader isLoading={isLoading || (hasToken && !isAuthorized)}>
       <Switch>
@@ -43,10 +52,19 @@ const Routing: React.FC<IProps> = ({
         <PrivateRoute path={Routes.Apps} component={Apps} />
         <PrivateRoute path={Routes.Resources} component={Resources} />
         <Redirect exact from={Routes.BaseUrl} to={Routes.Apps} />
-        <PrivateRoute exact path={Routes.AppEditor} component={AppEditor} />
-        <PrivateRoute path={Routes.Settings} component={Settings} />
-        <Route path={Routes.Invite} component={Home} />
+        {
+          (hasAccess && isAuthorized) && (
+            <PrivateRoute exact path={Routes.AppEditor} component={AppEditor} />
+          )
+        }
+        {
+          (isAdmin && isAuthorized) && (
+            <PrivateRoute path={Routes.Settings} component={Settings} />
+          )
+        }
         <Route path={Routes.Preview} component={Preview} />
+        <Route path={Routes.Invite} component={Home} />
+        <Route path={Routes.Invite} component={Home} />
         <PublicRoute path="*" component={NotFound} />
       </Switch>
     </Loader>

@@ -23,6 +23,7 @@ import {
   previewQuery
 } from '../../../services/queryService';
 import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
+import { queryParser } from '../../../common/helpers/queryParsHelper';
 
 const query = (state: IAppState) => state.app.qur.queriesApp;
 
@@ -55,15 +56,27 @@ function* watchSaveQueryRequest() {
   yield takeEvery(duplicateSelectQueryRoutine.TRIGGER, saveQuery);
 }
 
+const selectLocals = (state: IAppState) => state.app.editor.locals;
+
 function* runSelectQuery({ payload }: any): Routine<any> {
   const fulfilledQueries = payload.triggered;
   const { triggers, id, name } = payload.data;
   const queriesApp = yield select(query);
+  const locals = yield select(selectLocals);
+  const parsedPayload = {
+    ...payload,
+    data: {
+      ...payload.data,
+      code: queryParser(payload.data.code, locals)
+    }
+  };
+
   try {
     if (!fulfilledQueries.includes(id)) {
-      const resultData = yield call(runQuery, payload);
+      const resultData = yield call(runQuery, parsedPayload);
       if (fulfilledQueries.length === 0) {
         yield put(runSelectQueryRoutine.success({ resultData, name }));
+        successToastMessage(`${name} run successfully`);
       } else {
         yield put(runTriggerRoutine.success({ resultData, name }));
       }
@@ -93,7 +106,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
     }
   } catch (e) {
     if (fulfilledQueries.length === 0) {
-      yield put(runTriggerRoutine.failure(name));
+      errorToastMessage(`${name} run failed`);
     }
     if (triggers.length !== 0) {
       fulfilledQueries.push(id);

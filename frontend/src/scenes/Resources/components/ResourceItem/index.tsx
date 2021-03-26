@@ -26,11 +26,13 @@ const Drop = styled(DropdownButton)`
 interface IProps {
   resource: IResource;
   remove: (obj: { resource: IResource }) => void;
+  access: boolean;
 }
 
 const ResourceItem: React.FC<IProps> = ({
   resource,
-  remove
+  remove,
+  access
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 

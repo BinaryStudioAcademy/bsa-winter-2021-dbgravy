@@ -13,7 +13,7 @@ interface IProps {
   columnWidth?: number
 }
 
-const Table: React.FC<IProps> = ({ rowHeight, columnWidth, width, height, values }) => {
+const TableComponent: React.FC<IProps> = ({ rowHeight, columnWidth, width, height, values }) => {
   const [stateValues, setStateValues] = useState([...values]);
   const [sortStyle, setStyle] = useState({ name: '', style: '' });
   const [highlighted, setHighlighted] = useState(-1);
@@ -118,4 +118,4 @@ const Table: React.FC<IProps> = ({ rowHeight, columnWidth, width, height, values
   );
 };
 
-export default Table;
+export default TableComponent;

@@ -27,7 +27,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   const [items, setItems] = useState<{
     [key: string]: IDropItem
   }>(elements);
-
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
   const onSelect = (id: string) => {
@@ -73,6 +72,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
         const clientOffset = monitor.getSourceClientOffset() as XYCoord;
         const t = clientOffset.y;
         const l = clientOffset.x;
+
         const left = Math.round(item.left + delta.x);
         const top = Math.round(item.top + delta.y);
         moveItem(item.id, left, top);
@@ -102,7 +102,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   );
 
   return (
-    <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '100vh' }}>
+    <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '94vh' }}>
       {Object.keys(items).map((key: string) => {
         const { left, top, name, componentType, width, height, component, id } = items[key];
         return (
@@ -126,7 +126,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                <InputComponent component={component as IInputText} id={id} />
+                <InputComponent component={component as IInputText} id={id} name={name} />
               )
             }
             {

@@ -9,7 +9,7 @@ import Routing from '../Routing';
 const App: FunctionComponent = () => (
   <Provider store={store}>
     <ToastContainer
-      position="top-left"
+      position="bottom-right"
       autoClose={3000}
       hideProgressBar={false}
       newestOnTop={false}

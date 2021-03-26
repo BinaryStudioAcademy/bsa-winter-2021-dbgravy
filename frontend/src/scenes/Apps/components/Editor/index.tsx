@@ -16,6 +16,7 @@ import {
 } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ComponentType } from '../../../../common/enums/ComponentType';
+import { IQueryState } from '../../../../common/models/query/IQueryState';
 
 interface IEditorProps {
   appId: string,
@@ -26,7 +27,9 @@ interface IEditorProps {
   updateComponent: (payload: { appId: string, component: IDropItem }) => void,
   localUpdateComponent: (payload: { component: {id: string, left: number, top: number} }) => void,
   deleteComponent: (payload: { appId: string, id: string }) => void,
-  show: boolean
+  show: boolean,
+  locals: string[]
+  query:IQueryState,
 }
 const Editor: React.FC<IEditorProps> = memo(
   ({
@@ -37,6 +40,8 @@ const Editor: React.FC<IEditorProps> = memo(
     addComponent,
     updateComponent,
     deleteComponent,
+    locals,
+    query,
     show
   }) => {
     const [active, setActive] = useState<'inspect' | 'insert'>('insert');
@@ -89,7 +94,7 @@ const Editor: React.FC<IEditorProps> = memo(
                 {showBottom
                   ? (
                     <div className={styles.constructorArea}>
-                      <Constructor id={appId} />
+                      <Constructor id={appId} locals={locals} query={query} />
                     </div>
                   )
                   : null}
@@ -177,7 +182,8 @@ Editor.defaultProps = {
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  components: rootState.app.editor.components
+  components: rootState.app.editor.components,
+  locals: Object.keys(rootState.app.editor.locals)
 });
 
 const mapDispatchToProps = {
