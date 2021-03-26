@@ -12,7 +12,14 @@ import styled from 'styled-components';
 const Drop = styled(DropdownButton)`
   .dropdown-toggle::after {
     border: none;
-    margin: 0
+    margin: 0;
+  }
+  .dropdown-item {
+    padding-bottom: 7px;
+  }
+  .dropdown-menu {
+    box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+    border-radius: 5px;
   }
 `;
 

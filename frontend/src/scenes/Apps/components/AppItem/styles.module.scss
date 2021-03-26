@@ -12,81 +12,40 @@
   align-items: center;
 }
 
-
 .main-info {
   margin-left: 20px;
   display: flex;
   flex-direction: column;
 }
 
-.child {
-  width: 125px;
-  position: fixed;
-  display: none;
-  flex-direction: column;
-  background-color: #fff;
-  box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
-  padding: 10px;
+.dd {
+  width: 40px;
+  height: 40px;
+  color: #888888;
   border-radius: 5px;
-  margin-top: 5px;
+}
 
-  .action {
-    color: #2e2e2e;
+.delete {
+  color: red;
+  font-size: 15px;
 
-    &:focus,
-    &:active,
-    &:hover {
-      color: #000000;
-      text-decoration: underline;
-      outline: none;
-    }
-
-    .app-editor {
-      color: #2e2e2e;
-
-      &:focus,
-      &:active,
-      &:hover {
-        color: #000000;
-        text-decoration: underline;
-        outline: none;
-      }
-    }
-  }
-
-  .delete {
-    color: red;
-
-    &:focus,
-    &:active,
-    &:hover {
-      text-decoration: underline;
-      outline: none;
-    }
-  }
-
-  span {
-    cursor: pointer;
-    margin-bottom: 3px;
-    font-size: 15px;
-
-
-    .linklike:hover,
-    .linklike:visited,
-    .linklike:link,
-    .linklike:active {
-      color: red;
-      text-decoration: none;
-      border: none;
-    }
-  }
-
-  span:last-child {
-    color: red;
-    margin-bottom: 0;
+  &:focus,
+  &:active,
+  &:hover {
+    text-decoration: none;
+    outline: none;
   }
 }
 
-.none {
-  display: flex;
+.action {
+  color: #2e2e2e;
+  font-size: 15px;
+
+  &:focus,
+  &:active,
+  &:hover {
+    color: #000000;
+    text-decoration: none;
+    outline: none;
+  }
 }
