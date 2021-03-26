@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import QueriesList from '../components/queriesList';
 import { useDispatch } from 'react-redux';
 import style from './style.module.scss';
-import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Form, DropdownButton, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
   setSelectQueryRoutine,
@@ -23,11 +23,11 @@ import TableComponent from '../../../components/TableComponent';
 import { IQueryState } from '../../../common/models/query/IQueryState';
 
 interface IProps {
-  id: string
+  id: string,
+  locals: string[],
   query: IQueryState
 }
-
-const Constructor: React.FC<IProps> = ({ id, query }) => {
+const Constructor: React.FC<IProps> = ({ id, query, locals }) => {
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -247,6 +247,27 @@ const Constructor: React.FC<IProps> = ({ id, query }) => {
                 resourceList={query.resources}
                 onChangeResource={changeResourceHandler}
               />
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  (
+                    <Tooltip id="top">
+                      <div className={style.inner}>
+                        &quot;Tip: to access input values from queries just wrap their names into triple brackets like
+                        {' {{{textInput1}}}'}
+                        <br />
+                        <br />
+                        Here is the list of inputs you can access:
+                        {' '}
+                        {locals.reduce((acc, val) => `${val} ${acc}`, '')}
+                        &quot;
+                      </div>
+                    </Tooltip>
+                  )
+                }
+              >
+                <div className={style.tip}>Query variables</div>
+              </OverlayTrigger>
             </Form.Group>
             <Form.Label className={style.row} />
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
