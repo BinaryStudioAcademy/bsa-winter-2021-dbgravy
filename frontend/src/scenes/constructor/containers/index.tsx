@@ -271,7 +271,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               }
             </Form.Group>
           </Form.Group>
-          <Form.Group controlId="ControlTextarea">
+          <Form.Group controlId="ControlTextarea" style={{ width: '100%' }}>
             <Form.Label className={style.row} />
             <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
@@ -326,7 +326,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           {
             !isEmptyData && (
-              <div style={{ padding: '20px' }}>
+              <div style={{ padding: '20px', flex: '1 1 100%' }}>
                 <Table
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
@@ -337,7 +337,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             )
           }
           {
-            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px', flex: '1 1 100%' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
