@@ -3,8 +3,35 @@
     bottom: 0;
     width: 100%;
     border-top: 1px solid #d9d9d9;
-    height: 400px;
+    height: 450px;
     flex-direction: row;
+    @media (max-height: 920px) {
+    	height: 420px;
+  	}
+    @media (max-height: 890px) {
+    	height: 400px;
+  	}
+    @media (max-height: 860px) {
+    	height: 380px;
+  	}
+    @media (max-height: 830px) {
+    	height: 350px;
+  	}
+    @media (max-height: 800px) {
+    	height: 315px;
+  	}
+    @media (max-height: 780px) {
+    	height: 310px;
+  	}
+    @media (max-height: 760px) {
+    	height: 330px;
+  	}
+    @media (max-height: 730px) {
+    	height: 270px;
+  	}
+    @media (max-height: 685px) {
+    	height: 200px;
+  	}
 }
 
 .LeftSide {
