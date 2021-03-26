@@ -16,7 +16,7 @@ interface IProps {
 const Cell: React.FC<IProps> = memo(({ data, columnIndex, rowIndex, style }) => {
   const { items, setHighlighted, highlighted, maxWidth } = data;
   const getByIndex = (array: Array<any>, index: number) => array[index];
-  const value = getByIndex(items, rowIndex)[getByIndex(Object.keys(getByIndex(items, rowIndex)), columnIndex)];
+  const value = getByIndex(items, rowIndex)[getByIndex(Object.keys(getByIndex(items, rowIndex)), columnIndex)] || '';
   const target = useRef(null);
   const [show, setShow] = useState(false);
 
