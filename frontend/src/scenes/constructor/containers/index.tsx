@@ -12,7 +12,6 @@ import {
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
-  previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
   setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
@@ -76,19 +75,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       appId: id,
       resourceId: query.selectQuery.resourceId,
       triggered: []
-    }));
-  };
-
-  const previewQuery = (): void => {
-    dispatch(previewSelectQueryRoutine.trigger({
-      data: {
-        code: query.setNewCode,
-        name: query.selectQuery.selectQueryName,
-        showConfirm: query.setNewConfirm
-      },
-      id: query.selectQuery.selectQueryId,
-      appId: id,
-      resourceId: query.selectQuery.resourceId
     }));
   };
 
@@ -262,7 +248,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Preview" onClick={previewQuery} />
               {
                 isDataChange || !isTriggersChange ? (
                   <Form.Control type="button" value="Save" onClick={saveCode} />
