@@ -67,6 +67,7 @@ const ProfilePopup: React.FC<IProps> = (
         setup={setup}
         organization={organization}
         organizations={organizations}
+        showDetails={setShowDetails}
       />
     </div>
   );

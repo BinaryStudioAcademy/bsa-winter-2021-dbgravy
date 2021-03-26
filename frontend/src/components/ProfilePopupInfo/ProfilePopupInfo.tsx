@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus, faSyncAlt, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles.module.scss';
@@ -25,6 +25,7 @@ interface IProps {
   logout: () => void,
   setup: (payload: { user?: IUser }) => void,
   isShow: boolean
+  showDetails: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ProfilePopupInfo: React.FC<IProps> = (
@@ -38,12 +39,29 @@ const ProfilePopupInfo: React.FC<IProps> = (
     organization,
     organizations,
     isShow,
+    showDetails,
     setup }
 ) => {
   useEffect(() => {
     fetchOrganization(user);
     fetchUserOrganizations();
   }, []);
+
+  const node = useRef<any>();
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const handleClick = (e: any) => {
+    if (node !== null) {
+      if (!node.current.contains(e.target)) {
+        showDetails(true);
+      }
+    }
+  };
 
   const [showCreator, setShowCreator] = useState(false);
   const [showSwitcher, setShowSwitcher] = useState(false);
@@ -169,7 +187,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     );
   };
 
-  return (<div className={isShow ? styles.none : ''}>{render()}</div>);
+  return (<div className={isShow ? styles.none : ''} ref={node}>{render()}</div>);
 };
 
 export default ProfilePopupInfo;

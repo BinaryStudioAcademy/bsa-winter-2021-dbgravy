@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
-import { Button } from 'react-bootstrap';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
 import { IApps } from '../../../../common/models/apps/IApps';
@@ -9,6 +9,21 @@ import { CalendarEnum } from '../../../Resources/enums/CalendarEnum';
 import UpdateApp from '../../containers/UpdateApp';
 import { Link } from 'react-router-dom';
 import DeleteModal from '../DeleteModal/index';
+import styled from 'styled-components';
+
+const Drop = styled(DropdownButton)`
+  .dropdown-toggle::after {
+    border: none;
+    margin: 0;
+  }
+  .dropdown-item {
+    padding-bottom: 7px;
+  }
+  .dropdown-menu {
+    box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.41);
+    border-radius: 5px;
+  }
+`;
 
 interface IProps {
   app: IApps;
@@ -49,45 +64,27 @@ const AppItem: React.FC<IProps> = ({
           </span>
         </div>
       </div>
-      {
-        (access) && (
-        <div>
-          <Button
-            className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
-            variant="outline-light"
-            onClick={() => setDisplay(!display)}
+      <div>
+        <Drop
+          title="..."
+          variant="outline-grey"
+          className={['dbg-button', styles.dd].join(' ')}
+        >
+          <Dropdown.Item as="button" onClick={() => onEdit()}>
+            <span className={styles.action}>Rename</span>
+          </Dropdown.Item>
+          <Dropdown.Item as="button">
+            <Link to={`/app/editor/${app.id}`} className={styles.action}>App Editor</Link>
+          </Dropdown.Item>
+          <Dropdown.Item
+            as="button"
+            onClick={() => setShowDeleteModal(true)}
           >
-            ...
-          </Button>
-          <div className={`${styles.child} ${display ? styles.none : ''}`}>
-            <span
-              onClick={() => onEdit()}
-              role="button"
-              className={styles.action}
-              onKeyPress={() => onEdit()}
-              tabIndex={0}
-            >
-              Rename
-            </span>
-            <span
-              onClick={() => setShowDeleteModal(true)}
-              role="button"
-              className={styles.delete}
-              onKeyPress={() => deleteApp({ app })}
-              tabIndex={0}
-            >
-              Delete
-            </span>
-            <span role="button" className={styles.action}>
-              <Link to={`/app/editor/${app.id}`} className={styles['app-editor']}>
-                App Editor
-              </Link>
-            </span>
-          </div>
-          <UpdateApp />
-        </div>
-        )
-      }
+            <span className={styles.delete}>Delete</span>
+          </Dropdown.Item>
+        </Drop>
+        <UpdateApp />
+      </div>
       <DeleteModal
         show={showDeleteModal}
         cancel={handleCancelModal}
