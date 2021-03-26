@@ -8,9 +8,10 @@ interface IProps {
   search: string;
   deleteApp: (data: { app: IApps }) => void;
   showEdit: (data: { app: IApps, show: boolean }) => void;
+  access: boolean
 }
 
-const AppsList: React.FC<IProps> = ({ search, appsList, deleteApp, showEdit
+const AppsList: React.FC<IProps> = ({ search, appsList, deleteApp, showEdit, access
 }) => (
   <div className={styles['list-wrp']}>
     {
@@ -22,6 +23,7 @@ const AppsList: React.FC<IProps> = ({ search, appsList, deleteApp, showEdit
               app={app}
               deleteApp={deleteApp}
               showEdit={showEdit}
+              access={access}
             />
           )
           : null

@@ -25,7 +25,6 @@ import ResourceList from '../components/ResourceList';
 import QueryEditor from '../../../components/QueryCodeEditor';
 import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
-import QueryResult from '../components/ModalWindow/queryResult';
 
 interface IProps {
   id: string
@@ -38,7 +37,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showQuery, setShowQuery] = useState(false);
   const [currentResource, setCurrentResource] = useState<string>('');
 
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
@@ -210,13 +208,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
     }
   }, [query.isLoading]);
 
-  useEffect(() => {
-    if (query.selectQuery.queryMessage.length !== 0) {
-      setShowQuery(true);
-      setTimeout(() => setShowQuery(false), 1000);
-    }
-  }, [query.selectQuery.queryMessage]);
-
   const changeResourceHandler = (resId: string) => {
     setCurrentResource(resId);
   };
@@ -280,7 +271,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               }
             </Form.Group>
           </Form.Group>
-          <Form.Group controlId="ControlTextarea">
+          <Form.Group controlId="ControlTextarea" style={{ width: '100%' }}>
             <Form.Label className={style.row} />
             <div className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
@@ -338,7 +329,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           {
             !isEmptyData && (
-              <div style={{ padding: '20px' }}>
+              <div style={{ padding: '20px', flex: '1 1 100%' }}>
                 <Table
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
@@ -349,7 +340,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             )
           }
           {
-            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px', flex: '1 1 100%' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
@@ -359,7 +350,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isCancel={handleCancelConfirmModal}
         isSubmit={handleSubmitConfirmModal}
       />
-      <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
     </div>
   );
 };

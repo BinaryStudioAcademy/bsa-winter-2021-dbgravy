@@ -12,12 +12,14 @@ import { IAppState } from '../../common/models/store/IAppState';
 import { connect } from 'react-redux';
 import { Routes } from '../../common/enums/Routes';
 import { Link } from 'react-router-dom';
+import { isAccess } from '../../common/helpers/permissionHelper';
+import { Roles } from '../../common/enums/UserRoles';
 
 interface IProps {
   resources: IResource[],
   isLoading: boolean,
   fetchResources: () => void,
-  remove: (obj: { resource: IResource }) => void
+  remove: (obj: { resource: IResource }) => void,
 }
 
 const Resources: React.FC<IProps> = ({
@@ -26,9 +28,16 @@ const Resources: React.FC<IProps> = ({
   fetchResources,
   remove
 }) => {
+  const [access, setAccess] = useState<boolean>(false);
+
   useEffect(() => {
+    setAccess(isAccess([Roles.Admin, Roles.Developer]));
     fetchResources();
   }, []);
+
+  useEffect(() => {
+    setAccess(isAccess([Roles.Admin, Roles.Developer]));
+  }, [resources]);
 
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -58,7 +67,11 @@ const Resources: React.FC<IProps> = ({
                   onChange={ev => handleSearch(ev.target.value)}
                 />
               </InputGroup>
-              <Link to={Routes.ResourcesAddEdit} className="btn btn-primary">Create new</Link>
+              {
+                (access) && (
+                  <Link to={Routes.ResourcesAddEdit} className="btn btn-primary">Create new</Link>
+                )
+              }
             </Form>
           </div>
           {!resources.length ? (
@@ -71,7 +84,7 @@ const Resources: React.FC<IProps> = ({
             </Card>
           ) : (
             <div className="table-wrp">
-              <TableContainer search={searchValue} resources={resources} remove={remove} />
+              <TableContainer search={searchValue} resources={resources} access={access} remove={remove} />
             </div>
           )}
         </div>
@@ -82,7 +95,8 @@ const Resources: React.FC<IProps> = ({
 
 const mapStateToProps = (rootState: IAppState) => ({
   isLoading: rootState.resource.isLoading,
-  resources: rootState.resource.resources
+  resources: rootState.resource.resources,
+  user: rootState.user.user
 });
 
 const mapDispatchToProps = {

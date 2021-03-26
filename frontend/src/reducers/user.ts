@@ -67,8 +67,9 @@ export const user = (
         id,
         firstName,
         lastName,
-        organizationId,
-        email
+        currentOrganizationId,
+        email,
+        userOrganizations
       } = payload;
       return {
         ...state,
@@ -76,8 +77,10 @@ export const user = (
           id,
           firstName,
           lastName,
-          organizationId,
-          email
+          organizationId: currentOrganizationId,
+          email,
+          role: userOrganizations[0].role,
+          status: userOrganizations[0].status
         },
         isLoading: false,
         isAuthorized: Boolean(payload?.id)
@@ -125,8 +128,7 @@ export const user = (
           ...payload.user,
           newOrganization: {
             isLoading: false,
-            isFailed: false,
-            isSuccess: false
+            isDone: false
           }
         }
       };
@@ -148,8 +150,7 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: false,
-            isSuccess: true
+            isDone: true
           }
         }
       };
@@ -159,8 +160,7 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: true,
-            isSuccess: false
+            isDone: true
           }
         }
       };

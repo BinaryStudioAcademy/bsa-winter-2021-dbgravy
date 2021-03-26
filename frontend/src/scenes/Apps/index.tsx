@@ -11,6 +11,8 @@ import { IApps } from '../../common/models/apps/IApps';
 import { IAppState } from '../../common/models/store/IAppState';
 import Loader from '../../components/Loader/index';
 import Header from '../../components/Header/index';
+import { isAccess } from '../../common/helpers/permissionHelper';
+import { Roles } from '../../common/enums/UserRoles';
 
 interface IProps {
   addApp: (name: string) => void;
@@ -22,10 +24,16 @@ interface IProps {
   apps: IApps[];
 }
 
-const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp, showEdit, isEdit }) => {
+const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp, showEdit }) => {
+  const [access, setAccess] = useState<boolean>(false);
   useEffect(() => {
     fetchApps();
+    setAccess(isAccess([Roles.Admin, Roles.Developer]));
   }, []);
+
+  useEffect(() => {
+    setAccess(isAccess([Roles.Admin, Roles.Developer]));
+  }, [apps]);
 
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -53,7 +61,11 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
                   className={`mr-sm-2 border-left-0 ${styles['form-control-search']}`}
                 />
               </InputGroup>
-              <AddApp onAddApp={name => addApp(name)} />
+              {
+                (access) && (
+                  <AddApp onAddApp={name => addApp(name)} />
+                )
+              }
             </Form>
           </div>
           {!apps.length ? (
@@ -70,6 +82,7 @@ const Apps: React.FC<IProps> = ({ fetchApps, addApp, apps, isLoading, deleteApp,
               appsList={apps}
               deleteApp={deleteApp}
               showEdit={showEdit}
+              access={access}
             />
           )}
         </div>

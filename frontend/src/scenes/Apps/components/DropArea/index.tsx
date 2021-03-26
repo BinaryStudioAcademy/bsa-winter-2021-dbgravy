@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
 import update from 'immutability-helper';
 import DropAreaItem from '../DropAreaItem';
-import { Button } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
@@ -14,14 +13,16 @@ import TableData from '../tableDATA';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
+import ButtonComponent from '../ButtonComponent';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
   selectItem: Function;
   localUpdateElement: Function;
+  appId:string;
 }
 
-export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, localUpdateElement }) => {
+export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, localUpdateElement, appId }) => {
   const queries: Array<IQuery> = useSelector((state: IAppState) => state.app.qur.queriesApp);
   const [items, setItems] = useState<{
     [key: string]: IDropItem
@@ -38,7 +39,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
       selectItem(null);
     }
   };
-
   useEffect(() => {
     setItems({ ...elements });
     const itemKeys = Object.keys(elements);
@@ -131,22 +131,14 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             }
             {
               (componentType === ComponentType.table) && (
-                <TableData selectItem={component} queryList={queries} />
+                <div className={styles.tableWrp}>
+                  <TableData selectItem={component} queryList={queries} />
+                </div>
               )
             }
             {
               (componentType === ComponentType.button) && (
-                <Button
-                  as="input"
-                  type="button"
-                  onClick={() => false}
-                  value={(component as IButton).text ? (component as IButton).text : 'Submit'}
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: (component as IButton).color ? (component as IButton).color : 'red'
-                  }}
-                />
+              <ButtonComponent component={(component as IButton)} id={appId} />
               )
             }
           </DropAreaItem>
