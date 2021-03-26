@@ -16,8 +16,8 @@ import {
   deleteSelectQueryRoutine,
   setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
-import QueriesListForTriggers from '../components/triggerList';
-import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
+import QueriesListForTriggersWrapper from '../components/triggerListWrapper';
+// import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
@@ -325,9 +325,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             </div>
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
-            <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
+            <QueriesListForTriggersWrapper
+              queryList={query.queriesApp}
+              triggerList={query.setNewSuccessTriggers}
+              status
+            />
             <div className={style.baseMargin}>On failure trigger</div>
-            <QueriesListForUnSuccessTriggers
+            <QueriesListForTriggersWrapper
               queryList={query.queriesApp}
               triggerList={query.setNewUnSuccessTriggers}
             />
