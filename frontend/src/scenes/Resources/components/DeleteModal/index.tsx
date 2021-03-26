@@ -18,7 +18,7 @@ const DeleteModal: React.FC<IProps> = ({ show, cancel, submit }) => (
       <Modal.Title>Are you sure you want to delete this resource?</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      This resource is&nbsp;
+      This action is&nbsp;
       <b>permanent</b>
       ! It cannot be undone
     </Modal.Body>
