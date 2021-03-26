@@ -50,7 +50,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     && ((selectedItem as IDropItem).component as IButton).color as string
     : '');
 
-  const [typeAction, setTypeAction] = useState<ValueType<IOptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<IOptionType, boolean>>();
 
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
@@ -106,6 +105,9 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     if (selectedItem) {
       const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.component?.queryId);
       setSelectedQuery(searchSelectQuery);
+      if (searchSelectQuery) {
+        setQuery({ value: (searchSelectQuery as IQuery).id, label: (searchSelectQuery as IQuery).name });
+      }
       setComponentNameId((selectedItem as IDropItem).name);
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
@@ -117,10 +119,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
     }
   }, [selectedItem, queries]);
-
-  const optionsTypeAction: IOptionType[] = [
-    { value: 'Run a query', label: 'Run a query' }
-  ];
 
   const optionsQueries: IOptionType[] = queries.map(({ id, name }) => ({ value: id, label: (name as string) }));
   const handleSetQuery = (option: IOptionType) => {
@@ -193,18 +191,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
-            <Form.Label>On click</Form.Label>
-            <Select
-              value={typeAction as ValueType<IOptionType, boolean>}
-              onChange={option => setTypeAction(option)}
-              options={optionsTypeAction}
-            />
-            <div style={{ padding: '5px' }} />
+            <Form.Label>Run query on change</Form.Label>
             <Select
               value={query as ValueType<IOptionType, boolean>}
               onChange={option => handleSetQuery(option as IOptionType)}
               options={optionsQueries}
-              isDisabled={!typeAction}
             />
             <div style={{ padding: '5px' }} />
             <Button
@@ -219,18 +210,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       {
         (selectedItem && selectedItem.componentType === 'table') && (
           <Form onSubmit={e => handleSubmit(e)}>
-            <Form.Label>On click</Form.Label>
-            <Select
-              value={typeAction as ValueType<IOptionType, boolean>}
-              onChange={option => setTypeAction(option)}
-              options={optionsTypeAction}
-            />
-            <div style={{ padding: '5px' }} />
+            <Form.Label>Query data</Form.Label>
             <Select
               value={query as ValueType<IOptionType, boolean>}
               onChange={option => handleSetQuery(option as IOptionType)}
               options={optionsQueries}
-              isDisabled={!typeAction}
             />
             <div style={{ padding: '5px' }} />
             <Button
@@ -257,18 +241,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={colorButton}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setColorButton(e.target.value)}
             />
-            <Form.Label>On click</Form.Label>
-            <Select
-              value={typeAction as ValueType<IOptionType, boolean>}
-              onChange={option => setTypeAction(option)}
-              options={optionsTypeAction}
-            />
-            <div style={{ padding: '5px' }} />
+            <Form.Label>Run query on click</Form.Label>
             <Select
               value={query as ValueType<IOptionType, boolean>}
               onChange={option => handleSetQuery(option as IOptionType)}
               options={optionsQueries}
-              isDisabled={!typeAction}
             />
             <div style={{ padding: '5px' }} />
             <Button
