@@ -68,7 +68,10 @@
     display: flex;
     -ms-flex-direction: row;
     flex-direction: row;
-    height: calc(100% - 50px);
+    height: calc(100% - 71px);
+    @media (max-width: 992px) {
+    	height: calc(100% - 141px);
+  	}
 }
 
 .splitPane {
@@ -110,12 +113,15 @@
 }
 
 .dropArea {
-    flex: 1 1 30%;
+    flex: 1;
     background-color: #cecece;
     position: relative;
     min-height: 400px;
     max-height: 100vh;
-    overflow-x: hidden;
+    overflow: auto;
+    @media (max-height: 768px) {
+    	min-height: 350px;
+  	}
 }
 
 .constructorArea {
@@ -124,4 +130,5 @@
     position: relative;
     outline: none;
     display: flex;
+    overflow: auto;
 }

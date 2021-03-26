@@ -131,7 +131,9 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             }
             {
               (componentType === ComponentType.table) && (
-                <TableData selectItem={component} queryList={queries} />
+                <div className={styles.tableWrp}>
+                  <TableData selectItem={component} queryList={queries} />
+                </div>
               )
             }
             {
