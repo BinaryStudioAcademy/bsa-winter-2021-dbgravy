@@ -41,18 +41,22 @@
 
 .resource {
     display: flex;
-    margin-left: 20px;
     flex-direction: row;
     align-content: center;
 }
 
 .resourceText {
-    display: flex;
-    flex-direction: row;
-    margin: 0!important;
-    width: 100px;
+    flex: 0 0 auto;
+    margin: 5px 20px;
     text-align: center;
     align-content: center;
+}
+
+.resourceSelect {
+    text-align: left;
+    align-content: center;
+    flex: 1 1 0%;
+    margin-right: 50%;
 }
 
 .searchInput {

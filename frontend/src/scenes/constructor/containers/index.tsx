@@ -282,14 +282,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           <Form.Group controlId="ControlTextarea">
             <Form.Label className={style.row} />
-            <Form.Group controlId="Resource" className={style.resource}>
+            <div className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
               <ResourceList
                 resourceList={query.resources}
-                titleName={query.setNewResource?.name}
                 onChangeResource={changeResourceHandler}
               />
-            </Form.Group>
+            </div>
             <Form.Label className={style.row} />
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
             <Form.Label className={style.row} />

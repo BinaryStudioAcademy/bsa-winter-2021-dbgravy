@@ -15,6 +15,7 @@ import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
 import { IInputText } from '../../../../common/models/editor/IInputText';
+import { IOptionType } from '../../../../common/models/editor/IOption';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
@@ -22,11 +23,6 @@ export interface IInspectProps {
   deleteComponent: Function,
   queries: IQuery[]
 }
-
-type OptionType = {
-  value: string;
-  label: string;
-};
 
 const DropdownButton = styled(Dropdown.Toggle)`
   :after {
@@ -55,11 +51,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     && ((selectedItem as IDropItem).component as IButton).color as string
     : '');
 
-  const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
-  const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
+  const [typeAction, setTypeAction] = useState<ValueType<IOptionType, boolean>>();
+  const [query, setQuery] = useState<ValueType<IOptionType, boolean>>();
   const [inputQuery, setInputQuery] = useState<null | string>(null);
-  const [defaultInputQ, setDefaultInputQ] = useState<OptionType | undefined>(undefined);
-  console.log('typeAction', typeAction);
+  const [defaultInputQ, setDefaultInputQ] = useState<IOptionType | undefined>(undefined);
+
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
   const changeSelectQuery = (id:string) => {
     const newSelectQuery = queries.find(elem => elem.id === id);
@@ -117,7 +113,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     return c ? { value: c.id, label: c.name } : undefined;
   };
 
-  const handleChange = (e: OptionType | null) => {
+  const handleChange = (e: IOptionType | null) => {
     setDefaultInputQ(e || undefined);
     setInputQuery(e?.value || null);
   };
@@ -139,11 +135,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     }
   }, [selectedItem, queries]);
 
-  const optionsTypeAction: OptionType[] = [
+  const optionsTypeAction: IOptionType[] = [
     { value: 'Run a query', label: 'Run a query' }
   ];
 
-  const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
+  const optionsQueries: IOptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
 
   return (
     <div style={{ width: '100%' }}>
@@ -257,13 +253,13 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
             />
             <Form.Label>On click</Form.Label>
             <Select
-              value={typeAction as ValueType<OptionType, boolean>}
+              value={typeAction as ValueType<IOptionType, boolean>}
               onChange={option => setTypeAction(option)}
               options={optionsTypeAction}
             />
             <div style={{ padding: '5px' }} />
             <Select
-              value={query as ValueType<OptionType, boolean>}
+              value={query as ValueType<IOptionType, boolean>}
               onChange={option => setQuery(option)}
               options={optionsQueries}
               isDisabled={!typeAction}
