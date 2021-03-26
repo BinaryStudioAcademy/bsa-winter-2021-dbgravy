@@ -83,7 +83,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
         {
           (organization?.role === Roles.Admin) && (
             <div className={styles['options-wrp']}>
-              <span>
+              <span className={styles.lilpad}>
                 <FontAwesomeIcon icon={faCog} color="grey" />
                 <Link to={Routes.Settings} className={styles.linklike}>Organization settings</Link>
               </span>
@@ -124,9 +124,9 @@ const ProfilePopupInfo: React.FC<IProps> = (
           <div className={styles['options-wrp']}>
             <span
               onClick={() => setShowCreator(true)}
-              role="button"
-              tabIndex={0}
+              role="presentation"
               onKeyPress={() => setShowCreator(true)}
+              className={styles.lilpad}
             >
               <FontAwesomeIcon icon={faPlus} color="grey" />
               Create organization
@@ -138,6 +138,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
               role="button"
               tabIndex={0}
               onKeyPress={() => setShowSwitcher(true)}
+              className={styles.lilpad}
             >
               <FontAwesomeIcon icon={faSyncAlt} color="grey" />
               Switch Organization
@@ -156,9 +157,9 @@ const ProfilePopupInfo: React.FC<IProps> = (
         <div className={styles['options-wrp']}>
           <span
             onClick={() => logoutUser()}
-            role="button"
-            tabIndex={0}
+            role="presentation"
             onKeyPress={() => logoutUser()}
+            className={styles.lilpad}
           >
             <FontAwesomeIcon icon={faArrowRight} size="sm" color="grey" />
             Logout

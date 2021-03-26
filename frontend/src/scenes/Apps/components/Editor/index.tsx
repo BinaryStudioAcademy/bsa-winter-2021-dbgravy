@@ -79,7 +79,12 @@ const Editor: React.FC<IEditorProps> = memo(
             <div>
               <div className={styles.paneHorizontal}>
                 <div className={`${styles.dropArea} dropArea`}>
-                  <DropArea elements={components} selectItem={selectItem} localUpdateElement={editItem} />
+                  <DropArea
+                    elements={components}
+                    selectItem={selectItem}
+                    localUpdateElement={editItem}
+                    appId={appId}
+                  />
                 </div>
                 {showBottom
                   ? (

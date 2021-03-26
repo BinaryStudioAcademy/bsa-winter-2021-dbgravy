@@ -128,8 +128,7 @@ export const user = (
           ...payload.user,
           newOrganization: {
             isLoading: false,
-            isFailed: false,
-            isSuccess: false
+            isDone: false
           }
         }
       };
@@ -151,8 +150,7 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: false,
-            isSuccess: true
+            isDone: true
           }
         }
       };
@@ -162,8 +160,7 @@ export const user = (
         user: {
           ...payload.user,
           newOrganization: {
-            isFailed: true,
-            isSuccess: false
+            isDone: true
           }
         }
       };
