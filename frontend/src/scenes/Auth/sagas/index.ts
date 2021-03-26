@@ -44,7 +44,9 @@ function* loginUserRequest({ payload }: Routine<any>) {
     yield put(inviteUserToOrganizationRoutine.failure());
   } catch (error) {
     yield put(loginUserRoutine.failure(error.message));
-    errorToastMessage(error.msg);
+    if (error.status) {
+      errorToastMessage(error.msg);
+    }
   }
 }
 

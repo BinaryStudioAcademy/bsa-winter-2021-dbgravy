@@ -295,24 +295,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               >
                 .
               </div>
-              {
-              !query.setNewConfirm ? (
-                <Form.Check
-                  type="checkbox"
-                  id="checkbox"
-                  className={style.checkBox}
-                  disabled
-                />
-              )
-                : (
-                  <Form.Check
-                    type="checkbox"
-                    id="checkbox2"
-                    className={style.checkBox}
-                    checked
-                  />
-                )
-            }
+              <Form.Check
+                type="checkbox"
+                id="checkbox"
+                className={style.checkBox}
+                checked={query.setNewConfirm}
+                onChange={changeConfirm}
+              />
               <span className={style.spanText}>Show a confirmation modal before running</span>
             </div>
             <Form.Label className={style.row} />
