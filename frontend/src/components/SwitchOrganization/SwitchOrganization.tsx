@@ -27,16 +27,16 @@ const SwitchOrganization: React.FC<IProps> = ({ organizations, changeUserOrganiz
 
   return (
     <div className={[styles.center, styles.container].join(' ')}>
-      <div>
+      <div className={styles.head}>
         <span
           onClick={handleClose}
           onKeyPress={handleClose}
           role="button"
           tabIndex={0}
         >
-          <FontAwesomeIcon icon={faArrowLeft} size="sm" />
+          <FontAwesomeIcon icon={faArrowLeft} />
         </span>
-        <span className={styles.head}>Search organization</span>
+        <span>Switch organization</span>
       </div>
       <input
         type="text"
@@ -46,7 +46,7 @@ const SwitchOrganization: React.FC<IProps> = ({ organizations, changeUserOrganiz
       />
       <Loader isLoading={!organizations.length}>
         <div className={styles.listContainer}>
-          <ListGroup>
+          <ListGroup key={organizations.length}>
             {
               organizations
                 .map(organization => (
