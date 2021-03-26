@@ -14,7 +14,6 @@ export interface IQueryState {
         showConfirm: boolean,
         resourceId:string,
         data?: any,
-        queryMessage: string
     },
     setNewCode:string,
     setSelectResourceTable:ITables,
