@@ -13,7 +13,7 @@ import permissionMiddleware from '../middlewares/permissionsMiddleware';
 const router = Router();
 
 router
-  .get('/:appId', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),
+  .get('/:appId', permissionMiddleware([Role.ADMIN, Role.DEVELOPER, Role.VIEWER]),
     run(req => getComponentsByAppId(req.params.appId)))
   .get('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]), run(req => getComponentById(req.params.id)))
   .post('/:appId', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),

@@ -15,7 +15,7 @@ import { Role } from '../../common/enums/Role';
 const router = Router();
 
 router
-  .get('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),
+  .get('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER, Role.VIEWER]),
     run(req => getResourceById(req.params.id)))
   .put('/:id', permissionMiddleware([Role.ADMIN, Role.DEVELOPER]),
     run(req => updateResource(req.params.id, req.body.resource)))

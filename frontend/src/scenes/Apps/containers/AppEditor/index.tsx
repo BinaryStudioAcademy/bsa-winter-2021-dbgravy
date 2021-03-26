@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Editor from '../../components/Editor';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import logo from '../../../../images/Logo.svg';
 import { fetchResourceRoutine } from '../../../Resources/routines';
@@ -23,8 +23,6 @@ import { IResource } from '../../../../common/models/resources/IResource';
 import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
 import { Routes } from '../../../../common/enums/Routes';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
-import { isAccess } from '../../../../common/helpers/permissionHelper';
-import { Roles } from '../../../../common/enums/UserRoles';
 
 interface IProps {
   resources: Array<IResource>,
@@ -33,11 +31,7 @@ interface IProps {
 
 const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
   const { id }: IFetchParams = useParams();
-  const history = useHistory();
   useEffect(() => {
-    if (!isAccess([Roles.Admin, Roles.Developer])) {
-      history.push('/apps');
-    }
     fetchResources();
   }, []);
 
