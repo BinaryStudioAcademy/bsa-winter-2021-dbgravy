@@ -3,25 +3,23 @@
     bottom: 0;
     width: 100%;
     border-top: 1px solid #d9d9d9;
+    height: 400px;
     flex-direction: row;
-    flex-wrap:wrap;
 }
 
 .LeftSide {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #d9d9d9;
-    max-width: 250px;
-    margin-bottom: 0;
-    flex:1 1 100px;
+    width: 320px;
 }
 
 .RightSide {
     display: flex;
+    flex-direction: column;
     width: 100%;
     overflow-x: hidden;
-    flex-wrap: wrap;
-    flex: 1 1 40%;
+    overflow-y: auto;
 }
 
 .RightSideHeader {
@@ -43,6 +41,7 @@
 
 .resource {
     display: flex;
+    margin-left: 20px;
     flex-direction: row;
     align-content: center;
 }
@@ -152,7 +151,7 @@
 }
 
 .row {
-    width: calc(100% - 40px);
+    width: 100%;
     margin-left: 20px;
     margin-right: 20px;
     height: 4px;
@@ -183,13 +182,10 @@ a.delete:hover {
     color: red;
 }
 
-.dropMenuChange {
-  max-width: 400px;
-  width: 100%;
-}
-
 .dropMenuChange button {
-    width: 100%;
+    width: 400px;
+    margin-left: 20px;
+    margin-right: 20px;
     background-color: #d9d9d9;
     border-color: black;
     color: black;

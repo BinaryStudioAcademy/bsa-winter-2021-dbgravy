@@ -17,7 +17,6 @@ import {
   setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggersWrapper from '../components/triggerListWrapper';
-// import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
@@ -271,15 +270,15 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               }
             </Form.Group>
           </Form.Group>
-          <Form.Group controlId="ControlTextarea" style={{ width: '100%' }}>
+          <Form.Group controlId="ControlTextarea">
             <Form.Label className={style.row} />
-            <div className={style.resource}>
+            <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
               <ResourceList
                 resourceList={query.resources}
                 onChangeResource={changeResourceHandler}
               />
-            </div>
+            </Form.Group>
             <Form.Label className={style.row} />
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
             <Form.Label className={style.row} />
@@ -329,7 +328,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           {
             !isEmptyData && (
-              <div style={{ padding: '20px', flex: '1 1 100%' }}>
+              <div style={{ padding: '20px' }}>
                 <Table
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
@@ -340,7 +339,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             )
           }
           {
-            isEmptyData && <span style={{ padding: '20px', flex: '1 1 100%' }}>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
