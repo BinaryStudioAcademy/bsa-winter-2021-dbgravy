@@ -40,7 +40,7 @@ const Editor: React.FC<IEditorProps> = memo(
     addComponent,
     updateComponent,
     deleteComponent,
-    locals
+    locals,
     query,
     show
   }) => {
@@ -94,7 +94,7 @@ const Editor: React.FC<IEditorProps> = memo(
                 {showBottom
                   ? (
                     <div className={styles.constructorArea}>
-                      <Constructor id={appId} locals={locals} query={query}/>
+                      <Constructor id={appId} locals={locals} query={query} />
                     </div>
                   )
                   : null}
