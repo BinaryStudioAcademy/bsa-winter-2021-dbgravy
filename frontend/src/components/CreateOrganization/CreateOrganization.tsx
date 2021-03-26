@@ -16,8 +16,8 @@ interface IProps {
 
 const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill, setup }) => {
   useEffect(() => {
-    if (user?.newOrganization?.isLoading === true
-      && user?.newOrganization?.isFailed === true) {
+    if (user?.newOrganization?.isLoading === false
+      && user?.newOrganization?.isDone === true) {
       handleClose();
     }
   }, []);
@@ -32,7 +32,7 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setOrgName(e.target.value);
-    if (user?.newOrganization?.isFailed || user?.newOrganization?.isSuccess) {
+    if (user?.newOrganization?.isDone) {
       setup({ user });
     }
   };
@@ -40,6 +40,7 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
   const onSend = () => {
     create({ user, newOrganization: { name: organizationName } });
     setOrgName('');
+    handleClose();
   };
 
   return (
@@ -62,12 +63,8 @@ const CreateOrganization: React.FC<IProps> = ({ setShow, create, user, fullfill,
         value={organizationName}
         onChange={onChange}
       />
-      <div className={user?.newOrganization?.isFailed ? styles.error : styles.post}>
-        {user?.newOrganization?.isLoading
-          ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
-        {user?.newOrganization?.isFailed ? 'Failed to create new organization.' : ''}
-        {user?.newOrganization?.isSuccess ? 'Organization succesfully created' : ''}
-      </div>
+      {user?.newOrganization?.isLoading
+        ? <Loader isLoading={user?.newOrganization?.isLoading || false} isAbsolute={false} /> : null}
       <div className={styles.btnsContainer}>
         <Button onClick={onSend}>Create</Button>
       </div>

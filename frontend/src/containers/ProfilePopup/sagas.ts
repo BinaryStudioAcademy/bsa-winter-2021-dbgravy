@@ -17,7 +17,7 @@ import { logotUserRoutine } from '../../scenes/Auth/routines';
 import { removeToken } from '../../services/authService';
 import { clearStorage, getRefreshToken } from '../../common/helpers/storageHelper';
 import { Routine } from 'redux-saga-routines';
-import { errorToastMessage } from '../../common/helpers/toastMessageHelper';
+import { errorToastMessage, successToastMessage } from '../../common/helpers/toastMessageHelper';
 import { fetchAppRoutine } from '../../scenes/Apps/routines';
 import { fetchResourceRoutine } from '../../scenes/Resources/routines';
 
@@ -58,12 +58,15 @@ function* createOrganization() {
   const user: IUser = yield select(selectUser);
   try {
     const { newOrganization, id: createdByUserId } = yield select(selectUser);
-    const response: { result: boolean } = yield call(
+    const response: { result: boolean, organizationId: string } = yield call(
       postCreateOrganization, { name: newOrganization.name, createdByUserId }
     );
 
     if (response.result) {
+      yield put(changeUserOrganizationRoutine.trigger(response.organizationId));
       yield put(createOrganizationRoutine.success({ user }));
+      yield put(fetchUserOrganizationsRoutine.trigger());
+      successToastMessage('Organization succesfully created');
     } else {
       yield put(createOrganizationRoutine.failure({ user }));
     }

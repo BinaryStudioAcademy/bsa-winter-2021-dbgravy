@@ -63,7 +63,8 @@ function* runSelectQuery({ payload }: any): Routine<any> {
     if (!fulfilledQueries.includes(id)) {
       const resultData = yield call(runQuery, payload);
       if (fulfilledQueries.length === 0) {
-        yield put(runSelectQueryRoutine.success({ resultData, name }));
+        yield put(runSelectQueryRoutine.success({ resultData }));
+        successToastMessage(`${name} run successfully`);
       } else {
         yield put(runTriggerRoutine.success({ resultData, name }));
       }
@@ -93,7 +94,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
     }
   } catch (e) {
     if (fulfilledQueries.length === 0) {
-      yield put(runTriggerRoutine.failure(name));
+      errorToastMessage(`${name} run failed`);
     }
     if (triggers.length !== 0) {
       fulfilledQueries.push(id);

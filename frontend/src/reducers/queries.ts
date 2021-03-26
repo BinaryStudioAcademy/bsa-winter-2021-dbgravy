@@ -29,8 +29,7 @@ const initialState: IQueryState = {
     selectQueryTriggers: [],
     showConfirm: false,
     resourceId: '',
-    data: [],
-    queryMessage: ''
+    data: []
   },
   setNewCode: '',
   setNewName: '',
@@ -98,8 +97,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryTriggers: action.payload[0].triggers,
           showConfirm: action.payload[0].showConfirm,
           resourceId: action.payload[0].resourceId,
-          data: [],
-          queryMessage: ''
+          data: []
         },
         setNewCode: action.payload[0].code,
         setNewName: action.payload[0].name,
@@ -131,7 +129,6 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
           selectQueryTriggers: triggers,
           resourceId,
           showConfirm,
-          queryMessage: '',
           data: []
         },
         isOpen: action.payload.isOpen,
@@ -219,8 +216,7 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         ...state,
         isResultLoading: true,
         selectQuery: {
-          ...state.selectQuery,
-          queryMessage: ''
+          ...state.selectQuery
         }
       };
     case runSelectQueryRoutine.SUCCESS:
@@ -237,18 +233,9 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         }),
         selectQuery: {
           ...state.selectQuery,
-          data: action.payload.resultData,
-          queryMessage: `${action.payload.name} successfully run`
+          data: action.payload.resultData
         },
         isResultLoading: false
-      };
-    case runTriggerRoutine.FAILURE:
-      return {
-        ...state,
-        selectQuery: {
-          ...state.selectQuery,
-          queryMessage: `${action.payload} run failed`
-        }
       };
     case runTriggerRoutine.SUCCESS:
       return {
