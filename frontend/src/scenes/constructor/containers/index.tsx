@@ -3,7 +3,7 @@ import QueriesList from '../components/queriesList';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.scss';
 import { IAppState } from '../../../common/models/store/IAppState';
-import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Form, DropdownButton, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
   setSelectQueryRoutine,
@@ -28,10 +28,11 @@ import ConfirmModal from '../components/ModalWindow/confirm';
 import QueryResult from '../components/ModalWindow/queryResult';
 
 interface IProps {
-  id: string
+  id: string,
+  locals: string[]
 }
 
-const Constructor: React.FC<IProps> = ({ id }) => {
+const Constructor: React.FC<IProps> = ({ id, locals }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
 
@@ -289,6 +290,27 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 titleName={query.setNewResource?.name}
                 onChangeResource={changeResourceHandler}
               />
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  (
+                    <Tooltip id="top">
+                      <div className={style.inner}>
+                        &quot;Tip: to access input values from queries just wrap their names into triple brackets like
+                        {' {{{textInput1}}}'}
+                        <br />
+                        <br />
+                        Here is the list of inputs you can access:
+                        {' '}
+                        {locals.reduce((acc, val) => `${val} ${acc}`, '')}
+                        &quot;
+                      </div>
+                    </Tooltip>
+                  )
+                }
+              >
+                <div className={style.tip}>Query variables</div>
+              </OverlayTrigger>
             </Form.Group>
             <Form.Label className={style.row} />
             <QueryEditor tables={query.setSelectResourceTable} changeCode={changeCode} codeValue={query.setNewCode} />
@@ -305,23 +327,23 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 .
               </div>
               {
-              !query.setNewConfirm ? (
-                <Form.Check
-                  type="checkbox"
-                  id="checkbox"
-                  className={style.checkBox}
-                  disabled
-                />
-              )
-                : (
+                !query.setNewConfirm ? (
                   <Form.Check
                     type="checkbox"
-                    id="checkbox2"
+                    id="checkbox"
                     className={style.checkBox}
-                    checked
+                    disabled
                   />
                 )
-            }
+                  : (
+                    <Form.Check
+                      type="checkbox"
+                      id="checkbox2"
+                      className={style.checkBox}
+                      checked
+                    />
+                  )
+              }
               <span className={style.spanText}>Show a confirmation modal before running</span>
             </div>
             <Form.Label className={style.row} />
