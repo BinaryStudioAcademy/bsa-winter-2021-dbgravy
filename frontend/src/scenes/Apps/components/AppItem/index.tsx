@@ -14,9 +14,10 @@ interface IProps {
   app: IApps;
   deleteApp: (data: { app: IApps }) => void;
   showEdit: (data: { app: IApps, show: boolean }) => void;
+  access: boolean
 }
 const AppItem: React.FC<IProps> = ({
-  app, showEdit, deleteApp
+  app, showEdit, deleteApp, access
 }) => {
   const [display, setDisplay] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -39,48 +40,54 @@ const AppItem: React.FC<IProps> = ({
       <div className={styles['app-main-info']}>
         <FontAwesomeIcon icon={faBriefcase} />
         <div className={styles['main-info']}>
-          <span>{app.name}</span>
+          <Link to={`/app/preview/${app.id}`}>
+            <span>{app.name}</span>
+          </Link>
           <span className="text-secondary">
             Created&ensp;
             <Moment calendar={CalendarEnum}>{app.createdAt}</Moment>
           </span>
         </div>
       </div>
-      <div>
-        <Button
-          className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
-          variant="outline-light"
-          onClick={() => setDisplay(!display)}
-        >
-          ...
-        </Button>
-        <div className={`${styles.child} ${display ? styles.none : ''}`}>
-          <span
-            onClick={() => onEdit()}
-            role="button"
-            className={styles.action}
-            onKeyPress={() => onEdit()}
-            tabIndex={0}
+      {
+        (access) && (
+        <div>
+          <Button
+            className={(display) ? 'dbg-button dbg-active' : 'dbg-button'}
+            variant="outline-light"
+            onClick={() => setDisplay(!display)}
           >
-            Rename
-          </span>
-          <span
-            onClick={() => setShowDeleteModal(true)}
-            role="button"
-            className={styles.delete}
-            onKeyPress={() => deleteApp({ app })}
-            tabIndex={0}
-          >
-            Delete
-          </span>
-          <span role="button" className={styles.action}>
-            <Link to={`/app/editor/${app.id}`} className={styles['app-editor']}>
-              App Editor
-            </Link>
-          </span>
+            ...
+          </Button>
+          <div className={`${styles.child} ${display ? styles.none : ''}`}>
+            <span
+              onClick={() => onEdit()}
+              role="button"
+              className={styles.action}
+              onKeyPress={() => onEdit()}
+              tabIndex={0}
+            >
+              Rename
+            </span>
+            <span
+              onClick={() => setShowDeleteModal(true)}
+              role="button"
+              className={styles.delete}
+              onKeyPress={() => deleteApp({ app })}
+              tabIndex={0}
+            >
+              Delete
+            </span>
+            <span role="button" className={styles.action}>
+              <Link to={`/app/editor/${app.id}`} className={styles['app-editor']}>
+                App Editor
+              </Link>
+            </span>
+          </div>
+          <UpdateApp />
         </div>
-        <UpdateApp />
-      </div>
+        )
+      }
       <DeleteModal
         show={showDeleteModal}
         cancel={handleCancelModal}

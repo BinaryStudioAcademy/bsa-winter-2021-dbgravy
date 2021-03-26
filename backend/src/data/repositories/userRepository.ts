@@ -42,7 +42,13 @@ export class UserRepository extends Repository<User> {
   }
 
   async getById(id: string): Promise<User> {
-    const user: User = await this.findOne({ id });
+    const user: User = await this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.organizations', 'organizations',
+        'organizations.id = user.currentOrganizationId AND organizations.createdByUserId = user.id')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganizations',
+        'userOrganizations.organizationId = user.currentOrganizationId AND userOrganizations.userId = user.id')
+      .where('user.id = :id', { id })
+      .getOne();
     return user;
   }
 

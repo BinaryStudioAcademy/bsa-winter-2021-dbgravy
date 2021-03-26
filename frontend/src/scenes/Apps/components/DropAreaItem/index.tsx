@@ -5,8 +5,9 @@ import styles from './styles.module.scss';
 const style: CSSProperties = {
   position: 'absolute',
   backgroundColor: 'white',
-  padding: '0.5rem 1rem',
-  cursor: 'move'
+  cursor: 'move',
+  display: 'flex',
+  alignItems: 'center'
 };
 export interface IDropAreaItemProps {
   id: string
@@ -44,7 +45,7 @@ export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
   return (
     <div
       ref={drag}
-      style={{ ...style, left, top, height, width, overflow: 'auto' }}
+      style={{ ...style, left, top, height, width }}
       role="presentation"
       onClick={() => onSelect(id)}
       className={(selectedItem === id) ? `${styles.active}` : ''}
