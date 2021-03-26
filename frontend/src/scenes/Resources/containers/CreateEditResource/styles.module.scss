@@ -40,7 +40,12 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-
+  @media (max-height: 860px) {
+    flex-direction: row;
+    padding: 30px;
+    width: 100%;
+    height: auto;
+  }
   h1 {
     font-size: 30px;
     margin-bottom: 15px;
