@@ -3,5 +3,5 @@ import { ILocal } from './ILocal';
 
 export interface IEditorState {
   components: { [key: string]: IDropItem },
-  locals: Array<ILocal>
+  locals: { [key: string]: ILocal }
 }

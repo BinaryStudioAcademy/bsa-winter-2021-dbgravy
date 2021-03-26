@@ -13,10 +13,11 @@ import {
 interface IProps {
   component: IInputText,
   id: string,
-  setInputValue: (obj: { id: string, value: string }) => void,
+  setInputValue: (obj: { id: string, value: string, name: string }) => void,
   runQuery: (o: any) => void,
   queries: Array<IQuery | any>,
-  locals: ILocal[]
+  locals: { [key: string]: ILocal },
+  name: string
 }
 const AppItem: React.FC<IProps> = ({
   component,
@@ -24,7 +25,8 @@ const AppItem: React.FC<IProps> = ({
   setInputValue,
   runQuery,
   queries,
-  locals
+  locals,
+  name
 }) => {
   const [inputTextValue, setInputTextValue] = useState('');
   const isInitialMount = useRef(true);
@@ -40,17 +42,18 @@ const AppItem: React.FC<IProps> = ({
   }, [inputTextValue]);
 
   useEffect(() => {
-    setInputTextValue(locals.find(e => e.id === id)?.value || '');
+    setInputTextValue(locals[name]?.value.slice(1, locals[name]?.value.length - 1) || '');
   }, [component]);
 
   const saveInput = (queryId?: string) => {
     if (queryId) {
       const queryData = (queries as IQuery[]).find(e => e.id === queryId);
-      const { id: qId, code, showConfirm, name, triggers, appId, resourceId } = queryData as IQuery & { triggers: [] };
+      const { id: qId, code, showConfirm, name: qName, triggers, appId, resourceId } = queryData as IQuery
+      & { triggers: [] };
 
       const value = {
         data: {
-          id: qId, code, showConfirm, name, triggers
+          id: qId, code, showConfirm, name: qName, triggers
         },
         appId,
         resourceId,
@@ -58,7 +61,7 @@ const AppItem: React.FC<IProps> = ({
       };
       runQuery(value);
     }
-    setInputValue({ id, value: inputTextValue });
+    setInputValue({ id, value: `'${inputTextValue}'`, name });
   };
 
   return (

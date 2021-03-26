@@ -126,7 +126,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                <InputComponent component={component as IInputText} id={id} />
+                <InputComponent component={component as IInputText} id={id} name={name} />
               )
             }
             {
