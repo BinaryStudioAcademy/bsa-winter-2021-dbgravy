@@ -57,7 +57,6 @@ const ProfilePopupInfo: React.FC<IProps> = (
   const handleClick = (e: any) => {
     if (node !== null) {
       if (!node.current.contains(e.target)) {
-        // inside click
         showDetails(true);
       }
     }
