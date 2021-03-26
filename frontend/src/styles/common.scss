@@ -56,3 +56,7 @@ code {
  .CodeMirror-scroll {
    width: 100%;
  }
+
+.CodeMirror-hints {
+  z-index: 1001;
+}
