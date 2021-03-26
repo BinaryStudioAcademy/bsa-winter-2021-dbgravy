@@ -46,7 +46,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     fetchUserOrganizations();
   }, []);
 
-  const node = useRef<HTMLDivElement>(document.createElement('div'));
+  const node = useRef<any>();
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClick);
@@ -55,15 +55,12 @@ const ProfilePopupInfo: React.FC<IProps> = (
   }, []);
 
   const handleClick = (e: any) => {
-    if (node && !node.current.contains(e.target)) {
-      // inside click
-      // console.log(e);
-      // console.log(node);
-      // return;
-      showDetails(!isShow);
+    if (node !== null) {
+      if (!node.current.contains(e.target)) {
+        // inside click
+        showDetails(true);
+      }
     }
-    console.log(e);
-    console.log(node);
   };
 
   const [showCreator, setShowCreator] = useState(false);
@@ -133,7 +130,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     }
 
     return (
-      <div className={styles.container} ref={node}>
+      <div className={styles.container}>
         {isLoadFail()}
         <div className={styles['opt-block']}>
           <div className={styles['options-wrp']}>
@@ -184,7 +181,7 @@ const ProfilePopupInfo: React.FC<IProps> = (
     );
   };
 
-  return (<div className={isShow ? styles.none : ''}>{render()}</div>);
+  return (<div className={isShow ? styles.none : ''} ref={node}>{render()}</div>);
 };
 
 export default ProfilePopupInfo;
