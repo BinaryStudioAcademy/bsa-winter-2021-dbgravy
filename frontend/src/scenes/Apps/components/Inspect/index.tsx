@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import styles from './styles.module.scss';
-import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
 import { IInputText } from '../../../../common/models/editor/IInputText';
@@ -53,14 +52,8 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
 
   const [typeAction, setTypeAction] = useState<ValueType<IOptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<IOptionType, boolean>>();
-  const [inputQuery, setInputQuery] = useState<null | string>(null);
-  const [defaultInputQ, setDefaultInputQ] = useState<IOptionType | undefined>(undefined);
 
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
-  const changeSelectQuery = (id:string) => {
-    const newSelectQuery = queries.find(elem => elem.id === id);
-    setSelectedQuery(newSelectQuery);
-  };
   const handleEditNameId = () => {
     setToggleComponentNameId(false);
   };
@@ -86,7 +79,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           ...selectedItem.component,
           label: labelInputText,
           placeholder,
-          queryId: inputQuery
+          queryId: selectedQuery?.id
         }
       };
       editComponent(item);
@@ -98,7 +91,8 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
         component: {
           ...selectedItem.component,
           queryId: selectedQuery?.id
-        } };
+        }
+      };
       editComponent(newItem);
     }
   };
@@ -106,16 +100,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleEdit();
-  };
-
-  const selectOne = () => {
-    const c = queries.find(e => e.id === selectedItem?.component.queryId);
-    return c ? { value: c.id, label: c.name } : undefined;
-  };
-
-  const handleChange = (e: IOptionType | null) => {
-    setDefaultInputQ(e || undefined);
-    setInputQuery(e?.value || null);
   };
 
   useEffect(() => {
@@ -130,7 +114,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       if (selectedItem && selectedItem.componentType === 'textInput') {
         setPlaceholder(((selectedItem as IDropItem).component as IInputText).placeholder as string);
         setLabelInputText(((selectedItem as IDropItem).component as IInputText).label as string);
-        setDefaultInputQ(selectOne());
       }
     }
   }, [selectedItem, queries]);
@@ -139,7 +122,12 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     { value: 'Run a query', label: 'Run a query' }
   ];
 
-  const optionsQueries: IOptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
+  const optionsQueries: IOptionType[] = queries.map(({ id, name }) => ({ value: id, label: (name as string) }));
+  const handleSetQuery = (option: IOptionType) => {
+    setQuery(option);
+    const searchSelectQuery = queries.find(elem => elem.id === option.value);
+    setSelectedQuery(searchSelectQuery as IQuery);
+  };
 
   return (
     <div style={{ width: '100%', padding: '15px' }}>
@@ -205,12 +193,18 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
-            <Form.Label>Run query</Form.Label>
+            <Form.Label>On click</Form.Label>
             <Select
-              value={defaultInputQ}
-              options={queries.map(q => ({ value: q.id, label: q.name }))}
-              isClearable
-              onChange={e => handleChange(e)}
+              value={typeAction as ValueType<IOptionType, boolean>}
+              onChange={option => setTypeAction(option)}
+              options={optionsTypeAction}
+            />
+            <div style={{ padding: '5px' }} />
+            <Select
+              value={query as ValueType<IOptionType, boolean>}
+              onChange={option => handleSetQuery(option as IOptionType)}
+              options={optionsQueries}
+              isDisabled={!typeAction}
             />
             <div style={{ padding: '5px' }} />
             <Button
@@ -224,12 +218,24 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
       {
         (selectedItem && selectedItem.componentType === 'table') && (
-          <Form>
-            <QueriesList queryList={queries} selectedQuery={selectedQuery} changeQuery={changeSelectQuery} />
+          <Form onSubmit={e => handleSubmit(e)}>
+            <Form.Label>On click</Form.Label>
+            <Select
+              value={typeAction as ValueType<IOptionType, boolean>}
+              onChange={option => setTypeAction(option)}
+              options={optionsTypeAction}
+            />
+            <div style={{ padding: '5px' }} />
+            <Select
+              value={query as ValueType<IOptionType, boolean>}
+              onChange={option => handleSetQuery(option as IOptionType)}
+              options={optionsQueries}
+              isDisabled={!typeAction}
+            />
+            <div style={{ padding: '5px' }} />
             <Button
               variant="primary"
               type="submit"
-              onClick={handleSubmit}
             >
               Save
             </Button>
@@ -260,7 +266,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
             <div style={{ padding: '5px' }} />
             <Select
               value={query as ValueType<IOptionType, boolean>}
-              onChange={option => setQuery(option)}
+              onChange={option => handleSetQuery(option as IOptionType)}
               options={optionsQueries}
               isDisabled={!typeAction}
             />

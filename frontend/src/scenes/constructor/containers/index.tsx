@@ -318,12 +318,14 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             <QueriesListForTriggersWrapper
               queryList={query.queriesApp}
               triggerList={query.setNewSuccessTriggers}
+              selectQueryId={query.selectQuery.selectQueryId}
               status
             />
             <div className={style.baseMargin}>On failure trigger</div>
             <QueriesListForTriggersWrapper
               queryList={query.queriesApp}
               triggerList={query.setNewUnSuccessTriggers}
+              selectQueryId={query.selectQuery.selectQueryId}
             />
           </Form.Group>
           {

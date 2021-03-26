@@ -1,16 +1,16 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import Select, { ValueType } from 'react-select';
 import { IOptionType } from '../../../../common/models/editor/IOption';
 import styles from './style.module.scss';
 import { IQuery } from '../../../../common/models/apps/querys';
-import { useSelector, useDispatch } from 'react-redux';
-import { IAppState } from '../../../../common/models/store/IAppState';
+import { useDispatch } from 'react-redux';
 import { ITrigger } from '../../../../common/models/query/ITrigger';
 import { setSuccessTriggersRoutine } from '../../routines';
 
 interface IProps {
     queryList:Array<IQuery>
     triggerList:Array<ITrigger>
+    selectQueryId: string,
     status?: boolean
 }
 
@@ -21,23 +21,36 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
 const QueriesListForTriggersWrapper:FunctionComponent<IProps> = ({
   queryList,
   triggerList,
+  selectQueryId,
   status
 }) => {
   const [triggers, setTriggers] = useState<ValueType<IOptionType, boolean>[]>([]);
-
-  const queries = useSelector((state: IAppState) => state.app.qur);
+  useEffect(() => {
+    const successTriggers = triggerList.filter(trigger => trigger.queryId === selectQueryId);
+    const triggersOption = queryList
+      .filter(query => successTriggers.find(trigger => trigger.triggerQueryId === query.id))
+      .map(({ name, id }) => ({ value: id, label: name }));
+    setTriggers(triggersOption);
+  }, [queryList, selectQueryId]);
 
   const dispatch = useDispatch();
-  const selectQuery = (id: string): void | any => {
-    if (!queries.setNewSuccessTriggers.find(element => element.triggerQueryId === id)) {
-      dispatch(setSuccessTriggersRoutine.trigger({
-        queryId: queries.selectQuery.selectQueryId,
-        triggerQueryId: id,
-        success: true
-      }));
+  const selectQuery = (id: string, isAdd: boolean): void | any => {
+    if (isAdd) {
+      if (!triggerList.find(element => element.triggerQueryId === id)) {
+        dispatch(setSuccessTriggersRoutine.trigger({
+          queryId: selectQueryId,
+          triggerQueryId: id,
+          success: status
+        }));
+      } else {
+        const index = triggerList.findIndex(item => item.triggerQueryId === id);
+        const updateNewTriggers = [...triggerList];
+        updateNewTriggers.splice(index, 1);
+        dispatch(setSuccessTriggersRoutine.failure(updateNewTriggers));
+      }
     } else {
-      const index = queries.setNewSuccessTriggers.findIndex(item => item.triggerQueryId === id);
-      const updateNewTriggers = [...queries.setNewSuccessTriggers];
+      const index = triggerList.findIndex(item => item.triggerQueryId === id);
+      const updateNewTriggers = [...triggerList];
       updateNewTriggers.splice(index, 1);
       dispatch(setSuccessTriggersRoutine.failure(updateNewTriggers));
     }
@@ -45,8 +58,8 @@ const QueriesListForTriggersWrapper:FunctionComponent<IProps> = ({
 
   const queryOptions: IOptionType[] = queryList
     .map(queryElement => {
-      if (queryElement.id !== queries.selectQuery.selectQueryId) {
-        if (triggerList.find(element => (
+      if (queryElement.id !== selectQueryId) {
+        if (!triggerList.find(element => (
           element.triggerQueryId === queryElement.id))) {
           return queryElement;
         }
@@ -56,10 +69,16 @@ const QueriesListForTriggersWrapper:FunctionComponent<IProps> = ({
     .filter(notEmpty)
     .map(({ name, id }) => ({ value: id, label: name }));
   const handleSelectTrigger = (option: IOptionType[]) => {
-    const newOptionElement = option
-      .filter(element => triggers.find(trigger => ((trigger as IOptionType).value as string) === element.value));
+    if (triggers.length > option.length) {
+      const newOptionElement = triggers
+        .filter(trigger => !option.find(element => ((trigger as IOptionType).value as string) === element.value));
+      selectQuery((newOptionElement[0] as IOptionType)?.value, false);
+    } else if (triggers.length < option.length) {
+      const newOptionElement = option
+        .filter(element => !triggers.find(trigger => ((trigger as IOptionType).value as string) === element.value));
+      selectQuery((newOptionElement[0] as IOptionType)?.value, true);
+    }
     setTriggers(option);
-    selectQuery((newOptionElement[0] as IOptionType).value);
   };
 
   return (
