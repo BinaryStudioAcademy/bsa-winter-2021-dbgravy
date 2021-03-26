@@ -23,8 +23,8 @@ import ModalWindow from '../components/ModalWindow';
 import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
 import QueryEditor from '../../../components/QueryCodeEditor';
-import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
+import TableComponent from '../../../components/TableComponent';
 
 interface IProps {
   id: string
@@ -327,7 +327,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           {
             !isEmptyData && (
               <div style={{ padding: '20px', flex: '1 1 100%' }}>
-                <Table
+                <TableComponent
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
                   columnWidth={300}
