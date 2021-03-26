@@ -1,40 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import QueriesList from '../components/queriesList';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import style from './style.module.scss';
-import { IAppState } from '../../../common/models/store/IAppState';
 import { Form, DropdownButton, Dropdown, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
-  fetchQueryRoutine,
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
-  previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
-  setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
+  setNewConfirmRoutine, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
-import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
 import QueryEditor from '../../../components/QueryCodeEditor';
 import ConfirmModal from '../components/ModalWindow/confirm';
 import TableComponent from '../../../components/TableComponent';
+import { IQueryState } from '../../../common/models/query/IQueryState';
 
 interface IProps {
   id: string,
-  locals: string[]
+  locals: string[],
+  query: IQueryState
 }
-
-const Constructor: React.FC<IProps> = ({ id, locals }) => {
-  const query = useSelector((state: IAppState) => state.app.qur);
+const Constructor: React.FC<IProps> = ({ id, query, locals }) => {
   const dispatch = useDispatch();
-
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
@@ -77,19 +72,6 @@ const Constructor: React.FC<IProps> = ({ id, locals }) => {
       appId: id,
       resourceId: query.selectQuery.resourceId,
       triggered: []
-    }));
-  };
-
-  const previewQuery = (): void => {
-    dispatch(previewSelectQueryRoutine.trigger({
-      data: {
-        code: query.setNewCode,
-        name: query.selectQuery.selectQueryName,
-        showConfirm: query.setNewConfirm
-      },
-      id: query.selectQuery.selectQueryId,
-      appId: id,
-      resourceId: query.selectQuery.resourceId
     }));
   };
 
@@ -195,19 +177,6 @@ const Constructor: React.FC<IProps> = ({ id, locals }) => {
       appId: id
     }));
   };
-  useEffect(() => {
-    dispatch(fetchResourceRoutine.trigger());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchQueryRoutine.trigger({ id }));
-  }, [query.resources]);
-
-  useEffect(() => {
-    if (!query.isLoading) {
-      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
-    }
-  }, [query.isLoading]);
 
   const changeResourceHandler = (resId: string) => {
     setCurrentResource(resId);
@@ -263,7 +232,6 @@ const Constructor: React.FC<IProps> = ({ id, locals }) => {
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Preview" onClick={previewQuery} />
               {
                 isDataChange || !isTriggersChange ? (
                   <Form.Control type="button" value="Save" onClick={saveCode} />
