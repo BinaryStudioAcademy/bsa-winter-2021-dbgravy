@@ -145,44 +145,27 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
                 </Form.Group>
               </Nav>
               {!isPreview ? (
-                <Nav className="mr-auto">
-                  <FontAwesomeIcon
-                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
-                    color={showRight ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusRight}
-                    size="2x"
-                    className={styles.angleDouble}
-                  />
-                  <div style={{ padding: '5px' }} />
-                  <FontAwesomeIcon
-                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
-                    color={showBottom ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusBottom}
-                    size="2x"
-                    className={styles.angleDouble}
-                  />
+                <Nav>
+                  <div className={styles.angleDouble}>
+                    <FontAwesomeIcon
+                      icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                      color={showRight ? '#808080' : '#D3D3D3'}
+                      onClick={changeStatusRight}
+                      size="lg"
+                      className={styles.angleDoubleFirst}
+                    />
+                  </div>
+                  <div className={styles.angleDouble}>
+                    <FontAwesomeIcon
+                      icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                      color={showBottom ? '#808080' : '#D3D3D3'}
+                      onClick={changeStatusBottom}
+                      size="lg"
+                      className={styles.angleDoubleSecond}
+                    />
+                  </div>
                 </Nav>
               ) : null}
-              <Nav>
-                <div className={styles.angleDouble}>
-                  <FontAwesomeIcon
-                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
-                    color={showRight ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusRight}
-                    size="lg"
-                    className={styles.angleDoubleFirst}
-                  />
-                </div>
-                <div className={styles.angleDouble}>
-                  <FontAwesomeIcon
-                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
-                    color={showBottom ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusBottom}
-                    size="lg"
-                    className={styles.angleDoubleSecond}
-                  />
-                </div>
-              </Nav>
               <Nav className="ml-auto">
                 <Button onClick={changeStatusBottom}>
                   {!isPreview ? (
