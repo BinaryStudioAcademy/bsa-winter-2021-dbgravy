@@ -62,8 +62,9 @@ const Routing: React.FC<IProps> = ({
             <PrivateRoute path={Routes.Settings} component={Settings} />
           )
         }
-        <Route path={Routes.Invite} component={Home} />
         <Route path={Routes.Preview} component={Preview} />
+        <Route path={Routes.Invite} component={Home} />
+        <Route path={Routes.Invite} component={Home} />
         <PublicRoute path="*" component={NotFound} />
       </Switch>
     </Loader>

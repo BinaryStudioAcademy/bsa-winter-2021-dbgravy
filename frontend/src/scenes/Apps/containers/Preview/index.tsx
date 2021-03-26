@@ -1,7 +1,8 @@
 import React from 'react';
+import AppEditor from '../AppEditor';
 
 const Preview: React.FC = () => (
-  <div />
+  <AppEditor isPreview />
 );
 
 export default Preview;

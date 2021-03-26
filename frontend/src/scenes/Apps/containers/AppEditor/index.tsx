@@ -28,9 +28,10 @@ import { fetchQueryRoutine, takeResourcesTableAndColumns } from '../../../constr
 interface IProps {
   resources: Array<IResource>,
   fetchResources: () => void,
+  isPreview?: boolean
 }
 
-const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
+const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) => {
   const { id }: IFetchParams = useParams();
   useEffect(() => {
     fetchResources();
@@ -143,36 +144,49 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
               }
                 </Form.Group>
               </Nav>
-              <Nav>
-                <div className={styles.angleDouble}>
-                  <FontAwesomeIcon
-                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
-                    color={showRight ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusRight}
-                    size="lg"
-                    className={styles.angleDoubleFirst}
-                  />
-                </div>
-                <div className={styles.angleDouble}>
-                  <FontAwesomeIcon
-                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
-                    color={showBottom ? '#808080' : '#D3D3D3'}
-                    onClick={changeStatusBottom}
-                    size="lg"
-                    className={styles.angleDoubleSecond}
-                  />
-                </div>
-              </Nav>
+              {!isPreview ? (
+                <Nav>
+                  <div className={styles.angleDouble}>
+                    <FontAwesomeIcon
+                      icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                      color={showRight ? '#808080' : '#D3D3D3'}
+                      onClick={changeStatusRight}
+                      size="lg"
+                      className={styles.angleDoubleFirst}
+                    />
+                  </div>
+                  <div className={styles.angleDouble}>
+                    <FontAwesomeIcon
+                      icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                      color={showBottom ? '#808080' : '#D3D3D3'}
+                      onClick={changeStatusBottom}
+                      size="lg"
+                      className={styles.angleDoubleSecond}
+                    />
+                  </div>
+                </Nav>
+              ) : null}
               <Nav className="ml-auto">
                 <Button onClick={changeStatusBottom}>
-                  <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
-                    Preview
-                  </NavLink>
+                  {!isPreview ? (
+                    <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                      Preview
+                    </NavLink>
+                  ) : (
+                    <NavLink to={`/app/editor/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                      Edit
+                    </NavLink>
+                  )}
                 </Button>
               </Nav>
             </Navbar>
             <DndProvider backend={HTML5Backend}>
-              <Editor appId={id} show={showRight} showBottom={showBottom} query={query} />
+              <Editor
+                appId={id}
+                show={isPreview ? false : showRight}
+                showBottom={isPreview ? false : showBottom}
+                query={query}
+              />
             </DndProvider>
           </div>
         )

@@ -102,7 +102,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   );
 
   return (
-    <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '100vh' }}>
+    <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '94vh' }}>
       {Object.keys(items).map((key: string) => {
         const { left, top, name, componentType, width, height, component, id } = items[key];
         return (
