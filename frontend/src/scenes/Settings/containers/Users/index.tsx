@@ -20,6 +20,8 @@ import Loader from '../../../../components/Loader';
 import { IUserEdit } from '../../../../common/models/user/IUserEdit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router';
+import { isAccess } from '../../../../common/helpers/permissionHelper';
 
 interface IProps {
   users: IUser[],
@@ -35,16 +37,20 @@ interface IProps {
   reInvite: (obj: { id: string, email: string, role?: Roles, new?: boolean }) => void,
   activation: (obj: { id: string, status: Status }) => void,
   setShowModal: (status: boolean) => void,
+  currentUser: IUser
 }
 
 const Users: React.FC<IProps> = ({
   users, count, isLoading, fetchUsers, inviteNew, reInvite, activation, userChanges, isFailed,
-  setShowModal, showModal, fetchUserOrganization, organizationId }) => {
+  setShowModal, showModal, fetchUserOrganization, organizationId, currentUser }) => {
   useEffect(() => {
     fetchUsers();
   }, [organizationId]);
-
+  const history = useHistory();
   useEffect(() => {
+    if (!isAccess([Roles.Admin, Roles.Developer])) {
+      history.push('/apps');
+    }
     fetchUserOrganization();
   }, []);
 
@@ -88,6 +94,7 @@ const Users: React.FC<IProps> = ({
             resendInvite={reInvite}
             activateUser={activation}
             userChanges={userChanges}
+            currentUser={currentUser}
           />
         );
       })
@@ -156,7 +163,8 @@ const mapStateToProps = (state: IAppState) => ({
   isFailed: state.settings.isFailed,
   userChanges: state.settings.userChanges,
   showModal: state.settings.showModal,
-  organizationId: state.user.currentOrganization?.id
+  organizationId: state.user.currentOrganization?.id,
+  currentUser: state.user.user
 });
 
 const mapDispatchToProps = {

@@ -16,6 +16,7 @@ import {
 } from '../../routines';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import { ComponentType } from '../../../../common/enums/ComponentType';
+import { IQueryState } from '../../../../common/models/query/IQueryState';
 
 interface IEditorProps {
   appId: string,
@@ -26,6 +27,7 @@ interface IEditorProps {
   updateComponent: (payload: { appId: string, component: IDropItem }) => void,
   localUpdateComponent: (payload: { component: {id: string, left: number, top: number} }) => void,
   deleteComponent: (payload: { appId: string, id: string }) => void,
+  query:IQueryState,
   show: boolean
 }
 const Editor: React.FC<IEditorProps> = memo(
@@ -37,6 +39,7 @@ const Editor: React.FC<IEditorProps> = memo(
     addComponent,
     updateComponent,
     deleteComponent,
+    query,
     show
   }) => {
     const [active, setActive] = useState<'inspect' | 'insert'>('insert');
@@ -89,7 +92,7 @@ const Editor: React.FC<IEditorProps> = memo(
                 {showBottom
                   ? (
                     <div className={styles.constructorArea}>
-                      <Constructor id={appId} />
+                      <Constructor id={appId} query={query} />
                     </div>
                   )
                   : null}

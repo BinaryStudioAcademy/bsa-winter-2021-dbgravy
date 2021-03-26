@@ -1,12 +1,14 @@
 import React, { CSSProperties } from 'react';
 import { useDrag } from 'react-dnd';
+import { ComponentType } from '../../../../common/enums/ComponentType';
 import styles from './styles.module.scss';
 
 const style: CSSProperties = {
   position: 'absolute',
   backgroundColor: 'white',
-  padding: '0.5rem 1rem',
-  cursor: 'move'
+  cursor: 'move',
+  display: 'flex',
+  alignItems: 'center'
 };
 export interface IDropAreaItemProps {
   id: string
@@ -15,8 +17,8 @@ export interface IDropAreaItemProps {
   onSelect: Function,
   selectedItem: string | null,
   itemType: string,
-  width: string,
-  height: string
+  width: string | number,
+  height: string | number
 }
 
 export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
@@ -30,6 +32,15 @@ export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
   width,
   height
 }) => {
+  let w = width;
+  let h = height;
+  if (itemType === ComponentType.table && w === 0) {
+    w = 'auto';
+  }
+  if (itemType === ComponentType.table && height === 0) {
+    h = 'auto';
+  }
+
   const [, drag] = useDrag(
     () => ({
       type: itemType,
@@ -44,7 +55,7 @@ export const DropAreaItem: React.FC<IDropAreaItemProps> = ({
   return (
     <div
       ref={drag}
-      style={{ ...style, left, top, height, width, overflow: 'auto' }}
+      style={{ ...style, left, top, width: w, height: h }}
       role="presentation"
       onClick={() => onSelect(id)}
       className={(selectedItem === id) ? `${styles.active}` : ''}

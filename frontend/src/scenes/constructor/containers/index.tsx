@@ -1,44 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import QueriesList from '../components/queriesList';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import style from './style.module.scss';
-import { IAppState } from '../../../common/models/store/IAppState';
 import { Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import {
   duplicateSelectQueryRoutine,
   setSelectQueryRoutine,
   setWaiterQueryRoutine,
-  fetchQueryRoutine,
   setNewNameQueryRoutine,
   saveSelectQueryRoutine,
   runSelectQueryRoutine,
-  previewSelectQueryRoutine,
   deleteSelectQueryRoutine,
-  setNewConfirmRoutine, takeResourcesTableAndColumns, setNewCodeRoutine
+  setNewConfirmRoutine, setNewCodeRoutine
 } from '../routines';
 import QueriesListForTriggers from '../components/triggerList';
 import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
-import { fetchResourceRoutine } from '../../Resources/routines';
 import ResourceList from '../components/ResourceList';
 import QueryEditor from '../../../components/QueryCodeEditor';
-import Table from '../../../components/TableComponent';
 import ConfirmModal from '../components/ModalWindow/confirm';
-import QueryResult from '../components/ModalWindow/queryResult';
+import TableComponent from '../../../components/TableComponent';
+import { IQueryState } from '../../../common/models/query/IQueryState';
 
 interface IProps {
   id: string
+  query: IQueryState
 }
 
-const Constructor: React.FC<IProps> = ({ id }) => {
-  const query = useSelector((state: IAppState) => state.app.qur);
+const Constructor: React.FC<IProps> = ({ id, query }) => {
   const dispatch = useDispatch();
-
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showQuery, setShowQuery] = useState(false);
   const [currentResource, setCurrentResource] = useState<string>('');
 
   const isDataChange: boolean = (query.selectQuery.selectQueryCode !== query.setNewCode
@@ -78,19 +72,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       appId: id,
       resourceId: query.selectQuery.resourceId,
       triggered: []
-    }));
-  };
-
-  const previewQuery = (): void => {
-    dispatch(previewSelectQueryRoutine.trigger({
-      data: {
-        code: query.setNewCode,
-        name: query.selectQuery.selectQueryName,
-        showConfirm: query.setNewConfirm
-      },
-      id: query.selectQuery.selectQueryId,
-      appId: id,
-      resourceId: query.selectQuery.resourceId
     }));
   };
 
@@ -196,26 +177,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
       appId: id
     }));
   };
-  useEffect(() => {
-    dispatch(fetchResourceRoutine.trigger());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchQueryRoutine.trigger({ id }));
-  }, [query.resources]);
-
-  useEffect(() => {
-    if (!query.isLoading) {
-      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
-    }
-  }, [query.isLoading]);
-
-  useEffect(() => {
-    if (query.selectQuery.queryMessage.length !== 0) {
-      setShowQuery(true);
-      setTimeout(() => setShowQuery(false), 1000);
-    }
-  }, [query.selectQuery.queryMessage]);
 
   const changeResourceHandler = (resId: string) => {
     setCurrentResource(resId);
@@ -271,7 +232,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
                 <Dropdown.Item href="#" onClick={duplicateQuery}>Duplicate</Dropdown.Item>
                 <Dropdown.Item href="#" className={style.delete} onClick={deleteQuery}>Delete</Dropdown.Item>
               </DropdownButton>
-              <Form.Control type="button" value="Preview" onClick={previewQuery} />
               {
                 isDataChange || !isTriggersChange ? (
                   <Form.Control type="button" value="Save" onClick={saveCode} />
@@ -280,7 +240,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               }
             </Form.Group>
           </Form.Group>
-          <Form.Group controlId="ControlTextarea">
+          <Form.Group controlId="ControlTextarea" style={{ width: '100%' }}>
             <Form.Label className={style.row} />
             <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
@@ -304,24 +264,13 @@ const Constructor: React.FC<IProps> = ({ id }) => {
               >
                 .
               </div>
-              {
-              !query.setNewConfirm ? (
-                <Form.Check
-                  type="checkbox"
-                  id="checkbox"
-                  className={style.checkBox}
-                  disabled
-                />
-              )
-                : (
-                  <Form.Check
-                    type="checkbox"
-                    id="checkbox2"
-                    className={style.checkBox}
-                    checked
-                  />
-                )
-            }
+              <Form.Check
+                type="checkbox"
+                id="checkbox"
+                className={style.checkBox}
+                checked={query.setNewConfirm}
+                onChange={changeConfirm}
+              />
               <span className={style.spanText}>Show a confirmation modal before running</span>
             </div>
             <Form.Label className={style.row} />
@@ -335,8 +284,8 @@ const Constructor: React.FC<IProps> = ({ id }) => {
           </Form.Group>
           {
             !isEmptyData && (
-              <div style={{ padding: '20px' }}>
-                <Table
+              <div style={{ padding: '20px', flex: '1 1 100%' }}>
+                <TableComponent
                   key={query.isResultLoading.toString()}
                   values={[...query.selectQuery.data]}
                   columnWidth={300}
@@ -346,7 +295,7 @@ const Constructor: React.FC<IProps> = ({ id }) => {
             )
           }
           {
-            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px', flex: '1 1 100%' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
@@ -356,7 +305,6 @@ const Constructor: React.FC<IProps> = ({ id }) => {
         isCancel={handleCancelConfirmModal}
         isSubmit={handleSubmitConfirmModal}
       />
-      <QueryResult show={showQuery} message={query.selectQuery.queryMessage} />
     </div>
   );
 };

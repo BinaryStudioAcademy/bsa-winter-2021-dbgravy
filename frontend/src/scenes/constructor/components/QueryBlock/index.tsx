@@ -7,24 +7,24 @@ import { ITrigger } from '../../../../common/models/query/ITrigger';
 import { deepArray } from '../../../../common/helpers/arrayHelper';
 
 interface IProps {
-    id:string,
-    name:string,
-    code?:string,
-    triggers:Array<ITrigger>,
-    showConfirm:boolean|undefined
-    resourceId:string
+  id: string,
+  name: string,
+  code?: string,
+  triggers: Array<ITrigger>,
+  showConfirm: boolean | undefined
+  resourceId: string
 }
 
-const QueryBlock:FunctionComponent<IProps> = ({
+const QueryBlock: FunctionComponent<IProps> = ({
   id, name, code, showConfirm, triggers, resourceId }) => {
   const query = useSelector((state: IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const isDataChange = (query.selectQuery.selectQueryCode === query.setNewCode
-        && query.selectQuery.showConfirm === query.setNewConfirm
-        && query.selectQuery.resourceId === query.setNewResource?.id);
-  const isTriggersChange:boolean = deepArray(query.selectQuery.selectQueryTriggers,
+    && query.selectQuery.showConfirm === query.setNewConfirm
+    && query.selectQuery.resourceId === query.setNewResource?.id);
+  const isTriggersChange: boolean = deepArray(query.selectQuery.selectQueryTriggers,
     [...query.setNewSuccessTriggers, ...query.setNewUnSuccessTriggers]);
-  const selectQuery = ():void|any => {
+  const selectQuery = (): void | any => {
     if (isDataChange && isTriggersChange) {
       if (resourceId !== query.setNewResource?.id) {
         dispatch(takeResourcesTableAndColumns.trigger(query.resources.find(element => element.id === resourceId)));
@@ -39,7 +39,12 @@ const QueryBlock:FunctionComponent<IProps> = ({
     }
   };
   return (
-    <option onClick={selectQuery} className={style.App} role="button" tabIndex={0}>
+    <option
+      onClick={selectQuery}
+      className={[style.query, style.list].join(' ')}
+      role="button"
+      tabIndex={0}
+    >
       {name}
     </option>
   );

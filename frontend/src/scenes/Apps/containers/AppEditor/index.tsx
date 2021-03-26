@@ -23,6 +23,7 @@ import { IResource } from '../../../../common/models/resources/IResource';
 import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
 import { Routes } from '../../../../common/enums/Routes';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
+import { fetchQueryRoutine, takeResourcesTableAndColumns } from '../../../constructor/routines';
 
 interface IProps {
   resources: Array<IResource>,
@@ -35,7 +36,9 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
   useEffect(() => {
     fetchResources();
   }, []);
-  const query = useSelector((state: IAppState) => state.app.application);
+
+  const app = useSelector((state: IAppState) => state.app.application);
+  const query = useSelector((state:IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [showBottom, setHiddenBottom] = useState<boolean>(true);
@@ -44,8 +47,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
     const target: HTMLInputElement = e.target as HTMLInputElement;
     if (target.id === 'appName') {
       setEditNameField(false);
-    } else if (query.setSelectAppName !== query.setSelectApp?.name) {
-      dispatch(editAppRoutine.trigger({ app: query.setSelectApp, name: query.setSelectAppName }));
+    } else if (app.setSelectAppName !== app.setSelectApp?.name) {
+      dispatch(editAppRoutine.trigger({ app: app.setSelectApp, name: app.setSelectAppName }));
       setEditNameField(true);
     } else {
       setEditNameField(true);
@@ -73,6 +76,20 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
     dispatch(fetchSelectAppRoutine.trigger({ id }));
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchResourceRoutine.trigger());
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchQueryRoutine.trigger({ id }));
+  }, [query.resources]);
+
+  useEffect(() => {
+    if (!query.isLoading) {
+      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    }
+  }, [query.isLoading]);
+
   return (
     <>
       {
@@ -98,7 +115,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
             <Navbar bg="white" expand="lg" className={styles.mainNav}>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-              <Nav className={`${styles.leftNav} mr-auto`}>
+              <Nav className={`${styles.leftNav} ${styles.mrAuto}`}>
                 <Col xs={6} md={4}>
                   <Image className={styles['logo-img']} src={logo} alt="db-gravy-logo" />
                 </Col>
@@ -112,14 +129,14 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
                 editNameField ? (
                   <Form.Control
                     type="button"
-                    defaultValue={query.setSelectAppName}
+                    defaultValue={app.setSelectAppName}
                     className={styles.nameFill}
                   />
                 )
                   : (
                     <Form.Control
                       type="text"
-                      defaultValue={query.setSelectAppName}
+                      defaultValue={app.setSelectAppName}
                       onChange={changeName}
                       className={styles.nameFill}
                     />
@@ -147,6 +164,26 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
                 </Nav>
               ) : null}
               <Nav>
+                <div className={styles.angleDouble}>
+                  <FontAwesomeIcon
+                    icon={showRight ? faAngleDoubleRight : faAngleDoubleLeft}
+                    color={showRight ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusRight}
+                    size="lg"
+                    className={styles.angleDoubleFirst}
+                  />
+                </div>
+                <div className={styles.angleDouble}>
+                  <FontAwesomeIcon
+                    icon={showBottom ? faAngleDoubleDown : faAngleDoubleUp}
+                    color={showBottom ? '#808080' : '#D3D3D3'}
+                    onClick={changeStatusBottom}
+                    size="lg"
+                    className={styles.angleDoubleSecond}
+                  />
+                </div>
+              </Nav>
+              <Nav className="ml-auto">
                 <Button onClick={changeStatusBottom}>
                   {!isPreview ? (
                     <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
@@ -161,7 +198,12 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
               </Nav>
             </Navbar>
             <DndProvider backend={HTML5Backend}>
-              <Editor appId={id} show={isPreview ? false : showRight} showBottom={isPreview ? false : showBottom} />
+              <Editor
+                appId={id}
+                show={isPreview ? false : showRight}
+                showBottom={isPreview ? false : showBottom}
+                query={query}
+              />
             </DndProvider>
           </div>
         )
@@ -171,7 +213,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  resources: rootState.resource.resources
+  resources: rootState.resource.resources,
+  user: rootState.user.user
 });
 
 const mapDispatchToProps = {
