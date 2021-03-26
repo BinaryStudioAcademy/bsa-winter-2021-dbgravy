@@ -23,6 +23,7 @@ import { IResource } from '../../../../common/models/resources/IResource';
 import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
 import { Routes } from '../../../../common/enums/Routes';
 import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
+import { fetchQueryRoutine, takeResourcesTableAndColumns } from '../../../constructor/routines';
 
 interface IProps {
   resources: Array<IResource>,
@@ -35,7 +36,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
     fetchResources();
   }, []);
 
-  const query = useSelector((state: IAppState) => state.app.application);
+  const app = useSelector((state: IAppState) => state.app.application);
+  const query = useSelector((state:IAppState) => state.app.qur);
   const dispatch = useDispatch();
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [showBottom, setHiddenBottom] = useState<boolean>(true);
@@ -44,8 +46,8 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     if (target.id === 'appName') {
       setEditNameField(false);
-    } else if (query.setSelectAppName !== query.setSelectApp?.name) {
-      dispatch(editAppRoutine.trigger({ app: query.setSelectApp, name: query.setSelectAppName }));
+    } else if (app.setSelectAppName !== app.setSelectApp?.name) {
+      dispatch(editAppRoutine.trigger({ app: app.setSelectApp, name: app.setSelectAppName }));
       setEditNameField(true);
     } else {
       setEditNameField(true);
@@ -72,6 +74,20 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
   useEffect(() => {
     dispatch(fetchSelectAppRoutine.trigger({ id }));
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchResourceRoutine.trigger());
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchQueryRoutine.trigger({ id }));
+  }, [query.resources]);
+
+  useEffect(() => {
+    if (!query.isLoading) {
+      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    }
+  }, [query.isLoading]);
 
   return (
     <>
@@ -112,14 +128,14 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
                 editNameField ? (
                   <Form.Control
                     type="button"
-                    defaultValue={query.setSelectAppName}
+                    defaultValue={app.setSelectAppName}
                     className={styles.nameFill}
                   />
                 )
                   : (
                     <Form.Control
                       type="text"
-                      defaultValue={query.setSelectAppName}
+                      defaultValue={app.setSelectAppName}
                       onChange={changeName}
                       className={styles.nameFill}
                     />
@@ -156,7 +172,7 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources }) => {
               </Nav>
             </Navbar>
             <DndProvider backend={HTML5Backend}>
-              <Editor appId={id} show={showRight} showBottom={showBottom} />
+              <Editor appId={id} show={showRight} showBottom={showBottom} query={query} />
             </DndProvider>
           </div>
         )
