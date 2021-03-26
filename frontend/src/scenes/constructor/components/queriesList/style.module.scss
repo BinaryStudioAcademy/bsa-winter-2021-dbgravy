@@ -5,3 +5,6 @@ select.queriesList[multiple] {
   overflow: auto;
   border: none;
 }
+option:checked {
+  background-color: #EDEDED !important;
+}
