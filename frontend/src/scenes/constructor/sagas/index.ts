@@ -63,7 +63,7 @@ function* runSelectQuery({ payload }: any): Routine<any> {
     if (!fulfilledQueries.includes(id)) {
       const resultData = yield call(runQuery, payload);
       if (fulfilledQueries.length === 0) {
-        yield put(runSelectQueryRoutine.success({ resultData }));
+        yield put(runSelectQueryRoutine.success({ resultData, name }));
         successToastMessage(`${name} run successfully`);
       } else {
         yield put(runTriggerRoutine.success({ resultData, name }));

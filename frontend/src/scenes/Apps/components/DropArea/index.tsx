@@ -27,7 +27,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   const [items, setItems] = useState<{
     [key: string]: IDropItem
   }>(elements);
-
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
   const onSelect = (id: string) => {
