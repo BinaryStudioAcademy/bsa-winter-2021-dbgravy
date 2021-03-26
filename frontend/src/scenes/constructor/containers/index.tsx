@@ -13,8 +13,7 @@ import {
   deleteSelectQueryRoutine,
   setNewConfirmRoutine, setNewCodeRoutine
 } from '../routines';
-import QueriesListForTriggers from '../components/triggerList';
-import QueriesListForUnSuccessTriggers from '../components/triggerListUnSuccess';
+import QueriesListForTriggersWrapper from '../components/triggerListWrapper';
 import { deepArray } from '../../../common/helpers/arrayHelper';
 import ModalWindow from '../components/ModalWindow';
 import ResourceList from '../components/ResourceList';
@@ -240,13 +239,12 @@ const Constructor: React.FC<IProps> = ({ id, query, locals }) => {
               }
             </Form.Group>
           </Form.Group>
-          <Form.Group controlId="ControlTextarea" style={{ width: '100%' }}>
+          <Form.Group controlId="ControlTextarea">
             <Form.Label className={style.row} />
             <Form.Group controlId="Resource" className={style.resource}>
               <Form.Label className={style.resourceText}>Resource:</Form.Label>
               <ResourceList
                 resourceList={query.resources}
-                titleName={query.setNewResource?.name}
                 onChangeResource={changeResourceHandler}
               />
               <OverlayTrigger
@@ -296,11 +294,17 @@ const Constructor: React.FC<IProps> = ({ id, query, locals }) => {
             </div>
             <Form.Label className={style.row} />
             <div className={style.baseMargin}>On success trigger</div>
-            <QueriesListForTriggers queryList={query.queriesApp} triggerList={query.setNewSuccessTriggers} status />
+            <QueriesListForTriggersWrapper
+              queryList={query.queriesApp}
+              triggerList={query.setNewSuccessTriggers}
+              selectQueryId={query.selectQuery.selectQueryId}
+              status
+            />
             <div className={style.baseMargin}>On failure trigger</div>
-            <QueriesListForUnSuccessTriggers
+            <QueriesListForTriggersWrapper
               queryList={query.queriesApp}
               triggerList={query.setNewUnSuccessTriggers}
+              selectQueryId={query.selectQuery.selectQueryId}
             />
           </Form.Group>
           {
@@ -316,7 +320,7 @@ const Constructor: React.FC<IProps> = ({ id, query, locals }) => {
             )
           }
           {
-            isEmptyData && <span style={{ padding: '20px', flex: '1 1 100%' }}>No rows to display</span>
+            isEmptyData && <span style={{ padding: '20px' }}>No rows to display</span>
           }
         </Form.Group>
       </Form>
