@@ -2,13 +2,14 @@
     border: 1px solid #cecece;
     margin-left: auto;
     flex: 0 0 300px;
-    padding: 10px;
 }
 
 .navbarTop {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 10px;
+    background-color: rgb(245, 244, 244);
 }
 
 .navbarTopItem {
@@ -17,15 +18,19 @@
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    color: #ccc;
+    color: rgb(119, 119, 119);
     margin: 0 10px;
     border: none;
     background: none;
     padding: 5px 20px;
+    opacity: 0.6;
 }
 
 .active {
-    color: #333;
+    color: rgb(71, 71, 71);
+    text-decoration: underline;
+    transition: color 0.5s ease-in-out;
+    opacity: 1;
 }
 
 .content {

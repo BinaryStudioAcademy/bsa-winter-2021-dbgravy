@@ -25,7 +25,7 @@ export const createOrganization = async (data: ICreateOrganization): Promise<any
   if (!user2Organization) {
     throw new CustomError('Failed', HttpStatusCode.BAD_REQUEST);
   }
-  return { result: true };
+  return { result: true, organizationId };
 };
 
 export const getCurrentOrganization = async (user: ITransportedUser): Promise<IOrganization> => {

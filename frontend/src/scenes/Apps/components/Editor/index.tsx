@@ -36,7 +36,6 @@ const Editor: React.FC<IEditorProps> = memo(
     fetchComponents,
     addComponent,
     updateComponent,
-    localUpdateComponent,
     deleteComponent,
     show
   }) => {
@@ -46,7 +45,6 @@ const Editor: React.FC<IEditorProps> = memo(
     useEffect(() => {
       fetchComponents({ appId });
     }, []);
-
     const addElement = (component: IDropItem) => {
       addComponent({ appId, component });
       setActive('inspect');
@@ -56,13 +54,17 @@ const Editor: React.FC<IEditorProps> = memo(
       setSelected(item);
       setActive('inspect');
     };
-
     const editItem = (component: IDropItem) => {
-      updateComponent({ appId, component });
-    };
-
-    const localEditItem = (component: { id: string, left: number, top: number }) => {
-    // localUpdateComponent({ component });
+      if (!component.component) {
+        const newComponent: IDropItem = {
+          ...components[component.id],
+          left: component.left,
+          top: component.top
+        };
+        updateComponent({ appId, component: newComponent });
+      } else {
+        updateComponent({ appId, component });
+      }
     };
 
     const deleteItem = (id: string) => {
@@ -77,7 +79,12 @@ const Editor: React.FC<IEditorProps> = memo(
             <div>
               <div className={styles.paneHorizontal}>
                 <div className={`${styles.dropArea} dropArea`}>
-                  <DropArea elements={components} selectItem={selectItem} localUpdateElement={localEditItem} />
+                  <DropArea
+                    elements={components}
+                    selectItem={selectItem}
+                    localUpdateElement={editItem}
+                    appId={appId}
+                  />
                 </div>
                 {showBottom
                   ? (

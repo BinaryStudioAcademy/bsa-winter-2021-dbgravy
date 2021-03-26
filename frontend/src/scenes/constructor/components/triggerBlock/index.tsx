@@ -11,7 +11,6 @@ interface IProps {
     code?:string
     status:boolean
     triggers:Array<ITrigger>
-    runAutomatically:boolean|undefined
     showConfirm:boolean|undefined
 }
 

@@ -59,14 +59,16 @@ const User: React.FC<IProps> = ({
   return (
     <div className={clsName}>
       <div className={styles.uData}>
-        <div className={styles.image}>{`${firstLetter(firstName)} ${firstLetter(lastName)}`}</div>
+        <div className={styles.image}>
+          {firstName ? `${firstLetter(firstName)} ${firstLetter(lastName)}` : `${firstLetter(email)}`}
+        </div>
         <div className={styles.credits}>
           <span>{`${firstName} ${lastName}`}</span>
           <span>{email}</span>
         </div>
       </div>
-      <span className={styles.userRole}>{toCapital(role)}</span>
-      <span className={styles.userStatus}>{toCapital(status)}</span>
+      <span className={styles.userval}>{toCapital(role)}</span>
+      <span className={styles.userval}>{toCapital(status)}</span>
       {renderAction()}
     </div>
   );

@@ -14,6 +14,7 @@ import styles from './styles.module.scss';
 import QueriesList from '../queryList';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { IButton } from '../../../../common/models/editor/IButton';
+import { IInputText } from '../../../../common/models/editor/IInputText';
 
 export interface IInspectProps {
   selectedItem: IDropItem | null,
@@ -38,9 +39,13 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     ? (selectedItem as IDropItem).name as string
     : '');
   const [toggleComponentNameId, setToggleComponentNameId] = useState(false);
-  const [labelInputText, setLabelInputText] = useState('');
-  const [placeholder, setPlaceholder] = useState('');
-  const [defaultValueInputText, setDefaultValueInputText] = useState('');
+  const [labelInputText, setLabelInputText] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IInputText).label as string
+    : '');
+  const [placeholder, setPlaceholder] = useState(selectedItem
+    ? ((selectedItem as IDropItem).component as IInputText).placeholder as string
+    : '');
+
   const [textButton, setTextButton] = useState(selectedItem
     ? ((selectedItem as IDropItem).component as IButton)
     && ((selectedItem as IDropItem).component as IButton).text as string
@@ -52,6 +57,9 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
 
   const [typeAction, setTypeAction] = useState<ValueType<OptionType, boolean>>();
   const [query, setQuery] = useState<ValueType<OptionType, boolean>>();
+  const [inputQuery, setInputQuery] = useState<null | string>(null);
+  const [defaultInputQ, setDefaultInputQ] = useState<OptionType | undefined>(undefined);
+
   const [selectedQuery, setSelectedQuery] = useState<IQuery|undefined>();
   const changeSelectQuery = (id:string) => {
     const newSelectQuery = queries.find(elem => elem.id === id);
@@ -71,8 +79,21 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           queryId: selectedQuery?.id,
           text: textButton,
           color: colorButton
-        } };
+        }
+      };
       editComponent(newItem);
+    }
+    if (selectedItem && selectedItem.componentType === 'textInput') {
+      const item = {
+        ...selectedItem,
+        component: {
+          ...selectedItem.component,
+          label: labelInputText,
+          placeholder,
+          queryId: inputQuery
+        }
+      };
+      editComponent(item);
     }
     if (selectedItem && selectedItem.componentType === 'table') {
       const newItem = {
@@ -91,6 +112,16 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
     handleEdit();
   };
 
+  const selectOne = () => {
+    const c = queries.find(e => e.id === selectedItem?.component.queryId);
+    return c ? { value: c.id, label: c.name } : undefined;
+  };
+
+  const handleChange = (e: OptionType | null) => {
+    setDefaultInputQ(e || undefined);
+    setInputQuery(e?.value || null);
+  };
+
   useEffect(() => {
     if (selectedItem) {
       const searchSelectQuery:IQuery|undefined = queries.find(elem => elem.id === selectedItem?.component?.queryId);
@@ -99,6 +130,11 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       if (selectedItem && selectedItem.componentType === 'button') {
         setTextButton(((selectedItem as IDropItem).component as IButton).text as string);
         setColorButton(((selectedItem as IDropItem).component as IButton).color as string);
+      }
+      if (selectedItem && selectedItem.componentType === 'textInput') {
+        setPlaceholder(((selectedItem as IDropItem).component as IInputText).placeholder as string);
+        setLabelInputText(((selectedItem as IDropItem).component as IInputText).label as string);
+        setDefaultInputQ(selectOne());
       }
     }
   }, [selectedItem, queries]);
@@ -110,7 +146,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
   const optionsQueries: OptionType[] = queries.map(({ name, code }) => ({ value: name, label: (code as string) }));
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', padding: '15px' }}>
       {
         (!selectedItem) && (
           <div className={styles.noSelect}>
@@ -123,6 +159,7 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
           toggleComponentNameId ? (
             <InputGroup className="mb-3">
               <FormControl
+                autoFocus
                 value={componentNameId}
                 type="text"
                 placeholder="Component name"
@@ -141,12 +178,10 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
                 <span>{componentNameId}</span>
               </Card.Header>
               <Dropdown>
-                <DropdownButton variant="success" id="dropdown-basic">
+                <DropdownButton variant="primary" id="dropdown-basic">
                   <FontAwesomeIcon icon={faEllipsisV} />
                 </DropdownButton>
                 <Dropdown.Menu>
-                  <Dropdown.Header>Dropdown</Dropdown.Header>
-                  <Dropdown.Divider />
                   <Dropdown.Item
                     eventKey="1"
                     onClick={() => deleteComponent((selectedItem as IDropItem).id)}
@@ -161,31 +196,33 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
       }
       {
         (selectedItem && selectedItem.componentType === 'textInput') && (
-          <Form>
+          <Form onSubmit={e => handleSubmit(e)}>
             <Form.Label>Label</Form.Label>
             <Form.Control
               type="text"
               value={labelInputText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLabelInputText(e.target.value)}
             />
-            <Form.Label>Input type</Form.Label>
-            <Form.Control as="select">
-              <option>text</option>
-              <option>password</option>
-              <option>date</option>
-            </Form.Control>
-            <Form.Label>Default value</Form.Label>
-            <Form.Control
-              type="text"
-              value={defaultValueInputText}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultValueInputText(e.target.value)}
-            />
-            <Form.Label>Place holder</Form.Label>
+            <Form.Label>Placeholder</Form.Label>
             <Form.Control
               type="text"
               value={placeholder}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlaceholder(e.target.value)}
             />
+            <Form.Label>Run query</Form.Label>
+            <Select
+              value={defaultInputQ}
+              options={queries.map(q => ({ value: q.id, label: q.name }))}
+              isClearable
+              onChange={e => handleChange(e)}
+            />
+            <div style={{ padding: '5px' }} />
+            <Button
+              variant="primary"
+              type="submit"
+            >
+              Save
+            </Button>
           </Form>
         )
       }
@@ -235,7 +272,6 @@ const Inspect: React.FC<IInspectProps> = ({ selectedItem, editComponent, deleteC
             <Button
               variant="primary"
               type="submit"
-              // disabled={!(typeAction && query)}
             >
               Save
             </Button>

@@ -3,7 +3,6 @@ export interface IQuery {
   createdAt?: Date,
   updatedAt?: Date,
   name: string,
-  runAutomatically: boolean,
   code: string,
   showConfirm: boolean,
   appId: string,

@@ -2,25 +2,27 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
 import update from 'immutability-helper';
 import DropAreaItem from '../DropAreaItem';
-import { Button, Form } from 'react-bootstrap';
 import styles from './styles.module.scss';
 import { IDropItem } from '../../../../common/models/editor/IDropItem';
 import { IDragItem } from '../../../../common/models/editor/IDragItem';
 import { IInputText } from '../../../../common/models/editor/IInputText';
 import { ComponentType } from '../../../../common/enums/ComponentType';
 import { IButton } from '../../../../common/models/editor/IButton';
+import InputComponent from '../../containers/InputComponent';
 import TableData from '../tableDATA';
 import { IQuery } from '../../../../common/models/apps/querys';
 import { useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
+import ButtonComponent from '../ButtonComponent';
 
 export interface IDropAreaProps {
   elements: {[key: string]: IDropItem },
   selectItem: Function;
   localUpdateElement: Function;
+  appId:string;
 }
 
-export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, localUpdateElement }) => {
+export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, localUpdateElement, appId }) => {
   const queries: Array<IQuery> = useSelector((state: IAppState) => state.app.qur.queriesApp);
   const [items, setItems] = useState<{
     [key: string]: IDropItem
@@ -28,17 +30,15 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
 
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [itemType, setItemType] = useState('input');
-  const [inputTextValue, setInputTextValue] = useState('');
-
   const onSelect = (id: string) => {
     setSelectedItem(id);
     if (id) {
       selectItem({ ...elements[id] });
+      setItemType(elements[id].componentType);
     } else {
       selectItem(null);
     }
   };
-
   useEffect(() => {
     setItems({ ...elements });
     const itemKeys = Object.keys(elements);
@@ -104,7 +104,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
   return (
     <div ref={drop} style={{ height: '100%', overflowY: 'auto', minHeight: '94vh' }}>
       {Object.keys(items).map((key: string) => {
-        const { left, top, name, componentType, width, height, component } = items[key];
+        const { left, top, name, componentType, width, height, component, id } = items[key];
         return (
           <DropAreaItem
             key={key}
@@ -126,19 +126,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             </span>
             {
               (componentType === ComponentType.input) && (
-                <Form style={{ display: 'flex', position: 'relative' }}>
-                  <Form.Label
-                    style={{ margin: '0 10px', display: 'flex', alignItems: 'center' }}
-                  >
-                    {name}
-                  </Form.Label>
-                  <Form.Control
-                    type={(component as IInputText).type}
-                    name={key}
-                    value={inputTextValue}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputTextValue(e.target.value)}
-                  />
-                </Form>
+                <InputComponent component={component as IInputText} id={id} />
               )
             }
             {
@@ -148,17 +136,7 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
             }
             {
               (componentType === ComponentType.button) && (
-                <Button
-                  as="input"
-                  type="button"
-                  onClick={() => false}
-                  value={(component as IButton).text ? (component as IButton).text : 'Submit'}
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: (component as IButton).color ? (component as IButton).color : 'red'
-                  }}
-                />
+              <ButtonComponent component={(component as IButton)} id={appId} />
               )
             }
           </DropAreaItem>

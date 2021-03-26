@@ -40,7 +40,6 @@ export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDes
                 height: '60',
                 componentType: ComponentType.input,
                 component: {
-                  type: 'text',
                   label: 'Name',
                   defaultValue: '',
                   placeholder: ''
@@ -94,7 +93,7 @@ export const Item: React.FC<IItemProps> = ({ appId, itemIcon, itemTitle, itemDes
       ref={drag}
     >
       <span className={styles.itemIconWrp}>
-        <FontAwesomeIcon icon={itemIcon} className={styles.itemIcon} />
+        <FontAwesomeIcon icon={itemIcon} className={styles.itemIcon} color="cadetblue" />
       </span>
       <div className={styles.itemDescWrp}>
         <div className={styles.itemLabel}>{itemTitle}</div>

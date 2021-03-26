@@ -9,6 +9,8 @@ import { IButton, ITransportedButton } from '../common/models/editor/IButton';
 import { ComponentType } from '../common/enums/ComponentType';
 import { IComponentElement, IResponseComponent } from '../common/models/editor/IResponseComponent';
 import { HttpStatusCode } from '../common/constants/http';
+import { InputRepository } from '../data/repositories/inputRepository';
+import { ITransportedInputText, IInputText } from '../common/models/editor/IInputText';
 import { TableRepository } from '../data/repositories/tableRepository';
 import { ITable, ITransportedTable } from '../common/models/editor/ITable';
 
@@ -32,6 +34,7 @@ export const getComponentsByAppId = async (appId: string): Promise<IResponseComp
     let componentElement = {} as IComponentElement;
     switch (componentType) {
       case ComponentType.input:
+        componentElement = await getCustomRepository(InputRepository).getByComponentId(id);
         break;
       case ComponentType.table:
         componentElement = await getCustomRepository(TableRepository).getTableByComponentId(id);
@@ -73,6 +76,12 @@ export const addComponent = async (
   let createdComponentElement = {} as IComponentElement;
   switch (componentType) {
     case ComponentType.input:
+      createdComponentElement = await getCustomRepository(InputRepository).addInput({
+        label: (component.component as IInputText).label,
+        placeholder: (component.component as IInputText).placeholder,
+        queryId: (component.component as IInputText).queryId,
+        componentId: createdComponent.id
+      });
       break;
     case ComponentType.table:
       createdComponentElement = await getCustomRepository(TableRepository).addTable({
@@ -106,6 +115,13 @@ export const updateComponent = async (
   let editedComponentElement = {} as IComponentElement;
   switch (editedComponent.componentType) {
     case ComponentType.input:
+      editedComponentElement = await getCustomRepository(InputRepository).updateInput(
+        (component as ITransportedInputText).id, {
+          label: (component as IInputText).label,
+          placeholder: (component as IInputText).placeholder,
+          queryId: (component as IInputText).queryId
+        }
+      );
       break;
     case ComponentType.table:
       editedComponentElement = await getCustomRepository(TableRepository).updateTable(
@@ -139,6 +155,7 @@ export const deleteComponent = async (id: string): Promise<IResponseComponent> =
   let deletedComponentElement = {} as IComponentElement;
   switch (component.componentType) {
     case ComponentType.input:
+      deletedComponentElement = await getCustomRepository(InputRepository).deleteInput(component.id);
       break;
     case ComponentType.table:
       deletedComponentElement = await getCustomRepository(TableRepository).deleteTable(component.id);
