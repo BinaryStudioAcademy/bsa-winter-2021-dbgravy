@@ -126,44 +126,44 @@ const Editor: React.FC<IEditorProps> = memo(
                     </div>
                     <div className={styles.content}>
                       {
-                        (active === 'inspect') && (
-                          <Inspect
-                            selectedItem={selected}
-                            editComponent={editItem}
-                            deleteComponent={deleteItem}
-                          />
-                        )
-                      }
+                          (active === 'inspect') && (
+                            <Inspect
+                              selectedItem={selected}
+                              editComponent={editItem}
+                              deleteComponent={deleteItem}
+                            />
+                          )
+                        }
                       {
-                        (active === 'insert') && (
-                          <div style={{ width: '100%' }}>
-                            <Item
-                              appId={appId}
-                              itemIcon={faGripLines}
-                              itemTitle="Text Input"
-                              itemDesc="Control other components or queries with text."
-                              addElement={addElement}
-                              itemType={ComponentType.input}
-                            />
-                            <Item
-                              appId={appId}
-                              itemIcon={faTable}
-                              itemTitle="Table"
-                              itemDesc="Display tabular data with pagination."
-                              addElement={addElement}
-                              itemType={ComponentType.table}
-                            />
-                            <Item
-                              appId={appId}
-                              itemIcon={faWindowMinimize}
-                              itemTitle="Button"
-                              itemDesc="Trigger actions like run queries."
-                              addElement={addElement}
-                              itemType={ComponentType.button}
-                            />
-                          </div>
-                        )
-                      }
+                          (active === 'insert') && (
+                            <div style={{ width: '100%' }}>
+                              <Item
+                                appId={appId}
+                                itemIcon={faGripLines}
+                                itemTitle="Text Input"
+                                itemDesc="Control other components or queries with text."
+                                addElement={addElement}
+                                itemType={ComponentType.input}
+                              />
+                              <Item
+                                appId={appId}
+                                itemIcon={faTable}
+                                itemTitle="Table"
+                                itemDesc="Display tabular data with pagination."
+                                addElement={addElement}
+                                itemType={ComponentType.table}
+                              />
+                              <Item
+                                appId={appId}
+                                itemIcon={faWindowMinimize}
+                                itemTitle="Button"
+                                itemDesc="Trigger actions like run queries."
+                                addElement={addElement}
+                                itemType={ComponentType.button}
+                              />
+                            </div>
+                          )
+                        }
                     </div>
                   </div>
                 </div>

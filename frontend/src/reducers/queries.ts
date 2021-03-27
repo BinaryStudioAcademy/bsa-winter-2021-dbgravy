@@ -14,7 +14,7 @@ import {
   setWaiterQueryRoutine, takeResourcesTableAndColumns,
   runSelectQueryRoutine,
   previewSelectQueryRoutine,
-  runTriggerRoutine
+  runTriggerRoutine, switchLoadingRoutine
 } from '../scenes/constructor/routines';
 import { ITrigger } from '../common/models/query/ITrigger';
 import { IQueryState } from '../common/models/query/IQueryState';
@@ -269,6 +269,18 @@ export const queries = (state = initialState, action: Routine<any>): IQueryState
         },
         isLoading: false,
         isResultLoading: false
+      };
+    case fetchQueryRoutine.FAILURE:
+      return {
+        ...state,
+        setNewName: 'Pleas select one resource and tub button +New and create your first query ;)',
+        setNewCode: '',
+        isLoading: false
+      };
+    case switchLoadingRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
       };
     default:
       return state;

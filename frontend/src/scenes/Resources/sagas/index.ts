@@ -7,17 +7,20 @@ import {
   updateResourceRoutine,
   testResourceRoutine,
   deleteResourceRoutine
-} from '../routines/index';
+} from '../routines';
 import * as resourceService from '../../../services/resourceService';
 import { IAppState } from '../../../common/models/store/IAppState';
-import { setResourcesRoutine } from '../../constructor/routines';
+import { fetchQueryRoutine, setResourcesRoutine } from '../../constructor/routines';
 import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 
-function* fetchResources(): Routine<any> {
+function* fetchResources({ payload } : Routine<any>): Routine<any> {
   try {
     const resources = yield call(resourceService.getResources);
     yield put(fetchResourceRoutine.success(resources));
     yield put(setResourcesRoutine.trigger(resources));
+    if (payload) {
+      yield put(fetchQueryRoutine.trigger({ id: payload.id }));
+    }
   } catch (error) {
     yield put(fetchResourceRoutine.failure(error.message));
     errorToastMessage(error.message);

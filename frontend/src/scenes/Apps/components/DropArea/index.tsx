@@ -72,7 +72,6 @@ export const DropArea: React.FC<IDropAreaProps> = ({ elements, selectItem, local
         const clientOffset = monitor.getSourceClientOffset() as XYCoord;
         const t = clientOffset.y;
         const l = clientOffset.x;
-
         const left = Math.round(item.left + delta.x);
         const top = Math.round(item.top + delta.y);
         moveItem(item.id, left, top);
