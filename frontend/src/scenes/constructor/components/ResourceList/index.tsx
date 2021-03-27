@@ -21,12 +21,19 @@ const ResourceList:FunctionComponent<IProps> = ({
     onChangeResource(option.value);
   };
 
+  const selectStyles = {
+    control: (controlStyles: any) => ({ ...controlStyles, cursor: 'pointer' }),
+    option: (optionStyles: any) => ({ ...optionStyles, cursor: 'pointer' }),
+    menu: (menuStyles: any) => ({ ...menuStyles, zIndex: 5 })
+  };
+
   return (
     <Select
       value={resource as ValueType<IOptionType, boolean>}
       onChange={option => handleSelectResource(option as IOptionType)}
       options={optionsQueries}
       className={styles.resourceSelect}
+      styles={selectStyles}
     />
   );
 };
