@@ -25,7 +25,7 @@ import {
 import { successToastMessage, errorToastMessage } from '../../../common/helpers/toastMessageHelper';
 import { queryParser } from '../../../common/helpers/queryParsHelper';
 
-const query = (state: IAppState) => state.app.qur;
+const query = (state: IAppState) => state.app.qur.queriesApp;
 
 function* fetchQuery({ payload }: Routine<any>) {
   try {
