@@ -32,8 +32,10 @@ function* fetchQuery({ payload }: Routine<any>) {
     const queries: Array<IQuery> = yield call(fetchQueries, payload.id);
     yield put(fetchQueryRoutine.success(queries));
     yield put(openQueryRoutine.success(queries));
+    const setNewResource = (state: IAppState) => state.app.qur.setNewResource;
+    yield put(takeResourcesTableAndColumns.trigger(setNewResource));
   } catch (e) {
-    yield put(errorRoutineQuery.failure(e.message));
+    yield put(fetchQueryRoutine.failure(e.message));
   }
 }
 

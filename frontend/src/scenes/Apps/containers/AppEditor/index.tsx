@@ -14,7 +14,7 @@ import { useParams } from 'react-router';
 import { IFetchParams } from '../../../../common/models/fetch/IFetchParams';
 import logo from '../../../../images/Logo.svg';
 import { fetchResourceRoutine } from '../../../Resources/routines';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IAppState } from '../../../../common/models/store/IAppState';
 import Header from '../../../../components/Header';
 import appStyles from '../../styles.module.scss';
@@ -22,24 +22,25 @@ import { Link, NavLink } from 'react-router-dom';
 import { IResource } from '../../../../common/models/resources/IResource';
 import { Navbar, NavDropdown, Nav, Form, Button, Image, Col } from 'react-bootstrap';
 import { Routes } from '../../../../common/enums/Routes';
-import { editAppRoutine, fetchSelectAppRoutine, setNewAppNameRoutine } from '../../routines';
-import { fetchQueryRoutine, takeResourcesTableAndColumns } from '../../../constructor/routines';
+import {
+  editAppRoutine,
+  fetchSelectAppRoutine,
+  setCurrentlyAppId,
+  setNewAppNameRoutine
+} from '../../routines';
+import { switchLoadingRoutine } from '../../../constructor/routines';
+import Loader from '../../../../components/Loader';
 
 interface IProps {
-  resources: Array<IResource>,
-  fetchResources: () => void,
   isPreview?: boolean
 }
 
-const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) => {
+const AppEditor: React.FC<IProps> = ({ isPreview }) => {
   const { id }: IFetchParams = useParams();
-  useEffect(() => {
-    fetchResources();
-  }, []);
-
+  const dispatch = useDispatch();
   const app = useSelector((state: IAppState) => state.app.application);
   const query = useSelector((state:IAppState) => state.app.qur);
-  const dispatch = useDispatch();
+  const resources: Array<IResource> = useSelector((state:IAppState) => state.resource.resources);
   const [editNameField, setEditNameField] = useState<boolean>(true);
   const [showBottom, setHiddenBottom] = useState<boolean>(true);
   const [showRight, setHiddenRight] = useState<boolean>(true);
@@ -73,26 +74,18 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
     }
   };
   useEffect(() => {
-    dispatch(fetchSelectAppRoutine.trigger({ id }));
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchResourceRoutine.trigger());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchQueryRoutine.trigger({ id }));
-  }, [query.resources]);
-
-  useEffect(() => {
-    if (!query.isLoading) {
-      dispatch(takeResourcesTableAndColumns.trigger(query.setNewResource));
+    if (id !== app.currentlyApp && id) {
+      dispatch(switchLoadingRoutine.trigger());
+      dispatch(setCurrentlyAppId.trigger(id));
+      dispatch(fetchSelectAppRoutine.trigger({ id }));
+      dispatch(fetchResourceRoutine.trigger({ id }));
     }
-  }, [query.isLoading]);
+  }, [app.currentlyApp]);
 
   return (
     <>
-      {
+      <Loader isLoading={query.isLoading}>
+        {
         (resources.length === 0) ? (
           <div className={appStyles['apps-wrp']}>
             <Header />
@@ -169,11 +162,19 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
               <Nav className="ml-auto">
                 <Button onClick={changeStatusBottom}>
                   {!isPreview ? (
-                    <NavLink to={`/app/preview/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                    <NavLink
+                      to={`/app/preview/${app.currentlyApp}`}
+                      activeStyle={{ color: '#000' }}
+                      className={styles.preview}
+                    >
                       Preview
                     </NavLink>
                   ) : (
-                    <NavLink to={`/app/editor/${id}`} activeStyle={{ color: '#000' }} className={styles.preview}>
+                    <NavLink
+                      to={`/app/editor/${app.currentlyApp}`}
+                      activeStyle={{ color: '#000' }}
+                      className={styles.preview}
+                    >
                       Edit
                     </NavLink>
                   )}
@@ -191,17 +192,9 @@ const AppEditor: React.FC<IProps> = ({ resources, fetchResources, isPreview }) =
           </div>
         )
       }
+      </Loader>
     </>
   );
 };
 
-const mapStateToProps = (rootState: IAppState) => ({
-  resources: rootState.resource.resources,
-  user: rootState.user.user
-});
-
-const mapDispatchToProps = {
-  fetchResources: fetchResourceRoutine
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppEditor);
+export default AppEditor;
