@@ -84,7 +84,8 @@
     text-align: left;
     align-content: center;
     flex: 1 1 0%;
-    margin-right: 50%;
+    max-width: 250px;
+    margin-right: 10px;
 }
 
 .searchInput {
@@ -150,7 +151,7 @@
     grid-gap: 8px;
     align-items: center;
     justify-content: space-between;
-    width: calc(100% - 20px);
+    width: 100%;
 }
 
 .queryHeader {
@@ -270,7 +271,7 @@ a.delete:hover {
 }
 
 .tip {
-    margin-left: 10px;
+    margin-left: auto;
     color: rgb(112, 112, 112);
     font-size: 15px;
 }
